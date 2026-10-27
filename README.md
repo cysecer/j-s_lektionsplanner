@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 2 – Datenmodell und Demodaten).
+> Status: im Aufbau (Phase 3 – Anmeldung und Rollen).
 
 ## Voraussetzungen
 
@@ -19,8 +19,12 @@ docker compose up -d          # Postgres + Mailpit
 npm install                   # erzeugt auch den Prisma-Client
 npm run db:migrate            # Datenbankschema anlegen
 npm run db:seed               # Demodaten (Beispiel-Lektion "Spiele")
+npm run invite -- --email du@example.ch --role ADMIN   # erste Administratorin einladen
 npm run dev                   # http://localhost:3000
 ```
+
+Den Einladungslink findest du in Mailpit (<http://localhost:8025>) oder in der Ausgabe von
+`npm run invite`. Nach dem Annehmen bietet die App an, einen Passkey einzurichten.
 
 Alle E-Mails werden in der Entwicklung von Mailpit abgefangen: <http://localhost:8025>.
 
@@ -39,6 +43,7 @@ Alle E-Mails werden in der Entwicklung von Mailpit abgefangen: <http://localhost
 | `npm run db:deploy`  | Migrationen anwenden (Produktion)            |
 | `npm run db:seed`    | Demodaten laden (nur in leere Datenbank)     |
 | `npm run db:reset`   | Datenbank leeren, migrieren, Demodaten laden |
+| `npm run invite`     | Person einladen (`--email`, `--role`)        |
 
 ## Datenmodell
 
@@ -47,10 +52,16 @@ Schema: [prisma/schema.prisma](prisma/schema.prisma). Alle Daten hängen an eine
 Einfügen in eine Lektion als Kopie (Snapshot) übernommen; spätere Änderungen in der Bibliothek
 verändern alte Lektionen nicht. Die Volltextsuche nutzt Postgres mit deutscher Stammformbildung.
 
-Für die E2E-Tests einmalig den Browser installieren: `npx playwright install chromium`.
+Für die E2E-Tests einmalig den Browser installieren: `npx playwright install chromium`. Die
+E2E-Tests nutzen eine eigene Datenbank (`lektionsplaner_e2e`), die bei jedem Lauf neu angelegt
+wird; deine Entwicklungsdaten bleiben unberührt. Docker (Postgres + Mailpit) muss laufen.
 
 ## Konfiguration
 
 Alle Umgebungsvariablen sind in [.env.example](.env.example) dokumentiert und werden beim Start
 validiert ([src/lib/env-schema.ts](src/lib/env-schema.ts)). Fehlt ein Wert oder ist er ungültig,
 bricht die App mit einer verständlichen Meldung ab.
+
+## Sicherheit
+
+Anmeldung, Rollen und Eingabevalidierung sind in [SECURITY.md](SECURITY.md) beschrieben.

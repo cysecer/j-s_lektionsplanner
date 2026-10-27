@@ -1,0 +1,151 @@
+{
+  "app": {
+    "name": "Lektionsplaner",
+    "description": "Lektionsvorbereitungen für J+S-Gruppen planen, exportieren und versenden."
+  },
+  "common": {
+    "email": "E-Mail-Adresse",
+    "name": "Name",
+    "password": "Passwort",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "loading": "Wird geladen …",
+    "or": "oder",
+    "unknownError": "Etwas ist schiefgelaufen. Bitte versuche es nochmals."
+  },
+  "roles": {
+    "ADMIN": "Administrator/-in",
+    "COACH": "Leiter/-in",
+    "READER": "Nur lesen"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Anmelden",
+      "intro": "Melde dich mit deinem Passkey an oder lass dir einen Anmeldelink per E-Mail schicken.",
+      "withPasskey": "Mit Passkey anmelden",
+      "passkeyHint": "Face ID, Fingerabdruck, Windows Hello oder Bildschirmsperre deines Geräts.",
+      "sendLink": "Anmeldelink senden",
+      "linkSentTitle": "Schau in dein Postfach",
+      "linkSent": "Falls ein Konto mit {email} existiert, haben wir dir einen Anmeldelink geschickt. Er ist 15 Minuten gültig und kann nur einmal verwendet werden.",
+      "usePassword": "Stattdessen mit Passwort anmelden",
+      "useLink": "Stattdessen Anmeldelink erhalten",
+      "submitPassword": "Anmelden",
+      "forgotPassword": "Passwort vergessen?",
+      "failed": "Anmeldung fehlgeschlagen. Nach mehreren Fehlversuchen wird die Passwort-Anmeldung vorübergehend gesperrt – der Anmeldelink per E-Mail funktioniert weiterhin.",
+      "passkeyFailed": "Die Anmeldung mit Passkey hat nicht geklappt. Auf diesem Gerät ist vielleicht noch kein Passkey eingerichtet.",
+      "linkInvalid": "Der Anmeldelink ist ungültig oder abgelaufen. Bitte fordere einen neuen an.",
+      "rateLimited": "Zu viele Versuche. Bitte warte einen Moment.",
+      "inviteOnly": "Zugang nur auf Einladung. Wende dich an die Verantwortlichen deines Vereins."
+    },
+    "signOut": "Abmelden",
+    "signOutEverywhere": "Auf allen Geräten abmelden",
+    "invitation": {
+      "title": "Willkommen beim Lektionsplaner",
+      "intro": "{clubName} hat dich als {role} eingeladen.",
+      "nameLabel": "Dein Name",
+      "accept": "Einladung annehmen",
+      "invalid": "Diese Einladung ist ungültig, abgelaufen oder wurde bereits verwendet. Bitte frage nach einer neuen Einladung."
+    },
+    "passkeyPrompt": {
+      "title": "Schneller anmelden mit Passkey",
+      "body": "Mit einem Passkey meldest du dich künftig per Face ID, Fingerabdruck oder Windows Hello an – ohne Passwort und ohne auf eine E-Mail zu warten. Das ist auch sicherer.",
+      "create": "Passkey einrichten",
+      "later": "Später"
+    },
+    "account": {
+      "title": "Mein Konto",
+      "passkeys": "Passkeys",
+      "passkeysIntro": "Richte auf jedem Gerät, das du nutzt, einen Passkey ein (Handy, Tablet, Computer).",
+      "noPasskeys": "Noch kein Passkey eingerichtet.",
+      "addPasskey": "Passkey für dieses Gerät hinzufügen",
+      "passkeyAdded": "Passkey eingerichtet.",
+      "passkeyAddFailed": "Der Passkey konnte nicht eingerichtet werden.",
+      "removePasskey": "Entfernen",
+      "removePasskeyConfirm": "Diesen Passkey wirklich entfernen? Auf dem Gerät ist danach keine Anmeldung per Passkey mehr möglich.",
+      "passkeyCreated": "Eingerichtet am {date}",
+      "unnamedPasskey": "Passkey",
+      "unknownDevice": "Gerät",
+      "password": "Passwort (Ersatz)",
+      "passwordIntro": "Optional. Für den Fall, dass weder Passkey noch E-Mail verfügbar sind. Mindestens 15 Zeichen – ein Satz aus mehreren Wörtern ist ideal.",
+      "passwordSet": "Ein Passwort ist gesetzt.",
+      "noPassword": "Kein Passwort gesetzt.",
+      "newPassword": "Neues Passwort",
+      "currentPassword": "Aktuelles Passwort",
+      "setPassword": "Passwort festlegen",
+      "changePassword": "Passwort ändern",
+      "passwordSaved": "Passwort gespeichert.",
+      "sessions": "Angemeldete Geräte",
+      "signedOutEverywhere": "Alle anderen Geräte wurden abgemeldet."
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen",
+      "intro": "Gib deine E-Mail-Adresse ein. Falls ein Konto existiert, erhältst du einen Link zum Zurücksetzen.",
+      "submit": "Link anfordern",
+      "sent": "Falls ein Konto mit dieser Adresse existiert, ist ein Link unterwegs. Er ist 30 Minuten gültig."
+    },
+    "resetPassword": {
+      "title": "Neues Passwort festlegen",
+      "submit": "Passwort speichern",
+      "done": "Dein Passwort wurde geändert. Alle Geräte wurden abgemeldet.",
+      "invalid": "Der Link ist ungültig oder abgelaufen."
+    }
+  },
+  "password": {
+    "tooShort": "Mindestens {min} Zeichen. Tipp: mehrere Wörter zu einem Satz verbinden.",
+    "tooLong": "Höchstens {max} Zeichen.",
+    "common": "Dieses Passwort ist aus Datenlecks bekannt. Bitte wähle ein anderes.",
+    "repetitive": "Bitte keine Wiederholungen wie «aaaa» oder «abcabc».",
+    "sequential": "Bitte keine Folgen wie «abcdef» oder «123456».",
+    "contextual": "Das Passwort ist zu nahe an deinem Namen, deiner E-Mail-Adresse oder dem Verein.",
+    "wrongCurrent": "Das aktuelle Passwort stimmt nicht."
+  },
+  "validation": {
+    "invalid": "Ungültige Eingabe.",
+    "required": "Pflichtfeld.",
+    "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+    "tooLong": "Zu lang.",
+    "clockTime": "Bitte im Format HH:MM eingeben, z. B. 18:00.",
+    "richTextTooLong": "Der Text ist zu lang.",
+    "layoutColumnLabelRequired": "Jede Spalte braucht eine Überschrift.",
+    "layoutDuplicateColumn": "Doppelte Spalte.",
+    "layoutDuplicateField": "Ein Feld darf nur in einer Spalte vorkommen."
+  },
+  "errors": {
+    "unauthorized": "Bitte melde dich an.",
+    "forbidden": "Dafür fehlt dir die Berechtigung.",
+    "notFound": "Nicht gefunden.",
+    "conflict": "Ein Eintrag mit diesem Namen existiert bereits.",
+    "rateLimited": "Zu viele Anfragen. Bitte warte einen Moment.",
+    "validation": "Bitte prüfe deine Eingaben.",
+    "internal": "Etwas ist schiefgelaufen. Bitte versuche es nochmals."
+  },
+  "email": {
+    "greeting": "Hallo {name}",
+    "greetingAnonymous": "Hallo",
+    "signature": "Dein Lektionsplaner",
+    "ignore": "Falls du das nicht angefordert hast, kannst du diese E-Mail ignorieren.",
+    "magicLink": {
+      "subject": "Dein Anmeldelink für den Lektionsplaner",
+      "body": "Mit diesem Link meldest du dich an. Er ist 15 Minuten gültig und funktioniert nur einmal:",
+      "button": "Jetzt anmelden"
+    },
+    "invitation": {
+      "subject": "Einladung zum Lektionsplaner von {clubName}",
+      "body": "{inviter} lädt dich als {role} zum Lektionsplaner von {clubName} ein. Die Einladung ist {days} Tage gültig:",
+      "bodyNoInviter": "Du bist als {role} zum Lektionsplaner von {clubName} eingeladen. Die Einladung ist {days} Tage gültig:",
+      "button": "Einladung annehmen"
+    },
+    "resetPassword": {
+      "subject": "Passwort zurücksetzen",
+      "body": "Mit diesem Link legst du ein neues Passwort fest. Er ist 30 Minuten gültig:",
+      "button": "Neues Passwort festlegen"
+    }
+  },
+  "home": {
+    "title": "Übersicht",
+    "signedInAs": "Angemeldet als {name} ({role})",
+    "comingSoon": "Lektionen und Programmblöcke folgen in den nächsten Phasen."
+  }
+}

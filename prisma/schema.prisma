@@ -68,6 +68,8 @@ model Club {
   assets        Asset[]        @relation("ClubAssets")
   programBlocks ProgramBlock[]
   lessons       Lesson[]
+  memberships   Membership[]
+  invitations   Invitation[]
 }
 
 /// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
@@ -104,6 +106,8 @@ model Coach {
   responsibleForBlocks ProgramBlock[]
   responsibleForItems  LessonItem[]
   presentInLessons     LessonCoach[]
+  membership           Membership?
+  invitations          Invitation[]
 
   @@unique([clubId, name])
 }
@@ -368,4 +372,160 @@ model LessonItemSketch {
 
   @@id([itemId, assetId])
   @@index([assetId])
+}
+
+// ---------------------------------------------------------------------------
+// Authentication (tables used by Better Auth) and access control
+// ---------------------------------------------------------------------------
+
+enum Role {
+  /// Everything incl. settings, users, layouts and custom fields.
+  ADMIN
+  /// Edits the library and lessons, exports and sends PDFs.
+  COACH
+  /// Read-only: browses blocks and lessons, exports PDFs within a quota, no email.
+  READER
+}
+
+model User {
+  id                String    @id @default(uuid(7)) @db.Uuid
+  name              String
+  email             String    @unique
+  emailVerified     Boolean   @default(false)
+  image             String?
+  /// Preferred UI language (see src/i18n/config.ts).
+  locale            String    @default("de-CH")
+  /// Consecutive failed password sign-ins; reset on success.
+  failedSignInCount Int       @default(0)
+  /// Password sign-in is blocked until this time after too many failures.
+  lockedUntil       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  sessions           Session[]
+  accounts           Account[]
+  passkeys           Passkey[]
+  memberships        Membership[]
+  invitationsCreated Invitation[] @relation("InvitedBy")
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String   @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid(7)) @db.Uuid
+  accountId             String
+  providerId            String
+  userId                String    @db.Uuid
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Passkey {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  name         String?
+  publicKey    String
+  userId       String   @db.Uuid
+  credentialID String   @unique
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime @default(now())
+  aaguid       String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("passkey")
+}
+
+model RateLimit {
+  id          String @id @default(uuid(7)) @db.Uuid
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@map("rateLimit")
+}
+
+/// A user's access to a club. One per club; the role decides permissions.
+model Membership {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  clubId    String   @db.Uuid
+  role      Role
+  /// Links the user to a coach entry (pre-fills author, "my blocks").
+  coachId   String?  @unique @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club  Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, clubId])
+  @@index([clubId])
+}
+
+/// Invite-only access: an admin invites an email address with a role.
+/// Only a SHA-256 hash of the token is stored.
+model Invitation {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  clubId      String    @db.Uuid
+  email       String
+  role        Role
+  coachId     String?   @db.Uuid
+  locale      String    @default("de-CH")
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  invitedById String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+
+  club      Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach     Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  invitedBy User?  @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([clubId, email])
 }

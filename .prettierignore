@@ -7,3 +7,4 @@ test-results
 src/generated
 prisma/migrations
 .vscode
+data/common-passwords.txt
