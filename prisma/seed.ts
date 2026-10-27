@@ -211,8 +211,7 @@ async function main() {
       blockIds[b.title] = block.id;
     }
 
-    // The sample lesson. Start time 18:10 puts "Appell" at 19:15 and
-    // "Heigositzball" at 19:25, matching the paper version.
+    // The sample lesson, using the club defaults (18:00, 90 minutes).
     const lesson = await tx.lesson.create({
       data: {
         clubId,
@@ -221,8 +220,8 @@ async function main() {
         title: "Spiele",
         authorName: "Andrea Keller",
         date: new Date("2018-11-28T00:00:00Z"),
-        startTimeMinutes: 18 * 60 + 10,
-        totalDurationMinutes: 90,
+        startTimeMinutes: club.defaultStartTimeMinutes,
+        totalDurationMinutes: club.defaultDurationMinutes,
         location: "Halle 2 (Halle 1 für TuVo)",
         ageMin: 7,
         ageMax: 11,

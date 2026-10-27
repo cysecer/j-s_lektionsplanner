@@ -44,14 +44,18 @@ enum BuiltinSection {
 }
 
 model Club {
-  id              String   @id @default(uuid(7)) @db.Uuid
-  name            String
-  logoAssetId     String?  @unique @db.Uuid
+  id                      String   @id @default(uuid(7)) @db.Uuid
+  name                    String
+  logoAssetId             String?  @unique @db.Uuid
   /// Optional text in the PDF footer (e.g. "J+S-Kindersport").
-  pdfFooterText   String?
-  defaultLayoutId String?  @unique @db.Uuid
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  pdfFooterText           String?
+  defaultLayoutId         String?  @unique @db.Uuid
+  /// Pre-filled into new lessons (minutes after midnight; 1080 = 18:00).
+  defaultStartTimeMinutes Int      @default(1080)
+  /// Pre-filled planned lesson duration in minutes.
+  defaultDurationMinutes  Int      @default(90)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
   logo          Asset?         @relation("ClubLogo", fields: [logoAssetId], references: [id], onDelete: SetNull)
   defaultLayout Layout?        @relation("ClubDefaultLayout", fields: [defaultLayoutId], references: [id], onDelete: SetNull)
@@ -68,12 +72,15 @@ model Club {
 
 /// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
 model Team {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  clubId    String   @db.Uuid
-  name      String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                      String   @id @default(uuid(7)) @db.Uuid
+  clubId                  String   @db.Uuid
+  name                    String
+  sortOrder               Int      @default(0)
+  /// Overrides the club default when set (teams often train at other times).
+  defaultStartTimeMinutes Int?
+  defaultDurationMinutes  Int?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
   club          Club               @relation(fields: [clubId], references: [id], onDelete: Cascade)
   coaches       CoachTeam[]
