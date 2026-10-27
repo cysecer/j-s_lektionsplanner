@@ -82,7 +82,9 @@ export function LoginForm({ next, linkError }: { next: string; linkError: boolea
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t("auth.signIn.linkSentTitle")}</CardTitle>
+          <CardTitle className="text-2xl">
+            <h1>{t("auth.signIn.linkSentTitle")}</h1>
+          </CardTitle>
           <CardDescription className="text-base">
             {t("auth.signIn.linkSent", { email: status.email })}
           </CardDescription>
@@ -103,7 +105,9 @@ export function LoginForm({ next, linkError }: { next: string; linkError: boolea
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">{t("auth.signIn.title")}</CardTitle>
+        <CardTitle className="text-2xl">
+          <h1>{t("auth.signIn.title")}</h1>
+        </CardTitle>
         <CardDescription className="text-base">{t("auth.signIn.intro")}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">

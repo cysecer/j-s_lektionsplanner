@@ -88,6 +88,7 @@ model Team {
   coaches       CoachTeam[]
   programBlocks ProgramBlockTeam[]
   lessons       Lesson[]
+  activeFor     Membership[]
 
   @@unique([clubId, name])
   @@index([clubId, sortOrder])
@@ -490,18 +491,21 @@ model RateLimit {
 
 /// A user's access to a club. One per club; the role decides permissions.
 model Membership {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  userId    String   @db.Uuid
-  clubId    String   @db.Uuid
-  role      Role
+  id           String   @id @default(uuid(7)) @db.Uuid
+  userId       String   @db.Uuid
+  clubId       String   @db.Uuid
+  role         Role
   /// Links the user to a coach entry (pre-fills author, "my blocks").
-  coachId   String?  @unique @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  coachId      String?  @unique @db.Uuid
+  /// Team selected in the header; lists are filtered by it. Null = all teams.
+  activeTeamId String?  @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  club  Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  coach Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club       Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach      Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  activeTeam Team?  @relation(fields: [activeTeamId], references: [id], onDelete: SetNull)
 
   @@unique([userId, clubId])
   @@index([clubId])

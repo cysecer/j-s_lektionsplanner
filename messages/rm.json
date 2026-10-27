@@ -1,0 +1,188 @@
+{
+  "app": {
+    "name": "Planisader da lecziuns",
+    "description": "Planisar, exportar e trametter preparaziuns da lecziuns per gruppas G+S."
+  },
+  "common": {
+    "email": "Adressa dad e-mail",
+    "name": "Num",
+    "password": "Pled-clav",
+    "save": "Memorisar",
+    "cancel": "Interrumper",
+    "delete": "Stizzar",
+    "back": "Enavos",
+    "loading": "Chargiar …",
+    "or": "u",
+    "close": "Serrar",
+    "unknownError": "Insatge n'è betg reussì. Emprova anc ina giada."
+  },
+  "roles": {
+    "ADMIN": "Administratur/-a",
+    "COACH": "Manader/-a",
+    "READER": "Mo leger"
+  },
+  "auth": {
+    "signIn": {
+      "title": "S'annunziar",
+      "intro": "S'annunzia cun tia passkey u ta lascha trametter ina colliaziun d'annunzia per e-mail.",
+      "withPasskey": "S'annunziar cun passkey",
+      "passkeyHint": "Face ID, stampa dal det, Windows Hello u bloccaziun dal visur da tes apparat.",
+      "sendLink": "Trametter la colliaziun d'annunzia",
+      "linkSentTitle": "Guarda en tia chascha da posta",
+      "linkSent": "Sch'i dat in conto per {email}, avain nus tramess ina colliaziun d'annunzia. Ella è valaivla 15 minutas e po vegnir duvrada mo ina giada.",
+      "usePassword": "Empè s'annunziar cun pled-clav",
+      "useLink": "Empè retschaiver ina colliaziun d'annunzia",
+      "submitPassword": "S'annunziar",
+      "forgotPassword": "Emblidà il pled-clav?",
+      "failed": "L'annunzia n'è betg reussida. Suenter pliras emprovas fallidas vegn l'annunzia cun pled-clav bloccada temporarmain – la colliaziun d'annunzia per e-mail funcziuna vinavant.",
+      "passkeyFailed": "L'annunzia cun passkey n'è betg reussida. Forsa n'è anc nagina passkey installada sin quest apparat.",
+      "linkInvalid": "La colliaziun d'annunzia è nunvalaivla u scadida. Dumonda per plaschair ina nova.",
+      "rateLimited": "Memia bleras emprovas. Spetga per plaschair in mument.",
+      "inviteOnly": "Access mo cun invitaziun. Ta drizza als responsabels da tia uniun."
+    },
+    "signOut": "S'absentar",
+    "signOutEverywhere": "S'absentar sin tut ils apparats",
+    "invitation": {
+      "title": "Bainvegni tar il planisader da lecziuns",
+      "intro": "{clubName} ha envidà tai sco {role}.",
+      "nameLabel": "Tes num",
+      "accept": "Acceptar l'invitaziun",
+      "invalid": "Questa invitaziun è nunvalaivla, scadida u gia duvrada. Dumonda per plaschair ina nova invitaziun."
+    },
+    "passkeyPrompt": {
+      "title": "S'annunziar pli svelt cun passkey",
+      "body": "Cun ina passkey t'annunzias ti en futur cun Face ID, stampa dal det u Windows Hello – senza pled-clav e senza spetgar in e-mail. Quai è er pli segir.",
+      "create": "Installar passkey",
+      "later": "Pli tard"
+    },
+    "account": {
+      "title": "Mes conto",
+      "passkeys": "Passkeys",
+      "passkeysIntro": "Installescha ina passkey sin mintga apparat che ti duvras (telefonin, tablet, computer).",
+      "noPasskeys": "Anc nagina passkey installada.",
+      "addPasskey": "Agiuntar ina passkey per quest apparat",
+      "passkeyAdded": "Passkey installada.",
+      "passkeyAddFailed": "La passkey n'ha betg pudì vegnir installada.",
+      "removePasskey": "Allontanar",
+      "removePasskeyConfirm": "Propi allontanar questa passkey? Sin quest apparat n'è l'annunzia cun passkey lura betg pli pussaivla.",
+      "passkeyCreated": "Installada ils {date}",
+      "unnamedPasskey": "Passkey",
+      "unknownDevice": "Apparat",
+      "password": "Pled-clav (substitut)",
+      "passwordIntro": "Facultativ. Per il cas che ni passkey ni e-mail n'èn disponibels. Almain 15 caracters – ina frasa da plirs pleds è ideala.",
+      "passwordSet": "In pled-clav è definì.",
+      "noPassword": "Nagin pled-clav definì.",
+      "newPassword": "Nov pled-clav",
+      "currentPassword": "Pled-clav actual",
+      "setPassword": "Definir il pled-clav",
+      "changePassword": "Midar il pled-clav",
+      "passwordSaved": "Pled-clav memorisà.",
+      "sessions": "Apparats annunziads",
+      "signOutEverywhereHint": "Terminescha tia annunzia sin tut ils apparats, er sin quest. Util sche ti has pers in apparat u sche ti es stà annunzià sin in computer ester."
+    },
+    "forgotPassword": {
+      "title": "Emblidà il pled-clav",
+      "intro": "Endatescha tia adressa dad e-mail. Sch'i dat in conto, retschaivas ti ina colliaziun per redefinir il pled-clav.",
+      "submit": "Dumandar ina colliaziun",
+      "sent": "Sch'i dat in conto cun questa adressa, è ina colliaziun sin via. Ella è valaivla 30 minutas."
+    },
+    "resetPassword": {
+      "title": "Definir in nov pled-clav",
+      "submit": "Memorisar il pled-clav",
+      "done": "Tes pled-clav è vegnì midà. Tut ils apparats èn vegnids absentads.",
+      "invalid": "La colliaziun è nunvalaivla u scadida."
+    }
+  },
+  "password": {
+    "tooShort": "Almain {min} caracters. Tip: colliar plirs pleds ad ina frasa.",
+    "tooLong": "Maximalmain {max} caracters.",
+    "common": "Quest pled-clav è enconuschent da sfugidas da datas. Tscherna per plaschair in auter.",
+    "repetitive": "Per plaschair naginas repetiziuns sco «aaaa» u «abcabc».",
+    "sequential": "Per plaschair naginas successiuns sco «abcdef» u «123456».",
+    "contextual": "Il pled-clav è memia sumegliant a tes num, a tia adressa dad e-mail u a l'uniun.",
+    "wrongCurrent": "Il pled-clav actual n'è betg correct."
+  },
+  "validation": {
+    "invalid": "Endataziun nunvalaivla.",
+    "required": "Champ obligatoric.",
+    "email": "Endatescha per plaschair ina adressa dad e-mail valaivla.",
+    "tooLong": "Memia lung.",
+    "clockTime": "Endatescha per plaschair en il format HH:MM, p.ex. 18:00.",
+    "richTextTooLong": "Il text è memia lung.",
+    "layoutColumnLabelRequired": "Mintga colonna dovra in titel.",
+    "layoutDuplicateColumn": "Colonna dubla.",
+    "layoutDuplicateField": "In champ po cumparair mo en ina colonna."
+  },
+  "errors": {
+    "unauthorized": "S'annunzia per plaschair.",
+    "forbidden": "Ti n'has betg l'autorisaziun necessaria.",
+    "notFound": "Betg chattà.",
+    "conflict": "I dat gia ina endataziun cun quest num.",
+    "rateLimited": "Memia bleras dumondas. Spetga per plaschair in mument.",
+    "validation": "Controllescha per plaschair tias endataziuns.",
+    "internal": "Insatge n'è betg reussì. Emprova anc ina giada."
+  },
+  "email": {
+    "greeting": "Allegra {name}",
+    "greetingAnonymous": "Allegra",
+    "signature": "Tes planisader da lecziuns",
+    "ignore": "Sche ti n'has betg dumandà quai, pos ti ignorar quest e-mail.",
+    "magicLink": {
+      "subject": "Tia colliaziun d'annunzia per il planisader da lecziuns",
+      "body": "Cun questa colliaziun t'annunzias ti. Ella è valaivla 15 minutas e funcziuna mo ina giada:",
+      "button": "S'annunziar ussa"
+    },
+    "invitation": {
+      "subject": "Invitaziun al planisader da lecziuns da {clubName}",
+      "body": "{inviter} envida tai sco {role} al planisader da lecziuns da {clubName}. L'invitaziun è valaivla {days} dis:",
+      "bodyNoInviter": "Ti es envidà sco {role} al planisader da lecziuns da {clubName}. L'invitaziun è valaivla {days} dis:",
+      "button": "Acceptar l'invitaziun"
+    },
+    "resetPassword": {
+      "subject": "Redefinir il pled-clav",
+      "body": "Cun questa colliaziun defineschas ti in nov pled-clav. Ella è valaivla 30 minutas:",
+      "button": "Definir in nov pled-clav"
+    }
+  },
+  "nav": {
+    "main": "Navigaziun principala",
+    "lessons": "Lecziuns",
+    "blocks": "Blocs da program",
+    "settings": "Configuraziun",
+    "account": "Mes conto",
+    "openMenu": "Avrir il menu",
+    "menu": "Menu",
+    "userMenu": "Menu d'utilisader",
+    "skipToContent": "Siglir al cuntegn"
+  },
+  "header": {
+    "team": "Gruppa",
+    "allTeams": "Tut las gruppas",
+    "teamHint": "Las glistas mussan mo endataziuns da la gruppa tschernida.",
+    "language": "Lingua",
+    "signedInAs": "Annunzià sco {name}"
+  },
+  "lessons": {
+    "title": "Lecziuns",
+    "intro": "Tias preparaziuns da lecziuns. Novas lecziuns cumponas ti or da blocs da program.",
+    "comingSoon": "La survista da las lecziuns e l'editur vegnan construids sco proxim."
+  },
+  "blocks": {
+    "title": "Blocs da program",
+    "intro": "La biblioteca da gieus ed exercizis da tia uniun.",
+    "comingSoon": "La biblioteca vegn construida sco proxim."
+  },
+  "settings": {
+    "title": "Configuraziun",
+    "intro": "Administrar l'uniun, las gruppas, ils manaders, las persunas e la structura dal PDF.",
+    "comingSoon": "La configuraziun vegn construida sco proxim."
+  },
+  "dialog": {
+    "confirm": "Confermar",
+    "areYouSure": "Es ti segir?"
+  },
+  "units": {
+    "minutes": "{count, plural, one {# minuta} other {# minutas}}",
+    "minutesShort": "{count} min"
+  }
+}

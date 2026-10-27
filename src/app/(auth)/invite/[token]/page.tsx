@@ -15,7 +15,9 @@ export default async function InvitationPage({ params }: PageProps<"/invite/[tok
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t("auth.invitation.title")}</CardTitle>
+          <CardTitle className="text-2xl">
+            <h1>{t("auth.invitation.title")}</h1>
+          </CardTitle>
           <CardDescription className="text-base">{t("auth.invitation.invalid")}</CardDescription>
         </CardHeader>
       </Card>

@@ -33,7 +33,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">{t("auth.resetPassword.title")}</CardTitle>
+        <CardTitle className="text-2xl">
+          <h1>{t("auth.resetPassword.title")}</h1>
+        </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         {state === "done" ? (

@@ -13,6 +13,7 @@
     "back": "Zurück",
     "loading": "Wird geladen …",
     "or": "oder",
+    "close": "Schliessen",
     "unknownError": "Etwas ist schiefgelaufen. Bitte versuche es nochmals."
   },
   "roles": {
@@ -143,9 +144,45 @@
       "button": "Neues Passwort festlegen"
     }
   },
-  "home": {
-    "title": "Übersicht",
-    "signedInAs": "Angemeldet als {name} ({role})",
-    "comingSoon": "Lektionen und Programmblöcke folgen in den nächsten Phasen."
+  "nav": {
+    "main": "Hauptnavigation",
+    "lessons": "Lektionen",
+    "blocks": "Programmblöcke",
+    "settings": "Einstellungen",
+    "account": "Mein Konto",
+    "openMenu": "Menü öffnen",
+    "menu": "Menü",
+    "userMenu": "Benutzermenü",
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "header": {
+    "team": "Riege",
+    "allTeams": "Alle Riegen",
+    "teamHint": "Listen zeigen nur Einträge der gewählten Riege.",
+    "language": "Sprache",
+    "signedInAs": "Angemeldet als {name}"
+  },
+  "lessons": {
+    "title": "Lektionen",
+    "intro": "Deine Lektionsvorbereitungen. Neue Lektionen stellst du aus Programmblöcken zusammen.",
+    "comingSoon": "Die Lektionsübersicht und der Editor werden als Nächstes gebaut."
+  },
+  "blocks": {
+    "title": "Programmblöcke",
+    "intro": "Die Bibliothek mit Spielen und Übungen deines Vereins.",
+    "comingSoon": "Die Bibliothek wird als Nächstes gebaut."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "intro": "Verein, Riegen, Leitende, Personen und PDF-Layout verwalten.",
+    "comingSoon": "Die Einstellungen werden als Nächstes gebaut."
+  },
+  "dialog": {
+    "confirm": "Bestätigen",
+    "areYouSure": "Bist du sicher?"
+  },
+  "units": {
+    "minutes": "{count, plural, one {# Minute} other {# Minuten}}",
+    "minutesShort": "{count}'"
   }
 }

@@ -11,7 +11,7 @@ async function twoDevices(browser: Browser, name: string) {
   const deviceB = await newDevice(browser);
   const pageB = await deviceB.newPage();
   await signInWithMagicLink(pageB, email);
-  await expect(pageB.getByText(`Angemeldet als ${name}`)).toBeVisible();
+  await expect(pageB.getByRole("button", { name: `Angemeldet als ${name}` })).toBeVisible();
   return { pageA, pageB, close: () => Promise.all([deviceA.close(), deviceB.close()]) };
 }
 
@@ -20,6 +20,10 @@ test("sign out everywhere ends the sessions on all devices", async ({ browser })
 
   await pageA.goto("/account");
   await pageA.getByRole("button", { name: "Auf allen Geräten abmelden" }).click();
+  await pageA
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Auf allen Geräten abmelden" })
+    .click();
   await pageA.waitForURL("**/login");
   // The old session cookie no longer opens anything on device A…
   await pageA.goto("/account");

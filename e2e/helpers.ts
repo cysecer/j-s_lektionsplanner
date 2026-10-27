@@ -67,15 +67,21 @@ export function firstLink(text: string): string {
 }
 
 /** Accepts an invitation in the browser and skips the passkey prompt. */
-export async function acceptInvitation(page: Page, link: string, name: string) {
+export async function acceptInvitation(
+  page: Page,
+  link: string,
+  name: string,
+  labels = { nameLabel: "Dein Name", accept: "Einladung annehmen" },
+) {
   await page.goto(link);
-  await page.getByLabel("Dein Name").fill(name);
-  await page.getByRole("button", { name: "Einladung annehmen" }).click();
+  await page.getByLabel(labels.nameLabel).fill(name);
+  await page.getByRole("button", { name: labels.accept }).click();
   await page.waitForURL("**/welcome");
 }
 
 export async function signOut(page: Page) {
-  await page.getByRole("button", { name: "Abmelden", exact: true }).click();
+  await page.getByRole("button", { name: /^Angemeldet als / }).click();
+  await page.getByRole("menuitem", { name: "Abmelden" }).click();
   await page.waitForURL("**/login");
 }
 

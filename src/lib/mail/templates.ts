@@ -44,7 +44,7 @@ export function renderActionEmail(email: ActionEmail): { text: string; html: str
 <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px">
 <p style="margin:0 0 16px">${escapeHtml(email.greeting)},</p>
 <p style="margin:0 0 24px;line-height:1.5">${escapeHtml(email.body)}</p>
-<p style="margin:0 0 24px"><a href="${href}" style="display:inline-block;background:#b91c1c;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(email.buttonLabel)}</a></p>
+<p style="margin:0 0 24px"><a href="${href}" style="display:inline-block;background:#2b579a;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:600">${escapeHtml(email.buttonLabel)}</a></p>
 <p style="margin:0 0 24px;font-size:13px;color:#57534e;word-break:break-all">${href}</p>
 <p style="margin:0 0 8px;font-size:13px;color:#57534e">${escapeHtml(email.footer)}</p>
 <p style="margin:0;font-size:13px;color:#57534e">${escapeHtml(email.signature)}</p>

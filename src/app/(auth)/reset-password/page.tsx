@@ -14,7 +14,9 @@ export default async function ResetPasswordPage({ searchParams }: PageProps<"/re
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t("title")}</CardTitle>
+          <CardTitle className="text-2xl">
+            <h1>{t("title")}</h1>
+          </CardTitle>
           <CardDescription className="text-base">{t("invalid")}</CardDescription>
         </CardHeader>
       </Card>

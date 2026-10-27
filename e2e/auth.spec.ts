@@ -19,15 +19,22 @@ test("visitors without a session are sent to the login page", async ({ page }) =
 
 test("an invitation creates the account and pushes for a passkey", async ({ page }) => {
   const email = uniqueEmail("invite");
-  await acceptInvitation(page, invite(email, "COACH"), "Andrea Test");
+  const link = invite(email, "COACH");
+  await acceptInvitation(page, link, "Andrea Test");
 
   await expect(page.getByText("Schneller anmelden mit Passkey")).toBeVisible();
   await page.getByRole("button", { name: "Später" }).click();
-  await expect(page.getByText("Angemeldet als Andrea Test (Leiter/-in)")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Angemeldet als Andrea Test" })).toBeVisible();
+  await page.goto("/account");
+  await expect(page.getByText(/Andrea Test · .* · Leiter\/-in/)).toBeVisible();
 
-  // The link is single-use.
+  // The link is single-use: opening it again shows it as used.
   await signOut(page);
-  await page.goto(invite(email, "COACH").replace(/[^/]+$/, "x".repeat(43)));
+  await page.goto(link);
+  await expect(page.getByText(/ungültig, abgelaufen oder wurde bereits verwendet/)).toBeVisible();
+
+  // Unknown (well-formed) tokens get the same answer.
+  await page.goto(link.replace(/[^/]+$/, "x".repeat(43)));
   await expect(page.getByText(/ungültig, abgelaufen oder wurde bereits verwendet/)).toBeVisible();
 });
 
@@ -50,7 +57,7 @@ test("magic link sign-in, without revealing unknown addresses", async ({ page })
     E2E_APP_URL,
   );
   await page.goto(link);
-  await expect(page.getByText("Angemeldet als Marco Test")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Angemeldet als Marco Test" })).toBeVisible();
 
   // Unknown address: identical response, but no email is sent.
   await signOut(page);
@@ -94,7 +101,7 @@ test("password fallback: policy, sign-in and lockout", async ({ page }) => {
   await page.getByLabel("E-Mail-Adresse").fill(email);
   await page.getByLabel("Passwort").fill(good);
   await page.getByRole("button", { name: "Anmelden", exact: true }).click();
-  await expect(page.getByText("Angemeldet als Nina Test")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Angemeldet als Nina Test" })).toBeVisible();
 
   // Three wrong passwords (AUTH_MAX_FAILED_SIGNINS=3 in e2e) lock password sign-in…
   await signOut(page);
@@ -118,14 +125,15 @@ test("passkey: set up after invitation, then sign in with it", async ({ page }) 
   await acceptInvitation(page, invite(email), "Luca Test");
 
   await page.getByRole("button", { name: "Passkey einrichten" }).click();
-  await expect(page.getByText("Angemeldet als Luca Test")).toBeVisible();
+  // The welcome page forwards to the lessons once the passkey is stored.
+  await page.waitForURL("**/lessons");
 
   await page.goto("/account");
   await expect(page.getByText(/Eingerichtet am/)).toBeVisible();
 
   await signOut(page);
   await page.getByRole("button", { name: "Mit Passkey anmelden" }).click();
-  await expect(page.getByText("Angemeldet als Luca Test")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Angemeldet als Luca Test" })).toBeVisible();
 });
 
 test("server actions reject unauthenticated and malformed calls", async ({ request }) => {

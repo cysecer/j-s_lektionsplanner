@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 3 – Anmeldung und Rollen).
+> Status: im Aufbau (Phase 4 – Navigation und Sprachen).
 
 ## Voraussetzungen
 
@@ -65,3 +65,9 @@ bricht die App mit einer verständlichen Meldung ab.
 ## Sicherheit
 
 Anmeldung, Rollen und Eingabevalidierung sind in [SECURITY.md](SECURITY.md) beschrieben.
+
+## Sprachen
+
+Oberfläche auf Deutsch (Schweiz), Französisch, Italienisch, Rumantsch und Englisch. Die Sprache
+wird pro Person gespeichert. Status der Übersetzungen und Anleitung für neue Sprachen:
+[TRANSLATIONS.md](TRANSLATIONS.md).

@@ -3,6 +3,7 @@ import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
+import { localeSchema } from "@/i18n/config";
 import { db } from "@/lib/db";
 import { hashToken, tokenSchema } from "./tokens";
 
@@ -23,6 +24,8 @@ export const invitationPlugin = () =>
           body: z.strictObject({
             token: tokenSchema,
             name: z.string().trim().min(1).max(100),
+            /** Language shown while accepting; becomes the account's language. */
+            locale: localeSchema,
           }),
         },
         async (ctx) => {
@@ -51,7 +54,7 @@ export const invitationPlugin = () =>
                   email: invitation.email,
                   name: ctx.body.name,
                   emailVerified: true,
-                  locale: invitation.locale,
+                  locale: ctx.body.locale,
                 },
                 { method: "invitation" },
               ));

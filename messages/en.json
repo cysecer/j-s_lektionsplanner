@@ -1,0 +1,188 @@
+{
+  "app": {
+    "name": "Lesson Planner",
+    "description": "Plan, export and send lesson plans for J+S groups."
+  },
+  "common": {
+    "email": "Email address",
+    "name": "Name",
+    "password": "Password",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "back": "Back",
+    "loading": "Loading …",
+    "or": "or",
+    "close": "Close",
+    "unknownError": "Something went wrong. Please try again."
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "COACH": "Coach",
+    "READER": "Read only"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "intro": "Sign in with your passkey or get a sign-in link by email.",
+      "withPasskey": "Sign in with passkey",
+      "passkeyHint": "Face ID, fingerprint, Windows Hello or your device's screen lock.",
+      "sendLink": "Send sign-in link",
+      "linkSentTitle": "Check your inbox",
+      "linkSent": "If an account exists for {email}, we've sent you a sign-in link. It is valid for 15 minutes and can only be used once.",
+      "usePassword": "Sign in with a password instead",
+      "useLink": "Get a sign-in link instead",
+      "submitPassword": "Sign in",
+      "forgotPassword": "Forgot your password?",
+      "failed": "Sign-in failed. After several failed attempts, password sign-in is temporarily locked – the sign-in link by email keeps working.",
+      "passkeyFailed": "Signing in with a passkey didn't work. Maybe no passkey has been set up on this device yet.",
+      "linkInvalid": "The sign-in link is invalid or has expired. Please request a new one.",
+      "rateLimited": "Too many attempts. Please wait a moment.",
+      "inviteOnly": "Access by invitation only. Please contact the people in charge at your club."
+    },
+    "signOut": "Sign out",
+    "signOutEverywhere": "Sign out on all devices",
+    "invitation": {
+      "title": "Welcome to the Lesson Planner",
+      "intro": "{clubName} has invited you as {role}.",
+      "nameLabel": "Your name",
+      "accept": "Accept invitation",
+      "invalid": "This invitation is invalid, has expired or has already been used. Please ask for a new invitation."
+    },
+    "passkeyPrompt": {
+      "title": "Sign in faster with a passkey",
+      "body": "With a passkey you'll sign in using Face ID, your fingerprint or Windows Hello – no password, no waiting for an email. It's also more secure.",
+      "create": "Set up passkey",
+      "later": "Later"
+    },
+    "account": {
+      "title": "My account",
+      "passkeys": "Passkeys",
+      "passkeysIntro": "Set up a passkey on every device you use (phone, tablet, computer).",
+      "noPasskeys": "No passkey set up yet.",
+      "addPasskey": "Add a passkey for this device",
+      "passkeyAdded": "Passkey set up.",
+      "passkeyAddFailed": "The passkey could not be set up.",
+      "removePasskey": "Remove",
+      "removePasskeyConfirm": "Really remove this passkey? You won't be able to sign in with a passkey on that device anymore.",
+      "passkeyCreated": "Set up on {date}",
+      "unnamedPasskey": "Passkey",
+      "unknownDevice": "Device",
+      "password": "Password (fallback)",
+      "passwordIntro": "Optional. For when neither a passkey nor email is available. At least 15 characters – a sentence of several words is ideal.",
+      "passwordSet": "A password is set.",
+      "noPassword": "No password set.",
+      "newPassword": "New password",
+      "currentPassword": "Current password",
+      "setPassword": "Set password",
+      "changePassword": "Change password",
+      "passwordSaved": "Password saved.",
+      "sessions": "Signed-in devices",
+      "signOutEverywhereHint": "Ends your session on all devices, including this one. Useful if you've lost a device or signed in on someone else's computer."
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "intro": "Enter your email address. If an account exists, you'll receive a link to reset your password.",
+      "submit": "Request link",
+      "sent": "If an account exists for this address, a link is on its way. It is valid for 30 minutes."
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "submit": "Save password",
+      "done": "Your password has been changed. All devices have been signed out.",
+      "invalid": "The link is invalid or has expired."
+    }
+  },
+  "password": {
+    "tooShort": "At least {min} characters. Tip: combine several words into a sentence.",
+    "tooLong": "At most {max} characters.",
+    "common": "This password is known from data breaches. Please choose another one.",
+    "repetitive": "Please avoid repetitions like “aaaa” or “abcabc”.",
+    "sequential": "Please avoid sequences like “abcdef” or “123456”.",
+    "contextual": "The password is too close to your name, your email address or the club.",
+    "wrongCurrent": "The current password is incorrect."
+  },
+  "validation": {
+    "invalid": "Invalid input.",
+    "required": "Required.",
+    "email": "Please enter a valid email address.",
+    "tooLong": "Too long.",
+    "clockTime": "Please use the format HH:MM, e.g. 18:00.",
+    "richTextTooLong": "The text is too long.",
+    "layoutColumnLabelRequired": "Every column needs a heading.",
+    "layoutDuplicateColumn": "Duplicate column.",
+    "layoutDuplicateField": "A field can only appear in one column."
+  },
+  "errors": {
+    "unauthorized": "Please sign in.",
+    "forbidden": "You don't have permission to do that.",
+    "notFound": "Not found.",
+    "conflict": "An entry with this name already exists.",
+    "rateLimited": "Too many requests. Please wait a moment.",
+    "validation": "Please check your input.",
+    "internal": "Something went wrong. Please try again."
+  },
+  "email": {
+    "greeting": "Hello {name}",
+    "greetingAnonymous": "Hello",
+    "signature": "Your Lesson Planner",
+    "ignore": "If you didn't request this, you can ignore this email.",
+    "magicLink": {
+      "subject": "Your sign-in link for the Lesson Planner",
+      "body": "Use this link to sign in. It is valid for 15 minutes and works only once:",
+      "button": "Sign in now"
+    },
+    "invitation": {
+      "subject": "Invitation to the Lesson Planner of {clubName}",
+      "body": "{inviter} invites you as {role} to the Lesson Planner of {clubName}. The invitation is valid for {days} days:",
+      "bodyNoInviter": "You've been invited as {role} to the Lesson Planner of {clubName}. The invitation is valid for {days} days:",
+      "button": "Accept invitation"
+    },
+    "resetPassword": {
+      "subject": "Reset your password",
+      "body": "Use this link to set a new password. It is valid for 30 minutes:",
+      "button": "Set a new password"
+    }
+  },
+  "nav": {
+    "main": "Main navigation",
+    "lessons": "Lessons",
+    "blocks": "Program blocks",
+    "settings": "Settings",
+    "account": "My account",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "userMenu": "User menu",
+    "skipToContent": "Skip to content"
+  },
+  "header": {
+    "team": "Group",
+    "allTeams": "All groups",
+    "teamHint": "Lists only show entries of the selected group.",
+    "language": "Language",
+    "signedInAs": "Signed in as {name}"
+  },
+  "lessons": {
+    "title": "Lessons",
+    "intro": "Your lesson plans. You put new lessons together from program blocks.",
+    "comingSoon": "The lesson overview and editor will be built next."
+  },
+  "blocks": {
+    "title": "Program blocks",
+    "intro": "Your club's library of games and exercises.",
+    "comingSoon": "The library will be built next."
+  },
+  "settings": {
+    "title": "Settings",
+    "intro": "Manage the club, groups, coaches, people and the PDF layout.",
+    "comingSoon": "The settings will be built next."
+  },
+  "dialog": {
+    "confirm": "Confirm",
+    "areYouSure": "Are you sure?"
+  },
+  "units": {
+    "minutes": "{count, plural, one {# minute} other {# minutes}}",
+    "minutesShort": "{count} min"
+  }
+}

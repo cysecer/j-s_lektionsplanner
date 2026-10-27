@@ -12,15 +12,12 @@ export type Locale = (typeof LOCALES)[number];
 
 export const localeSchema = z.enum(LOCALES);
 
-/**
- * Locale used for date/number formatting. Romansh has no complete CLDR data
- * in all runtimes, so it formats like Swiss German.
- */
+/** Locale used for date/number formatting: Swiss conventions for every language. */
 export const FORMAT_LOCALE: Record<Locale, string> = {
   "de-CH": "de-CH",
   "fr-CH": "fr-CH",
   "it-CH": "it-CH",
-  rm: "de-CH",
+  rm: "rm-CH",
   en: "en-CH",
 };
 
@@ -46,3 +43,12 @@ export function negotiateLocale(acceptLanguage: string | null | undefined): Loca
   }
   return DEFAULT_LOCALE;
 }
+
+/** Each language in its own name (identical in every UI language). */
+export const LANGUAGE_NAMES: Record<Locale, string> = {
+  "de-CH": "Deutsch",
+  "fr-CH": "Français",
+  "it-CH": "Italiano",
+  rm: "Rumantsch",
+  en: "English",
+};

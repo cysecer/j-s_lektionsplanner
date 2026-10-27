@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PasskeySetupButton } from "./passkey-setup-button";
 
-/** Shown to users without a passkey until they set one up or dismiss it. */
-export function PasskeyNudge({ onLater }: { onLater?: () => void }) {
+/** Per-device "later" choice; the banner returns after 30 days. */
+export const PASSKEY_NUDGE_COOKIE = "passkey_nudge";
+
+/** Shown to users without a passkey until they set one up or postpone it. */
+export function PasskeyNudge() {
   const t = useTranslations("auth.passkeyPrompt");
   const [hidden, setHidden] = useState(false);
   if (hidden) return null;
@@ -24,8 +27,8 @@ export function PasskeyNudge({ onLater }: { onLater?: () => void }) {
           variant="ghost"
           className="h-12"
           onClick={() => {
+            document.cookie = `${PASSKEY_NUDGE_COOKIE}=dismissed; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
             setHidden(true);
-            onLater?.();
           }}
         >
           {t("later")}

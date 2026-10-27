@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
 import { FormField } from "@/components/form-field";
@@ -19,6 +19,7 @@ export function AcceptInvitationForm(props: {
   intro: string;
 }) {
   const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const [name, setName] = useState(props.suggestedName);
   const [nameError, setNameError] = useState<string>();
@@ -36,7 +37,7 @@ export function AcceptInvitationForm(props: {
     setBusy(true);
     const { error } = await authClient.$fetch("/invitation/accept", {
       method: "POST",
-      body: { token: props.token, name: parsed.data },
+      body: { token: props.token, name: parsed.data, locale },
     });
     if (error) {
       setBusy(false);
@@ -50,7 +51,9 @@ export function AcceptInvitationForm(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">{t("auth.invitation.title")}</CardTitle>
+        <CardTitle className="text-2xl">
+          <h1>{t("auth.invitation.title")}</h1>
+        </CardTitle>
         <CardDescription className="text-base">{props.intro}</CardDescription>
       </CardHeader>
       <CardContent>

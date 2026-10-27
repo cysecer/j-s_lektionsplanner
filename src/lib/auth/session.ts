@@ -20,6 +20,8 @@ export type Viewer = {
   clubId: string;
   role: Role;
   coachId: string | null;
+  /** Team selected in the header; null = all teams. */
+  activeTeamId: string | null;
   permissions: Permissions;
 };
 
@@ -43,7 +45,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const membership = await db.membership.findFirst({
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
-    select: { clubId: true, role: true, coachId: true },
+    select: { clubId: true, role: true, coachId: true, activeTeamId: true },
   });
   if (!membership) return null;
 
@@ -56,6 +58,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     clubId: membership.clubId,
     role: membership.role,
     coachId: membership.coachId,
+    activeTeamId: membership.activeTeamId,
     permissions: permissionsFor(membership.role),
   };
 });

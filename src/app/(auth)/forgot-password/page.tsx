@@ -34,7 +34,9 @@ export default function ForgotPasswordPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">{t("auth.forgotPassword.title")}</CardTitle>
+        <CardTitle className="text-2xl">
+          <h1>{t("auth.forgotPassword.title")}</h1>
+        </CardTitle>
         <CardDescription className="text-base">{t("auth.forgotPassword.intro")}</CardDescription>
       </CardHeader>
       <CardContent>

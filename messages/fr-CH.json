@@ -1,0 +1,188 @@
+{
+  "app": {
+    "name": "Planificateur de leçons",
+    "description": "Planifier, exporter et envoyer des préparations de leçon pour les groupes J+S."
+  },
+  "common": {
+    "email": "Adresse e-mail",
+    "name": "Nom",
+    "password": "Mot de passe",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "loading": "Chargement …",
+    "or": "ou",
+    "close": "Fermer",
+    "unknownError": "Une erreur s'est produite. Merci de réessayer."
+  },
+  "roles": {
+    "ADMIN": "Administrateur/-trice",
+    "COACH": "Moniteur/-trice",
+    "READER": "Lecture seule"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Connexion",
+      "intro": "Connecte-toi avec ta clé d'accès (passkey) ou reçois un lien de connexion par e-mail.",
+      "withPasskey": "Se connecter avec une passkey",
+      "passkeyHint": "Face ID, empreinte digitale, Windows Hello ou verrouillage d'écran de ton appareil.",
+      "sendLink": "Envoyer le lien de connexion",
+      "linkSentTitle": "Consulte ta boîte de réception",
+      "linkSent": "Si un compte existe pour {email}, nous t'avons envoyé un lien de connexion. Il est valable 15 minutes et ne peut être utilisé qu'une seule fois.",
+      "usePassword": "Se connecter plutôt avec un mot de passe",
+      "useLink": "Recevoir plutôt un lien de connexion",
+      "submitPassword": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "failed": "La connexion a échoué. Après plusieurs tentatives infructueuses, la connexion par mot de passe est temporairement bloquée – le lien de connexion par e-mail fonctionne toujours.",
+      "passkeyFailed": "La connexion avec une passkey n'a pas fonctionné. Aucune passkey n'est peut-être encore configurée sur cet appareil.",
+      "linkInvalid": "Le lien de connexion est invalide ou a expiré. Merci d'en demander un nouveau.",
+      "rateLimited": "Trop de tentatives. Merci de patienter un instant.",
+      "inviteOnly": "Accès sur invitation uniquement. Adresse-toi aux responsables de ta société."
+    },
+    "signOut": "Se déconnecter",
+    "signOutEverywhere": "Se déconnecter de tous les appareils",
+    "invitation": {
+      "title": "Bienvenue dans le planificateur de leçons",
+      "intro": "{clubName} t'a invité·e en tant que {role}.",
+      "nameLabel": "Ton nom",
+      "accept": "Accepter l'invitation",
+      "invalid": "Cette invitation est invalide, a expiré ou a déjà été utilisée. Merci de demander une nouvelle invitation."
+    },
+    "passkeyPrompt": {
+      "title": "Connexion plus rapide avec une passkey",
+      "body": "Avec une passkey, tu te connectes désormais avec Face ID, ton empreinte digitale ou Windows Hello – sans mot de passe et sans attendre d'e-mail. C'est aussi plus sûr.",
+      "create": "Configurer une passkey",
+      "later": "Plus tard"
+    },
+    "account": {
+      "title": "Mon compte",
+      "passkeys": "Passkeys",
+      "passkeysIntro": "Configure une passkey sur chaque appareil que tu utilises (téléphone, tablette, ordinateur).",
+      "noPasskeys": "Aucune passkey configurée pour l'instant.",
+      "addPasskey": "Ajouter une passkey pour cet appareil",
+      "passkeyAdded": "Passkey configurée.",
+      "passkeyAddFailed": "La passkey n'a pas pu être configurée.",
+      "removePasskey": "Supprimer",
+      "removePasskeyConfirm": "Vraiment supprimer cette passkey ? La connexion par passkey ne sera plus possible sur cet appareil.",
+      "passkeyCreated": "Configurée le {date}",
+      "unnamedPasskey": "Passkey",
+      "unknownDevice": "Appareil",
+      "password": "Mot de passe (solution de secours)",
+      "passwordIntro": "Facultatif. Pour le cas où ni passkey ni e-mail ne sont disponibles. Au moins 15 caractères – une phrase de plusieurs mots est idéale.",
+      "passwordSet": "Un mot de passe est défini.",
+      "noPassword": "Aucun mot de passe défini.",
+      "newPassword": "Nouveau mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "setPassword": "Définir le mot de passe",
+      "changePassword": "Modifier le mot de passe",
+      "passwordSaved": "Mot de passe enregistré.",
+      "sessions": "Appareils connectés",
+      "signOutEverywhereHint": "Met fin à ta connexion sur tous les appareils, y compris celui-ci. Utile si tu as perdu un appareil ou si tu t'es connecté·e sur un ordinateur étranger."
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "intro": "Saisis ton adresse e-mail. Si un compte existe, tu recevras un lien de réinitialisation.",
+      "submit": "Demander un lien",
+      "sent": "Si un compte existe pour cette adresse, un lien est en route. Il est valable 30 minutes."
+    },
+    "resetPassword": {
+      "title": "Définir un nouveau mot de passe",
+      "submit": "Enregistrer le mot de passe",
+      "done": "Ton mot de passe a été modifié. Tous les appareils ont été déconnectés.",
+      "invalid": "Le lien est invalide ou a expiré."
+    }
+  },
+  "password": {
+    "tooShort": "Au moins {min} caractères. Astuce : relier plusieurs mots en une phrase.",
+    "tooLong": "Au maximum {max} caractères.",
+    "common": "Ce mot de passe est connu suite à des fuites de données. Merci d'en choisir un autre.",
+    "repetitive": "Pas de répétitions comme « aaaa » ou « abcabc », s'il te plaît.",
+    "sequential": "Pas de suites comme « abcdef » ou « 123456 », s'il te plaît.",
+    "contextual": "Le mot de passe est trop proche de ton nom, de ton adresse e-mail ou de la société.",
+    "wrongCurrent": "Le mot de passe actuel est incorrect."
+  },
+  "validation": {
+    "invalid": "Saisie invalide.",
+    "required": "Champ obligatoire.",
+    "email": "Merci de saisir une adresse e-mail valide.",
+    "tooLong": "Trop long.",
+    "clockTime": "Merci de saisir au format HH:MM, p. ex. 18:00.",
+    "richTextTooLong": "Le texte est trop long.",
+    "layoutColumnLabelRequired": "Chaque colonne a besoin d'un titre.",
+    "layoutDuplicateColumn": "Colonne en double.",
+    "layoutDuplicateField": "Un champ ne peut figurer que dans une seule colonne."
+  },
+  "errors": {
+    "unauthorized": "Merci de te connecter.",
+    "forbidden": "Tu n'as pas l'autorisation nécessaire.",
+    "notFound": "Introuvable.",
+    "conflict": "Une entrée portant ce nom existe déjà.",
+    "rateLimited": "Trop de requêtes. Merci de patienter un instant.",
+    "validation": "Merci de vérifier tes saisies.",
+    "internal": "Une erreur s'est produite. Merci de réessayer."
+  },
+  "email": {
+    "greeting": "Bonjour {name}",
+    "greetingAnonymous": "Bonjour",
+    "signature": "Ton planificateur de leçons",
+    "ignore": "Si tu n'as rien demandé, tu peux ignorer cet e-mail.",
+    "magicLink": {
+      "subject": "Ton lien de connexion au planificateur de leçons",
+      "body": "Ce lien te permet de te connecter. Il est valable 15 minutes et ne fonctionne qu'une seule fois :",
+      "button": "Se connecter maintenant"
+    },
+    "invitation": {
+      "subject": "Invitation au planificateur de leçons de {clubName}",
+      "body": "{inviter} t'invite en tant que {role} au planificateur de leçons de {clubName}. L'invitation est valable {days} jours :",
+      "bodyNoInviter": "Tu es invité·e en tant que {role} au planificateur de leçons de {clubName}. L'invitation est valable {days} jours :",
+      "button": "Accepter l'invitation"
+    },
+    "resetPassword": {
+      "subject": "Réinitialiser le mot de passe",
+      "body": "Ce lien te permet de définir un nouveau mot de passe. Il est valable 30 minutes :",
+      "button": "Définir un nouveau mot de passe"
+    }
+  },
+  "nav": {
+    "main": "Navigation principale",
+    "lessons": "Leçons",
+    "blocks": "Blocs de programme",
+    "settings": "Paramètres",
+    "account": "Mon compte",
+    "openMenu": "Ouvrir le menu",
+    "menu": "Menu",
+    "userMenu": "Menu utilisateur",
+    "skipToContent": "Aller au contenu"
+  },
+  "header": {
+    "team": "Groupe",
+    "allTeams": "Tous les groupes",
+    "teamHint": "Les listes n'affichent que les entrées du groupe choisi.",
+    "language": "Langue",
+    "signedInAs": "Connecté·e en tant que {name}"
+  },
+  "lessons": {
+    "title": "Leçons",
+    "intro": "Tes préparations de leçon. Tu composes les nouvelles leçons à partir de blocs de programme.",
+    "comingSoon": "L'aperçu des leçons et l'éditeur seront construits prochainement."
+  },
+  "blocks": {
+    "title": "Blocs de programme",
+    "intro": "La bibliothèque de jeux et d'exercices de ta société.",
+    "comingSoon": "La bibliothèque sera construite prochainement."
+  },
+  "settings": {
+    "title": "Paramètres",
+    "intro": "Gérer la société, les groupes, les moniteurs, les personnes et la mise en page PDF.",
+    "comingSoon": "Les paramètres seront construits prochainement."
+  },
+  "dialog": {
+    "confirm": "Confirmer",
+    "areYouSure": "Es-tu sûr·e ?"
+  },
+  "units": {
+    "minutes": "{count, plural, one {# minute} other {# minutes}}",
+    "minutesShort": "{count} min"
+  }
+}

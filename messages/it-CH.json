@@ -1,0 +1,188 @@
+{
+  "app": {
+    "name": "Pianificatore di lezioni",
+    "description": "Pianificare, esportare e inviare preparazioni di lezioni per i gruppi G+S."
+  },
+  "common": {
+    "email": "Indirizzo e-mail",
+    "name": "Nome",
+    "password": "Password",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "back": "Indietro",
+    "loading": "Caricamento …",
+    "or": "oppure",
+    "close": "Chiudi",
+    "unknownError": "Qualcosa è andato storto. Riprova."
+  },
+  "roles": {
+    "ADMIN": "Amministratore/-trice",
+    "COACH": "Monitore/-trice",
+    "READER": "Sola lettura"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Accedi",
+      "intro": "Accedi con la tua passkey oppure fatti inviare un link di accesso via e-mail.",
+      "withPasskey": "Accedi con passkey",
+      "passkeyHint": "Face ID, impronta digitale, Windows Hello o blocco schermo del tuo dispositivo.",
+      "sendLink": "Invia link di accesso",
+      "linkSentTitle": "Controlla la tua casella di posta",
+      "linkSent": "Se esiste un account per {email}, ti abbiamo inviato un link di accesso. È valido 15 minuti e può essere usato una sola volta.",
+      "usePassword": "Accedi invece con la password",
+      "useLink": "Ricevi invece un link di accesso",
+      "submitPassword": "Accedi",
+      "forgotPassword": "Password dimenticata?",
+      "failed": "Accesso non riuscito. Dopo diversi tentativi falliti l'accesso con password viene bloccato temporaneamente – il link di accesso via e-mail continua a funzionare.",
+      "passkeyFailed": "L'accesso con passkey non è riuscito. Forse su questo dispositivo non è ancora configurata una passkey.",
+      "linkInvalid": "Il link di accesso non è valido o è scaduto. Richiedine uno nuovo.",
+      "rateLimited": "Troppi tentativi. Attendi un momento.",
+      "inviteOnly": "Accesso solo su invito. Rivolgiti ai responsabili della tua società."
+    },
+    "signOut": "Esci",
+    "signOutEverywhere": "Esci da tutti i dispositivi",
+    "invitation": {
+      "title": "Benvenuto/a nel pianificatore di lezioni",
+      "intro": "{clubName} ti ha invitato/a come {role}.",
+      "nameLabel": "Il tuo nome",
+      "accept": "Accetta l'invito",
+      "invalid": "Questo invito non è valido, è scaduto o è già stato usato. Chiedi un nuovo invito."
+    },
+    "passkeyPrompt": {
+      "title": "Accesso più rapido con una passkey",
+      "body": "Con una passkey in futuro accedi con Face ID, impronta digitale o Windows Hello – senza password e senza attendere un'e-mail. È anche più sicuro.",
+      "create": "Configura passkey",
+      "later": "Più tardi"
+    },
+    "account": {
+      "title": "Il mio account",
+      "passkeys": "Passkey",
+      "passkeysIntro": "Configura una passkey su ogni dispositivo che usi (telefono, tablet, computer).",
+      "noPasskeys": "Nessuna passkey configurata.",
+      "addPasskey": "Aggiungi passkey per questo dispositivo",
+      "passkeyAdded": "Passkey configurata.",
+      "passkeyAddFailed": "Non è stato possibile configurare la passkey.",
+      "removePasskey": "Rimuovi",
+      "removePasskeyConfirm": "Rimuovere davvero questa passkey? Su questo dispositivo non sarà più possibile accedere con la passkey.",
+      "passkeyCreated": "Configurata il {date}",
+      "unnamedPasskey": "Passkey",
+      "unknownDevice": "Dispositivo",
+      "password": "Password (alternativa)",
+      "passwordIntro": "Facoltativa. Per il caso in cui né passkey né e-mail siano disponibili. Almeno 15 caratteri – una frase di più parole è l'ideale.",
+      "passwordSet": "È impostata una password.",
+      "noPassword": "Nessuna password impostata.",
+      "newPassword": "Nuova password",
+      "currentPassword": "Password attuale",
+      "setPassword": "Imposta password",
+      "changePassword": "Cambia password",
+      "passwordSaved": "Password salvata.",
+      "sessions": "Dispositivi connessi",
+      "signOutEverywhereHint": "Termina il tuo accesso su tutti i dispositivi, anche su questo. Utile se hai perso un dispositivo o hai effettuato l'accesso su un computer altrui."
+    },
+    "forgotPassword": {
+      "title": "Password dimenticata",
+      "intro": "Inserisci il tuo indirizzo e-mail. Se esiste un account, riceverai un link per reimpostarla.",
+      "submit": "Richiedi link",
+      "sent": "Se esiste un account con questo indirizzo, un link è in arrivo. È valido 30 minuti."
+    },
+    "resetPassword": {
+      "title": "Imposta una nuova password",
+      "submit": "Salva password",
+      "done": "La tua password è stata cambiata. Tutti i dispositivi sono stati disconnessi.",
+      "invalid": "Il link non è valido o è scaduto."
+    }
+  },
+  "password": {
+    "tooShort": "Almeno {min} caratteri. Suggerimento: unire più parole in una frase.",
+    "tooLong": "Al massimo {max} caratteri.",
+    "common": "Questa password è nota da fughe di dati. Scegline un'altra.",
+    "repetitive": "Niente ripetizioni come «aaaa» o «abcabc».",
+    "sequential": "Niente sequenze come «abcdef» o «123456».",
+    "contextual": "La password è troppo simile al tuo nome, al tuo indirizzo e-mail o alla società.",
+    "wrongCurrent": "La password attuale non è corretta."
+  },
+  "validation": {
+    "invalid": "Inserimento non valido.",
+    "required": "Campo obbligatorio.",
+    "email": "Inserisci un indirizzo e-mail valido.",
+    "tooLong": "Troppo lungo.",
+    "clockTime": "Inserisci nel formato HH:MM, ad es. 18:00.",
+    "richTextTooLong": "Il testo è troppo lungo.",
+    "layoutColumnLabelRequired": "Ogni colonna ha bisogno di un titolo.",
+    "layoutDuplicateColumn": "Colonna doppia.",
+    "layoutDuplicateField": "Un campo può comparire in una sola colonna."
+  },
+  "errors": {
+    "unauthorized": "Accedi, per favore.",
+    "forbidden": "Non hai l'autorizzazione necessaria.",
+    "notFound": "Non trovato.",
+    "conflict": "Esiste già una voce con questo nome.",
+    "rateLimited": "Troppe richieste. Attendi un momento.",
+    "validation": "Controlla i dati inseriti.",
+    "internal": "Qualcosa è andato storto. Riprova."
+  },
+  "email": {
+    "greeting": "Ciao {name}",
+    "greetingAnonymous": "Ciao",
+    "signature": "Il tuo pianificatore di lezioni",
+    "ignore": "Se non l'hai richiesto, puoi ignorare questa e-mail.",
+    "magicLink": {
+      "subject": "Il tuo link di accesso al pianificatore di lezioni",
+      "body": "Con questo link accedi. È valido 15 minuti e funziona una sola volta:",
+      "button": "Accedi ora"
+    },
+    "invitation": {
+      "subject": "Invito al pianificatore di lezioni di {clubName}",
+      "body": "{inviter} ti invita come {role} al pianificatore di lezioni di {clubName}. L'invito è valido {days} giorni:",
+      "bodyNoInviter": "Sei invitato/a come {role} al pianificatore di lezioni di {clubName}. L'invito è valido {days} giorni:",
+      "button": "Accetta l'invito"
+    },
+    "resetPassword": {
+      "subject": "Reimpostare la password",
+      "body": "Con questo link imposti una nuova password. È valido 30 minuti:",
+      "button": "Imposta una nuova password"
+    }
+  },
+  "nav": {
+    "main": "Navigazione principale",
+    "lessons": "Lezioni",
+    "blocks": "Blocchi di programma",
+    "settings": "Impostazioni",
+    "account": "Il mio account",
+    "openMenu": "Apri menu",
+    "menu": "Menu",
+    "userMenu": "Menu utente",
+    "skipToContent": "Vai al contenuto"
+  },
+  "header": {
+    "team": "Gruppo",
+    "allTeams": "Tutti i gruppi",
+    "teamHint": "Gli elenchi mostrano solo le voci del gruppo scelto.",
+    "language": "Lingua",
+    "signedInAs": "Accesso come {name}"
+  },
+  "lessons": {
+    "title": "Lezioni",
+    "intro": "Le tue preparazioni di lezioni. Componi le nuove lezioni a partire dai blocchi di programma.",
+    "comingSoon": "La panoramica delle lezioni e l'editor saranno realizzati prossimamente."
+  },
+  "blocks": {
+    "title": "Blocchi di programma",
+    "intro": "La biblioteca di giochi ed esercizi della tua società.",
+    "comingSoon": "La biblioteca sarà realizzata prossimamente."
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "intro": "Gestire società, gruppi, monitori, persone e impaginazione PDF.",
+    "comingSoon": "Le impostazioni saranno realizzate prossimamente."
+  },
+  "dialog": {
+    "confirm": "Conferma",
+    "areYouSure": "Sei sicuro/a?"
+  },
+  "units": {
+    "minutes": "{count, plural, one {# minuto} other {# minuti}}",
+    "minutesShort": "{count} min"
+  }
+}
