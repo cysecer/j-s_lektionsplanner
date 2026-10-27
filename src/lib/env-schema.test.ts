@@ -51,10 +51,9 @@ describe("parseEnv", () => {
   });
 
   it("parses trusted proxies and rejects malformed entries", () => {
-    expect(parseEnv({ ...valid, TRUSTED_PROXIES: "10.0.0.0/8, 172.18.0.1" }).TRUSTED_PROXIES).toEqual([
-      "10.0.0.0/8",
-      "172.18.0.1",
-    ]);
+    expect(
+      parseEnv({ ...valid, TRUSTED_PROXIES: "10.0.0.0/8, 172.18.0.1" }).TRUSTED_PROXIES,
+    ).toEqual(["10.0.0.0/8", "172.18.0.1"]);
     expect(parseEnv(valid).TRUSTED_PROXIES).toEqual([]);
     expect(() => parseEnv({ ...valid, TRUSTED_PROXIES: "proxy.local" })).toThrow(/TRUSTED_PROXIES/);
   });
