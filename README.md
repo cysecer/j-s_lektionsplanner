@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 1 – Projektgrundlage).
+> Status: im Aufbau (Phase 2 – Datenmodell und Demodaten).
 
 ## Voraussetzungen
 
@@ -16,7 +16,9 @@ Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 ```bash
 cp .env.example .env          # Werte bei Bedarf anpassen
 docker compose up -d          # Postgres + Mailpit
-npm install
+npm install                   # erzeugt auch den Prisma-Client
+npm run db:migrate            # Datenbankschema anlegen
+npm run db:seed               # Demodaten (Beispiel-Lektion "Spiele")
 npm run dev                   # http://localhost:3000
 ```
 
@@ -24,15 +26,26 @@ Alle E-Mails werden in der Entwicklung von Mailpit abgefangen: <http://localhost
 
 ## Befehle
 
-| Befehl              | Zweck                                       |
-| ------------------- | ------------------------------------------- |
-| `npm run dev`       | Entwicklungsserver                          |
-| `npm run build`     | Produktions-Build                           |
-| `npm run typecheck` | TypeScript-Prüfung (strict)                 |
-| `npm run lint`      | ESLint                                      |
-| `npm run format`    | Prettier                                    |
-| `npm test`          | Unit-Tests (Vitest)                         |
-| `npm run test:e2e`  | End-to-End-Tests (Playwright, baut die App) |
+| Befehl               | Zweck                                        |
+| -------------------- | -------------------------------------------- |
+| `npm run dev`        | Entwicklungsserver                           |
+| `npm run build`      | Produktions-Build                            |
+| `npm run typecheck`  | TypeScript-Prüfung (strict)                  |
+| `npm run lint`       | ESLint                                       |
+| `npm run format`     | Prettier                                     |
+| `npm test`           | Unit-Tests (Vitest)                          |
+| `npm run test:e2e`   | End-to-End-Tests (Playwright, baut die App)  |
+| `npm run db:migrate` | Migrationen erstellen/anwenden (Entwicklung) |
+| `npm run db:deploy`  | Migrationen anwenden (Produktion)            |
+| `npm run db:seed`    | Demodaten laden (nur in leere Datenbank)     |
+| `npm run db:reset`   | Datenbank leeren, migrieren, Demodaten laden |
+
+## Datenmodell
+
+Schema: [prisma/schema.prisma](prisma/schema.prisma). Alle Daten hängen an einem Verein
+(`clubId`), damit später mehrere Vereine pro Installation möglich sind. Programmblöcke werden beim
+Einfügen in eine Lektion als Kopie (Snapshot) übernommen; spätere Änderungen in der Bibliothek
+verändern alte Lektionen nicht. Die Volltextsuche nutzt Postgres mit deutscher Stammformbildung.
 
 Für die E2E-Tests einmalig den Browser installieren: `npx playwright install chromium`.
 

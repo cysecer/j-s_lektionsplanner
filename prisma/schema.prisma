@@ -1,0 +1,364 @@
+// Data model for the Lektionsplaner.
+//
+// Multi-tenant ready: every top-level entity carries a clubId. The app runs
+// with a single club for now, but all queries are scoped by club.
+//
+// Rich-text columns hold the restricted Tiptap JSON format validated by
+// src/lib/rich-text/schema.ts; layout configs are validated by
+// src/lib/layout/schema.ts. JSON is never written without passing those.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  DEMANDING
+}
+
+enum LessonStatus {
+  DRAFT
+  FINAL
+}
+
+enum CustomFieldType {
+  SHORT_TEXT
+  LONG_TEXT
+  LIST
+  NUMBER
+  IMAGE
+}
+
+/// The three sections every club starts with. Their names are translated;
+/// clubs may rename them or add further custom sections.
+enum BuiltinSection {
+  INTRO
+  MAIN
+  END
+}
+
+model Club {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  name            String
+  logoAssetId     String?  @unique @db.Uuid
+  /// Optional text in the PDF footer (e.g. "J+S-Kindersport").
+  pdfFooterText   String?
+  defaultLayoutId String?  @unique @db.Uuid
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  logo          Asset?         @relation("ClubLogo", fields: [logoAssetId], references: [id], onDelete: SetNull)
+  defaultLayout Layout?        @relation("ClubDefaultLayout", fields: [defaultLayoutId], references: [id], onDelete: SetNull)
+  teams         Team[]
+  coaches       Coach[]
+  tags          Tag[]
+  sections      Section[]
+  customFields  CustomField[]
+  layouts       Layout[]
+  assets        Asset[]        @relation("ClubAssets")
+  programBlocks ProgramBlock[]
+  lessons       Lesson[]
+}
+
+/// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
+model Team {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clubId    String   @db.Uuid
+  name      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  club          Club               @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coaches       CoachTeam[]
+  programBlocks ProgramBlockTeam[]
+  lessons       Lesson[]
+
+  @@unique([clubId, name])
+  @@index([clubId, sortOrder])
+}
+
+/// Leiter/-in. Just a name; optionally linked to teams (and later to a user).
+model Coach {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clubId    String   @db.Uuid
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  club                 Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  teams                CoachTeam[]
+  responsibleForBlocks ProgramBlock[]
+  responsibleForItems  LessonItem[]
+  presentInLessons     LessonCoach[]
+
+  @@unique([clubId, name])
+}
+
+model CoachTeam {
+  coachId String @db.Uuid
+  teamId  String @db.Uuid
+
+  coach Coach @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  team  Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([coachId, teamId])
+  @@index([teamId])
+}
+
+model Tag {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clubId    String   @db.Uuid
+  name      String
+  createdAt DateTime @default(now())
+
+  club          Club              @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  programBlocks ProgramBlockTag[]
+
+  @@unique([clubId, name])
+}
+
+/// A section of a lesson (Einleitung / Hauptteil / Ausklang, or custom).
+model Section {
+  id        String          @id @default(uuid(7)) @db.Uuid
+  clubId    String          @db.Uuid
+  /// Set for the three built-in sections; their default names are translated.
+  builtin   BuiltinSection?
+  /// Custom name. When null, the translated name of `builtin` is shown.
+  name      String?
+  sortOrder Int             @default(0)
+
+  club            Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  suggestedBlocks ProgramBlock[]
+  lessonItems     LessonItem[]
+
+  @@unique([clubId, builtin])
+  @@index([clubId, sortOrder])
+}
+
+/// Admin-defined extra field on program blocks. Values are stored in
+/// ProgramBlock.customValues / LessonItem.customValues keyed by this id.
+model CustomField {
+  id         String          @id @default(uuid(7)) @db.Uuid
+  clubId     String          @db.Uuid
+  label      String
+  type       CustomFieldType
+  sortOrder  Int             @default(0)
+  /// Included in the full-text search (text and list types only).
+  searchable Boolean         @default(true)
+  /// Filterable in the library (short text, number).
+  filterable Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  @@unique([clubId, label])
+  @@index([clubId, sortOrder])
+}
+
+/// Saved program-block row layout (columns and the fields inside them).
+model Layout {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clubId    String   @db.Uuid
+  name      String
+  /// LayoutConfig, see src/lib/layout/schema.ts
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  club           Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  defaultForClub Club?    @relation("ClubDefaultLayout")
+  lessons        Lesson[]
+
+  @@unique([clubId, name])
+}
+
+/// Uploaded image (sketch, logo, custom image field). Immutable once stored,
+/// so lesson snapshots can share them with library blocks safely.
+model Asset {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  clubId     String   @db.Uuid
+  storageKey String   @unique
+  mimeType   String
+  width      Int
+  height     Int
+  byteSize   Int
+  createdAt  DateTime @default(now())
+
+  club               Club                 @relation("ClubAssets", fields: [clubId], references: [id], onDelete: Cascade)
+  logoOfClub         Club?                @relation("ClubLogo")
+  blockSketches      ProgramBlockSketch[]
+  lessonItemSketches LessonItemSketch[]
+
+  @@index([clubId])
+}
+
+/// Reusable library item (game / exercise).
+model ProgramBlock {
+  id                 String      @id @default(uuid(7)) @db.Uuid
+  clubId             String      @db.Uuid
+  title              String
+  durationMinutes    Int?
+  description        Json?
+  rules              Json?
+  variations         String[]
+  organization       Json?
+  material           String[]
+  responsibleCoachId String?     @db.Uuid
+  responsibleText    String?
+  suggestedSectionId String?     @db.Uuid
+  ageMin             Int?
+  ageMax             Int?
+  difficulty         Difficulty?
+  /// Values of custom fields, keyed by CustomField.id.
+  customValues       Json        @default("{}")
+  /// Plain-text concatenation of all searchable content; indexed for
+  /// German full-text search (see migration).
+  searchText         String      @default("")
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  club             Club                 @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  responsibleCoach Coach?               @relation(fields: [responsibleCoachId], references: [id], onDelete: SetNull)
+  suggestedSection Section?             @relation(fields: [suggestedSectionId], references: [id], onDelete: SetNull)
+  /// No teams means the block is available club-wide.
+  teams            ProgramBlockTeam[]
+  tags             ProgramBlockTag[]
+  sketches         ProgramBlockSketch[]
+  usedInItems      LessonItem[]
+
+  @@index([clubId, title])
+  @@index([clubId, durationMinutes])
+}
+
+model ProgramBlockTeam {
+  blockId String @db.Uuid
+  teamId  String @db.Uuid
+
+  block ProgramBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  team  Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([blockId, teamId])
+  @@index([teamId])
+}
+
+model ProgramBlockTag {
+  blockId String @db.Uuid
+  tagId   String @db.Uuid
+
+  block ProgramBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  tag   Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([blockId, tagId])
+  @@index([tagId])
+}
+
+model ProgramBlockSketch {
+  blockId   String @db.Uuid
+  assetId   String @db.Uuid
+  sortOrder Int    @default(0)
+
+  block ProgramBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  asset Asset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
+
+  @@id([blockId, assetId])
+  @@index([assetId])
+}
+
+/// Lektionsvorbereitung (training session plan).
+model Lesson {
+  id                   String       @id @default(uuid(7)) @db.Uuid
+  clubId               String       @db.Uuid
+  teamId               String?      @db.Uuid
+  layoutId             String?      @db.Uuid
+  title                String
+  authorName           String
+  date                 DateTime     @db.Date
+  /// Minutes after midnight; when set, clock times are shown per item.
+  startTimeMinutes     Int?
+  totalDurationMinutes Int?
+  location             String?
+  ageMin               Int?
+  ageMax               Int?
+  groupSize            String?
+  difficulty           Difficulty?
+  safety               Json?
+  goals                Json?
+  notes                Json?
+  status               LessonStatus @default(DRAFT)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  club           Club          @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  team           Team?         @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  layout         Layout?       @relation(fields: [layoutId], references: [id], onDelete: SetNull)
+  presentCoaches LessonCoach[]
+  items          LessonItem[]
+
+  @@index([clubId, date])
+  @@index([clubId, teamId, date])
+}
+
+model LessonCoach {
+  lessonId String @db.Uuid
+  coachId  String @db.Uuid
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  coach  Coach  @relation(fields: [coachId], references: [id], onDelete: Cascade)
+
+  @@id([lessonId, coachId])
+  @@index([coachId])
+}
+
+/// A program block placed in a lesson: a snapshot copy of the block's content
+/// so later library edits never change past lessons silently.
+model LessonItem {
+  id                 String   @id @default(uuid(7)) @db.Uuid
+  lessonId           String   @db.Uuid
+  sectionId          String   @db.Uuid
+  sortOrder          Int
+  /// Library block this item was copied from; null for one-off items.
+  sourceBlockId      String?  @db.Uuid
+  /// True once the snapshot was edited and differs from its source block.
+  modifiedLocally    Boolean  @default(false)
+  title              String
+  durationMinutes    Int?
+  description        Json?
+  rules              Json?
+  variations         String[]
+  organization       Json?
+  material           String[]
+  responsibleCoachId String?  @db.Uuid
+  responsibleText    String?
+  customValues       Json     @default("{}")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  lesson           Lesson             @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  section          Section            @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  sourceBlock      ProgramBlock?      @relation(fields: [sourceBlockId], references: [id], onDelete: SetNull)
+  responsibleCoach Coach?             @relation(fields: [responsibleCoachId], references: [id], onDelete: SetNull)
+  sketches         LessonItemSketch[]
+
+  @@index([lessonId, sectionId, sortOrder])
+  @@index([sourceBlockId])
+}
+
+model LessonItemSketch {
+  itemId    String @db.Uuid
+  assetId   String @db.Uuid
+  sortOrder Int    @default(0)
+
+  item  LessonItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  asset Asset      @relation(fields: [assetId], references: [id], onDelete: Restrict)
+
+  @@id([itemId, assetId])
+  @@index([assetId])
+}
