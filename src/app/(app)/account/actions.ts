@@ -57,11 +57,12 @@ export const changePasswordAction = action({
   },
 });
 
+/** Ends every session of this user, including the current one. */
 export const signOutEverywhereAction = action({
   role: "READER",
   input: z.strictObject({}),
-  handler: async () => {
-    await auth.api.revokeOtherSessions({ headers: await headers() });
+  handler: async (_input, { viewer }) => {
+    await db.session.deleteMany({ where: { userId: viewer.userId } });
     return null;
   },
 });

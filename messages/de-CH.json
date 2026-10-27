@@ -77,7 +77,7 @@
       "changePassword": "Passwort ändern",
       "passwordSaved": "Passwort gespeichert.",
       "sessions": "Angemeldete Geräte",
-      "signedOutEverywhere": "Alle anderen Geräte wurden abgemeldet."
+      "signOutEverywhereHint": "Beendet deine Anmeldung auf allen Geräten, auch auf diesem. Nützlich, wenn du ein Gerät verloren hast oder an einem fremden Computer angemeldet warst."
     },
     "forgotPassword": {
       "title": "Passwort vergessen",

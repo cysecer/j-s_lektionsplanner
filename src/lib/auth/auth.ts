@@ -41,6 +41,12 @@ export const auth = betterAuth({
   advanced: {
     database: { generateId: "uuid" },
     useSecureCookies: appUrl.protocol === "https:",
+    ipAddress: {
+      // Single-value X-Forwarded-For is trusted as is; with proxies configured,
+      // the chain is walked from the right to the first untrusted hop.
+      ipAddressHeaders: ["x-forwarded-for"],
+      trustedProxies: env.TRUSTED_PROXIES,
+    },
   },
 
   user: {

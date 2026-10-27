@@ -16,6 +16,20 @@ export const envSchema = z.object({
   /** Failed password attempts before the account is temporarily locked. */
   AUTH_MAX_FAILED_SIGNINS: intFromString(3, 100).default(10),
   AUTH_LOCKOUT_MINUTES: intFromString(1, 24 * 60).default(15),
+  /**
+   * Reverse proxies in front of the app (comma-separated IPs/CIDRs), so the
+   * real client IP can be read from X-Forwarded-For for rate limiting.
+   */
+  TRUSTED_PROXIES: z
+    .string()
+    .default("")
+    .transform((v) =>
+      v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    )
+    .pipe(z.array(z.union([z.cidrv4(), z.cidrv6(), z.ipv4(), z.ipv6()])).max(20)),
 
   SMTP_HOST: z.string().min(1),
   SMTP_PORT: intFromString(1, 65535),
