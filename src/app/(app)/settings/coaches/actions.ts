@@ -56,7 +56,7 @@ export const updateCoachAction = action({
   },
 });
 
-/** Archives coaches that appear in lessons, blocks or accounts; deletes the rest. */
+/** Archives coaches that appear in lessons or have an account; deletes the rest. */
 export const deleteCoachAction = action({
   role: "ADMIN",
   input: idSchema,
@@ -67,7 +67,6 @@ export const deleteCoachAction = action({
         membership: { select: { id: true } },
         _count: {
           select: {
-            responsibleForBlocks: true,
             responsibleForItems: true,
             presentInLessons: true,
             invitations: true,
@@ -78,8 +77,7 @@ export const deleteCoachAction = action({
     if (!coach) throw new ActionFailure("notFound");
     const c = coach._count;
     const inUse =
-      Boolean(coach.membership) ||
-      c.responsibleForBlocks + c.responsibleForItems + c.presentInLessons + c.invitations > 0;
+      Boolean(coach.membership) || c.responsibleForItems + c.presentInLessons + c.invitations > 0;
     if (inUse) await db.coach.update({ where: { id }, data: { archivedAt: new Date() } });
     else await db.coach.delete({ where: { id } });
     done();

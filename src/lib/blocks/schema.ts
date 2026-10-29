@@ -13,6 +13,8 @@ export const BLOCK_LIMITS = {
   teams: 50,
   durationMax: 600,
   ageMax: 120,
+  teamCountMax: 50,
+  participantsMax: 500,
 } as const;
 
 const uuidSet = (max: number) =>
@@ -33,6 +35,7 @@ const optionalInt = (min: number, max: number) =>
       .max(max, { message: "validation.numberRange" }),
   ]);
 
+/** Responsible person of a lesson item (blocks themselves have none). */
 export const responsibleSchema = z.discriminatedUnion("kind", [
   z.strictObject({ kind: z.literal("none") }),
   z.strictObject({ kind: z.literal("coach"), coachId: z.uuid() }),
@@ -49,7 +52,6 @@ export const blockInputSchema = z
     variations: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.variations),
     organization: richTextSchema.nullable(),
     material: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.material),
-    responsible: responsibleSchema,
     sketchAssetIds: uuidSet(BLOCK_LIMITS.sketches),
     tagIds: uuidSet(BLOCK_LIMITS.tags),
     /** Empty = available to the whole club. */
@@ -57,6 +59,9 @@ export const blockInputSchema = z
     suggestedSectionId: z.uuid().nullable(),
     ageMin: optionalInt(0, BLOCK_LIMITS.ageMax),
     ageMax: optionalInt(0, BLOCK_LIMITS.ageMax),
+    teamCount: optionalInt(1, BLOCK_LIMITS.teamCountMax),
+    minParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
+    maxParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
     difficulty: z.enum(Difficulty).nullable(),
     /** Validated against the club's field definitions with customValuesSchema(). */
     customValues: z.record(z.uuid(), z.unknown()),
@@ -64,7 +69,14 @@ export const blockInputSchema = z
   .refine((b) => b.ageMin === null || b.ageMax === null || b.ageMin <= b.ageMax, {
     message: "validation.ageRange",
     path: ["ageMax"],
-  });
+  })
+  .refine(
+    (b) =>
+      b.minParticipants === null ||
+      b.maxParticipants === null ||
+      b.minParticipants <= b.maxParticipants,
+    { message: "validation.participantsRange", path: ["maxParticipants"] },
+  );
 
 export type BlockInput = z.output<typeof blockInputSchema>;
 export type BlockFormValues = z.input<typeof blockInputSchema>;

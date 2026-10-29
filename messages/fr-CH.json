@@ -138,7 +138,8 @@
     "imageUnsupportedType": "Merci d'utiliser PNG, JPG ou HEIC.",
     "imageUnreadable": "L'image n'a pas pu être lue.",
     "numberRange": "Merci de saisir un nombre valable.",
-    "ageRange": "L'âge minimum ne peut pas dépasser l'âge maximum."
+    "ageRange": "L'âge minimum ne peut pas dépasser l'âge maximum.",
+    "participantsRange": "Le nombre minimum ne peut pas dépasser le nombre maximum."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -214,8 +215,6 @@
     "difficultyLabel": "Difficulté",
     "anyDifficulty": "Toutes",
     "age": "Adapté à l'âge",
-    "coach": "Responsable",
-    "anyCoach": "Tous",
     "sort": "Tri",
     "sorts": {
       "relevance": "Meilleurs résultats",
@@ -256,16 +255,21 @@
       "noDifficulty": "Non indiqué",
       "ageMin": "Âge de",
       "ageMax": "Âge jusqu'à",
-      "responsibleNone": "Personne de désigné",
-      "responsibleCoach": "Moniteur·trice de la liste",
-      "responsibleText": "Texte libre",
-      "responsibleTextLabel": "Nom ou description",
       "teamsHint": "Aucune sélection = visible pour tous les groupes.",
       "sketchesHint": "Jusqu'à 10 images. Trier avec les flèches.",
       "imageField": "Image",
       "saved": "Bloc de programme enregistré.",
-      "unsaved": "Les modifications non enregistrées seront perdues. Quitter quand même ?"
-    }
+      "unsaved": "Les modifications non enregistrées seront perdues. Quitter quand même ?",
+      "teamCount": "Nombre d'équipes",
+      "minParticipants": "Nombre min. d'enfants",
+      "maxParticipants": "Nombre max. d'enfants"
+    },
+    "filterKids": "Adapté au nombre d'enfants",
+    "filterTeamCount": "Nombre d'équipes",
+    "teamCount": "{count, plural, one {# équipe} other {# équipes}}",
+    "kidsRange": "{min}–{max} enfants",
+    "kidsFrom": "dès {min} enfants",
+    "kidsTo": "jusqu'à {max} enfants"
   },
   "settings": {
     "title": "Paramètres",
@@ -325,7 +329,7 @@
       "noTeams": "Aucun groupe attribué",
       "account": "A un compte",
       "empty": "Aucun moniteur enregistré.",
-      "deleteConfirm": "Supprimer « {name} » ? Si la personne figure dans des leçons, des blocs de programme ou a un compte, elle sera archivée et reste visible dans les anciennes leçons.",
+      "deleteConfirm": "Supprimer « {name} » ? Si la personne figure dans des leçons ou a un compte, elle sera archivée et reste visible dans les anciennes leçons.",
       "archived": "« {name} » a été archivé·e, car encore utilisé·e.",
       "deleted": "« {name} » a été supprimé·e.",
       "archivedTitle": "Moniteurs archivés"
@@ -456,7 +460,9 @@
     "organization": "Organisation",
     "sketches": "Croquis",
     "material": "Matériel",
-    "responsible": "Responsable"
+    "responsible": "Responsable",
+    "teamCount": "Nombre d'équipes",
+    "participants": "Nombre d'enfants"
   },
   "richText": {
     "toolbar": "Mise en forme du texte",

@@ -106,13 +106,12 @@ model Coach {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  club                 Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  teams                CoachTeam[]
-  responsibleForBlocks ProgramBlock[]
-  responsibleForItems  LessonItem[]
-  presentInLessons     LessonCoach[]
-  membership           Membership?
-  invitations          Invitation[]
+  club                Club          @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  teams               CoachTeam[]
+  responsibleForItems LessonItem[]
+  presentInLessons    LessonCoach[]
+  membership          Membership?
+  invitations         Invitation[]
 
   @@unique([clubId, name])
 }
@@ -229,11 +228,16 @@ model ProgramBlock {
   variations         String[]
   organization       Json?
   material           String[]
-  responsibleCoachId String?     @db.Uuid
-  responsibleText    String?
+  // No responsible person here: it is assigned per lesson item, because
+  // who is present differs from training to training.
   suggestedSectionId String?     @db.Uuid
   ageMin             Int?
   ageMax             Int?
+  /// Number of teams the game is played in (e.g. 2).
+  teamCount          Int?
+  /// Group size the block works for.
+  minParticipants    Int?
+  maxParticipants    Int?
   difficulty         Difficulty?
   /// Values of custom fields, keyed by CustomField.id.
   customValues       Json        @default("{}")
@@ -244,7 +248,6 @@ model ProgramBlock {
   updatedAt          DateTime    @updatedAt
 
   club             Club                 @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  responsibleCoach Coach?               @relation(fields: [responsibleCoachId], references: [id], onDelete: SetNull)
   suggestedSection Section?             @relation(fields: [suggestedSectionId], references: [id], onDelete: SetNull)
   /// No teams means the block is available club-wide.
   teams            ProgramBlockTeam[]
@@ -353,6 +356,10 @@ model LessonItem {
   variations         String[]
   organization       Json?
   material           String[]
+  teamCount          Int?
+  minParticipants    Int?
+  maxParticipants    Int?
+  /// Assigned when the block is placed in the lesson (coach or free text).
   responsibleCoachId String?  @db.Uuid
   responsibleText    String?
   customValues       Json     @default("{}")

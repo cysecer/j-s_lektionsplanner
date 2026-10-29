@@ -26,7 +26,6 @@ async function prepare(
   input: BlockInput,
   storedCustomValues: Record<string, unknown>,
 ) {
-  const coachId = input.responsible.kind === "coach" ? input.responsible.coachId : null;
   await Promise.all([
     assertCount(
       db.tag.count({ where: { clubId, id: { in: input.tagIds } } }),
@@ -43,13 +42,6 @@ async function prepare(
           db.section.count({ where: { clubId, id: input.suggestedSectionId } }),
           1,
           "unknownSection",
-        )
-      : null,
-    coachId
-      ? assertCount(
-          db.coach.count({ where: { clubId, archivedAt: null, id: coachId } }),
-          1,
-          "unknownCoach",
         )
       : null,
     requireClubAssets(clubId, input.sketchAssetIds),
@@ -83,7 +75,6 @@ async function prepare(
   const description = richOrNull(input.description);
   const rules = richOrNull(input.rules);
   const organization = richOrNull(input.organization);
-  const responsibleText = input.responsible.kind === "text" ? input.responsible.text : null;
 
   return {
     scalars: {
@@ -94,11 +85,12 @@ async function prepare(
       variations: input.variations,
       organization: jsonOrNull(organization),
       material: input.material,
-      responsibleCoachId: coachId,
-      responsibleText,
       suggestedSectionId: input.suggestedSectionId,
       ageMin: input.ageMin,
       ageMax: input.ageMax,
+      teamCount: input.teamCount,
+      minParticipants: input.minParticipants,
+      maxParticipants: input.maxParticipants,
       difficulty: input.difficulty,
       customValues: customValues as Prisma.InputJsonValue,
       searchText: buildSearchText({
@@ -108,7 +100,6 @@ async function prepare(
         variations: input.variations,
         organization,
         material: input.material,
-        responsibleText,
         customTexts: searchableCustomTexts(fields, customValues),
       }),
     },
@@ -173,11 +164,12 @@ export async function duplicateBlock(clubId: string, id: string, titleSuffix: st
       variations: source.variations,
       organization: source.organization ?? Prisma.DbNull,
       material: source.material,
-      responsibleCoachId: source.responsibleCoachId,
-      responsibleText: source.responsibleText,
       suggestedSectionId: source.suggestedSectionId,
       ageMin: source.ageMin,
       ageMax: source.ageMax,
+      teamCount: source.teamCount,
+      minParticipants: source.minParticipants,
+      maxParticipants: source.maxParticipants,
       difficulty: source.difficulty,
       customValues: source.customValues ?? {},
       searchText: source.searchText.replace(source.title, title),

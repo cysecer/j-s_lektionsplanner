@@ -33,7 +33,8 @@ describe("blockSearchSchema", () => {
       sort: "lastUsed",
       page: 2,
       section: undefined,
-      coach: undefined,
+      kids: undefined,
+      teamCount: undefined,
     });
   });
 
@@ -50,6 +51,21 @@ describe("blockSearchSchema", () => {
       section: "Hauptteil",
     });
     expect(Object.values(parsed).every((v) => v === undefined)).toBe(true);
+  });
+
+  it("parses group size and team count, rejecting out-of-range values", () => {
+    expect(blockSearchSchema.parse({ kids: "14", teamCount: "2" })).toMatchObject({
+      kids: 14,
+      teamCount: 2,
+    });
+    expect(blockSearchSchema.parse({ kids: "0", teamCount: "99" })).toMatchObject({
+      kids: undefined,
+      teamCount: undefined,
+    });
+  });
+
+  it("no longer filters by responsible coach", () => {
+    expect(blockSearchSchema.parse({ coach: uuid(1) })).not.toHaveProperty("coach");
   });
 
   it("ignores unknown parameters", () => {

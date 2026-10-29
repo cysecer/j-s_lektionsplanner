@@ -15,6 +15,14 @@ export async function ageLabel(min: number | null, max: number | null) {
   return null;
 }
 
+export async function kidsLabel(min: number | null, max: number | null) {
+  const t = await getTranslations("blocks");
+  if (min !== null && max !== null) return t("kidsRange", { min, max });
+  if (min !== null) return t("kidsFrom", { min });
+  if (max !== null) return t("kidsTo", { max });
+  return null;
+}
+
 export async function BlockCard({ block, locale }: { block: BlockListItem; locale: Locale }) {
   const t = await getTranslations();
   const section = block.suggestedSection;
@@ -22,6 +30,8 @@ export async function BlockCard({ block, locale }: { block: BlockListItem; local
     ? (section.name ?? (section.builtin ? t(`sections.${section.builtin}`) : null))
     : null;
   const age = await ageLabel(block.ageMin, block.ageMax);
+  const kids = await kidsLabel(block.minParticipants, block.maxParticipants);
+  const teams = block.teamCount === null ? null : t("blocks.teamCount", { count: block.teamCount });
 
   return (
     <Link
@@ -51,7 +61,13 @@ export async function BlockCard({ block, locale }: { block: BlockListItem; local
           ) : null}
         </div>
         <p className="text-muted-foreground text-sm">
-          {[sectionLabel, block.difficulty ? t(`difficulty.${block.difficulty}`) : null, age]
+          {[
+            sectionLabel,
+            block.difficulty ? t(`difficulty.${block.difficulty}`) : null,
+            age,
+            teams,
+            kids,
+          ]
             .filter(Boolean)
             .join(" · ")}
         </p>

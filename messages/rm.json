@@ -138,7 +138,8 @@
     "imageUnsupportedType": "Dovra per plaschair PNG, JPG u HEIC.",
     "imageUnreadable": "Il maletg n'ha betg pudì vegnir legì.",
     "numberRange": "Endatescha per plaschair in dumber valaivel.",
-    "ageRange": "La vegliadetgna minimala na dastga betg esser pli auta che la vegliadetgna maximala."
+    "ageRange": "La vegliadetgna minimala na dastga betg esser pli auta che la vegliadetgna maximala.",
+    "participantsRange": "Il dumber minimal na dastga betg esser pli aut ch'il dumber maximal."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -214,8 +215,6 @@
     "difficultyLabel": "Difficultad",
     "anyDifficulty": "Tuttas",
     "age": "Adattà per la vegliadetgna",
-    "coach": "Responsabel",
-    "anyCoach": "Tuts",
     "sort": "Successiun",
     "sorts": {
       "relevance": "Ils meglers resultats",
@@ -256,16 +255,21 @@
       "noDifficulty": "Betg indicà",
       "ageMin": "Vegliadetgna da",
       "ageMax": "Vegliadetgna fin",
-      "responsibleNone": "Nagin designà",
-      "responsibleCoach": "Manader/-a da la glista",
-      "responsibleText": "Text liber",
-      "responsibleTextLabel": "Num u descripziun",
       "teamsHint": "Nagina tscherna = visibel per tut las gruppas.",
       "sketchesHint": "Fin 10 maletgs. Zavrar cun las frizzas.",
       "imageField": "Maletg",
       "saved": "Bloc da program memorisà.",
-      "unsaved": "Midadas betg memorisadas van a perder. Tuttina bandunar?"
-    }
+      "unsaved": "Midadas betg memorisadas van a perder. Tuttina bandunar?",
+      "teamCount": "Dumber da teams",
+      "minParticipants": "Dumber min. d'uffants",
+      "maxParticipants": "Dumber max. d'uffants"
+    },
+    "filterKids": "Adattà per il dumber d'uffants",
+    "filterTeamCount": "Dumber da teams",
+    "teamCount": "{count, plural, one {# team} other {# teams}}",
+    "kidsRange": "{min}–{max} uffants",
+    "kidsFrom": "a partir da {min} uffants",
+    "kidsTo": "fin {max} uffants"
   },
   "settings": {
     "title": "Configuraziun",
@@ -325,7 +329,7 @@
       "noTeams": "Attribuì a nagina gruppa",
       "account": "Ha in conto",
       "empty": "Anc nagins manaders registrads.",
-      "deleteConfirm": "Stizzar «{name}»? Sche la persuna cumpara en lecziuns, blocs da program u ha in conto, vegn ella archivada e resta visibla en lecziuns veglias.",
+      "deleteConfirm": "Stizzar «{name}»? Sche la persuna cumpara en lecziuns u ha in conto, vegn ella archivada e resta visibla en lecziuns veglias.",
       "archived": "«{name}» è vegnì archivà, perquai ch'el vegn anc duvrà.",
       "deleted": "«{name}» è vegnì stizzà.",
       "archivedTitle": "Manaders archivads"
@@ -456,7 +460,9 @@
     "organization": "Organisaziun",
     "sketches": "Skizzas",
     "material": "Material",
-    "responsible": "Responsabel"
+    "responsible": "Responsabel",
+    "teamCount": "Dumber da teams",
+    "participants": "Dumber d'uffants"
   },
   "richText": {
     "toolbar": "Formataziun dal text",

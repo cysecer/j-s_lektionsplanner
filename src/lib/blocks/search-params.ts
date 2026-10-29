@@ -28,7 +28,10 @@ export const blockSearchSchema = z.object({
   durMax: loose(intParam(0, 600)),
   difficulty: loose(z.enum(Difficulty)),
   age: loose(intParam(0, 120)),
-  coach: loose(z.uuid()),
+  /** Group size: blocks whose min/max number of kids includes it. */
+  kids: loose(intParam(1, 500)),
+  /** Exact number of teams. */
+  teamCount: loose(intParam(1, 50)),
   sort: loose(z.enum(BLOCK_SORTS)),
   page: loose(intParam(1, 10_000)),
 });

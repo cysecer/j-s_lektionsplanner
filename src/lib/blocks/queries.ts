@@ -47,7 +47,17 @@ export async function searchBlocks(
     conditions.push(Prisma.sql`(b."ageMin" IS NULL OR b."ageMin" <= ${search.age})`);
     conditions.push(Prisma.sql`(b."ageMax" IS NULL OR b."ageMax" >= ${search.age})`);
   }
-  if (search.coach) conditions.push(Prisma.sql`b."responsibleCoachId" = ${search.coach}::uuid`);
+  if (search.kids !== undefined) {
+    conditions.push(
+      Prisma.sql`(b."minParticipants" IS NULL OR b."minParticipants" <= ${search.kids})`,
+    );
+    conditions.push(
+      Prisma.sql`(b."maxParticipants" IS NULL OR b."maxParticipants" >= ${search.kids})`,
+    );
+  }
+  if (search.teamCount !== undefined) {
+    conditions.push(Prisma.sql`b."teamCount" = ${search.teamCount}`);
+  }
 
   const sort: BlockSort = search.sort ?? (search.q ? "relevance" : "name");
   const orderBy: Record<BlockSort, Prisma.Sql> = {
@@ -86,6 +96,9 @@ export async function searchBlocks(
       difficulty: true,
       ageMin: true,
       ageMax: true,
+      teamCount: true,
+      minParticipants: true,
+      maxParticipants: true,
       suggestedSection: { select: { builtin: true, name: true } },
       tags: { select: { tag: { select: { id: true, name: true } } } },
       teams: { select: { team: { select: { id: true, name: true } } } },
@@ -123,7 +136,6 @@ export async function getBlock(clubId: string, id: string) {
       tags: { select: { tagId: true, tag: { select: { name: true } } } },
       teams: { select: { teamId: true, team: { select: { name: true } } } },
       sketches: { orderBy: { sortOrder: "asc" }, select: { assetId: true } },
-      responsibleCoach: { select: { id: true, name: true } },
       suggestedSection: { select: { id: true, builtin: true, name: true } },
     },
   });
@@ -147,7 +159,7 @@ export async function getBlockUsage(clubId: string, blockId: string) {
 
 /** Options for filters and the editor (active entries only). */
 export async function getBlockOptions(clubId: string) {
-  const [tags, teams, sections, coaches, fields] = await Promise.all([
+  const [tags, teams, sections, fields] = await Promise.all([
     db.tag.findMany({
       where: { clubId },
       orderBy: { name: "asc" },
@@ -163,16 +175,11 @@ export async function getBlockOptions(clubId: string) {
       orderBy: { sortOrder: "asc" },
       select: { id: true, builtin: true, name: true },
     }),
-    db.coach.findMany({
-      where: { clubId, archivedAt: null },
-      orderBy: { name: "asc" },
-      select: { id: true, name: true },
-    }),
     db.customField.findMany({
       where: { clubId, archivedAt: null },
       orderBy: [{ sortOrder: "asc" }, { label: "asc" }],
       select: { id: true, label: true, type: true, searchable: true, filterable: true },
     }),
   ]);
-  return { tags, teams, sections, coaches, fields };
+  return { tags, teams, sections, fields };
 }

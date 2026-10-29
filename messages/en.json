@@ -138,7 +138,8 @@
     "imageUnsupportedType": "Please use PNG, JPG or HEIC.",
     "imageUnreadable": "The image could not be read.",
     "numberRange": "Please enter a valid number.",
-    "ageRange": "The minimum age can't be higher than the maximum age."
+    "ageRange": "The minimum age can't be higher than the maximum age.",
+    "participantsRange": "The minimum can't be higher than the maximum."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -214,8 +215,6 @@
     "difficultyLabel": "Difficulty",
     "anyDifficulty": "All",
     "age": "Suitable for age",
-    "coach": "Responsible",
-    "anyCoach": "All",
     "sort": "Sort by",
     "sorts": {
       "relevance": "Best match",
@@ -256,16 +255,21 @@
       "noDifficulty": "Not specified",
       "ageMin": "Age from",
       "ageMax": "Age to",
-      "responsibleNone": "Nobody assigned",
-      "responsibleCoach": "Coach from the list",
-      "responsibleText": "Free text",
-      "responsibleTextLabel": "Name or description",
       "teamsHint": "No selection = visible to all groups.",
       "sketchesHint": "Up to 10 images. Sort with the arrows.",
       "imageField": "Image",
       "saved": "Program block saved.",
-      "unsaved": "Unsaved changes will be lost. Leave anyway?"
-    }
+      "unsaved": "Unsaved changes will be lost. Leave anyway?",
+      "teamCount": "Number of teams",
+      "minParticipants": "Min. number of kids",
+      "maxParticipants": "Max. number of kids"
+    },
+    "filterKids": "Suitable for number of kids",
+    "filterTeamCount": "Number of teams",
+    "teamCount": "{count, plural, one {# team} other {# teams}}",
+    "kidsRange": "{min}–{max} kids",
+    "kidsFrom": "from {min} kids",
+    "kidsTo": "up to {max} kids"
   },
   "settings": {
     "title": "Settings",
@@ -325,7 +329,7 @@
       "noTeams": "Not assigned to a group",
       "account": "Has an account",
       "empty": "No coaches yet.",
-      "deleteConfirm": "Delete “{name}”? If the person appears in lessons, program blocks or has an account, they'll be archived instead and stay visible in old lessons.",
+      "deleteConfirm": "Delete “{name}”? If the person appears in lessons or has an account, they'll be archived instead and stay visible in old lessons.",
       "archived": "“{name}” was archived because they're still referenced.",
       "deleted": "“{name}” was deleted.",
       "archivedTitle": "Archived coaches"
@@ -456,7 +460,9 @@
     "organization": "Organisation",
     "sketches": "Sketches",
     "material": "Equipment",
-    "responsible": "Responsible"
+    "responsible": "Responsible",
+    "teamCount": "Number of teams",
+    "participants": "Number of kids"
   },
   "richText": {
     "toolbar": "Text formatting",

@@ -12,13 +12,15 @@ const valid: BlockFormValues = {
   variations: ["2er Teams verteidigen eine Keule"],
   organization: null,
   material: ["Keulen", "4 Fussbälle"],
-  responsible: { kind: "none" },
   sketchAssetIds: [],
   tagIds: [uuid(1)],
   teamIds: [],
   suggestedSectionId: uuid(2),
   ageMin: "7",
   ageMax: "14",
+  teamCount: "2",
+  minParticipants: "8",
+  maxParticipants: "24",
   difficulty: "MEDIUM",
   customValues: {},
 };
@@ -26,7 +28,14 @@ const valid: BlockFormValues = {
 describe("blockInputSchema", () => {
   it("parses a complete block and coerces numbers", () => {
     const parsed = blockInputSchema.parse(valid);
-    expect(parsed).toMatchObject({ durationMinutes: 20, ageMin: 7, ageMax: 14 });
+    expect(parsed).toMatchObject({
+      durationMinutes: 20,
+      ageMin: 7,
+      ageMax: 14,
+      teamCount: 2,
+      minParticipants: 8,
+      maxParticipants: 24,
+    });
   });
 
   it("treats empty number inputs as not set", () => {
@@ -35,8 +44,24 @@ describe("blockInputSchema", () => {
       durationMinutes: "",
       ageMin: "",
       ageMax: "",
+      teamCount: "",
+      minParticipants: "",
+      maxParticipants: "",
     });
-    expect(parsed).toMatchObject({ durationMinutes: null, ageMin: null, ageMax: null });
+    expect(parsed).toMatchObject({
+      durationMinutes: null,
+      ageMin: null,
+      ageMax: null,
+      teamCount: null,
+      minParticipants: null,
+      maxParticipants: null,
+    });
+  });
+
+  it("has no responsible person (assigned per lesson instead)", () => {
+    expect(
+      blockInputSchema.safeParse({ ...valid, responsible: { kind: "text", text: "Beni" } }).success,
+    ).toBe(false);
   });
 
   it.each<[string, Partial<BlockFormValues>]>([
@@ -50,8 +75,11 @@ describe("blockInputSchema", () => {
     ["empty list entry", { material: ["Keulen", " "] }],
     ["control characters", { variations: [`a${String.fromCharCode(7)}b`] }],
     ["HTML in rich text", { description: "<p>x</p>" as never }],
-    ["unknown responsible kind", { responsible: { kind: "team" } as never }],
-    ["responsible coach without id", { responsible: { kind: "coach" } as never }],
+    ["zero teams", { teamCount: "0" }],
+    ["too many teams", { teamCount: "51" }],
+    ["zero participants", { minParticipants: "0" }],
+    ["participants range reversed", { minParticipants: "20", maxParticipants: "10" }],
+    ["fractional participants", { maxParticipants: "12.5" }],
   ])("rejects %s", (_label, patch) => {
     expect(blockInputSchema.safeParse({ ...valid, ...patch }).success).toBe(false);
   });

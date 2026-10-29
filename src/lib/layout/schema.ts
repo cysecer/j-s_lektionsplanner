@@ -16,6 +16,8 @@ export const BUILTIN_FIELDS = [
   "sketches",
   "material",
   "responsible",
+  "teamCount",
+  "participants",
 ] as const;
 
 export type BuiltinField = (typeof BUILTIN_FIELDS)[number];

@@ -138,7 +138,8 @@
     "imageUnsupportedType": "Bitte PNG, JPG oder HEIC verwenden.",
     "imageUnreadable": "Das Bild konnte nicht gelesen werden.",
     "numberRange": "Bitte eine gültige Zahl eingeben.",
-    "ageRange": "Das Mindestalter darf nicht höher sein als das Höchstalter."
+    "ageRange": "Das Mindestalter darf nicht höher sein als das Höchstalter.",
+    "participantsRange": "Die Mindestanzahl darf nicht höher sein als die Höchstanzahl."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -214,8 +215,6 @@
     "difficultyLabel": "Schwierigkeit",
     "anyDifficulty": "Alle",
     "age": "Geeignet für Alter",
-    "coach": "Verantwortlich",
-    "anyCoach": "Alle",
     "sort": "Sortierung",
     "sorts": {
       "relevance": "Beste Treffer",
@@ -256,16 +255,21 @@
       "noDifficulty": "Nicht angegeben",
       "ageMin": "Alter von",
       "ageMax": "Alter bis",
-      "responsibleNone": "Niemand bestimmt",
-      "responsibleCoach": "Leiter/-in aus der Liste",
-      "responsibleText": "Freier Text",
-      "responsibleTextLabel": "Name oder Beschreibung",
       "teamsHint": "Keine Auswahl = für alle Riegen sichtbar.",
       "sketchesHint": "Bis zu 10 Bilder. Mit den Pfeilen sortieren.",
       "imageField": "Bild",
       "saved": "Programmblock gespeichert.",
-      "unsaved": "Ungespeicherte Änderungen gehen verloren. Trotzdem verlassen?"
-    }
+      "unsaved": "Ungespeicherte Änderungen gehen verloren. Trotzdem verlassen?",
+      "teamCount": "Anzahl Teams",
+      "minParticipants": "Mindestanzahl Kinder",
+      "maxParticipants": "Max. Anzahl Kinder"
+    },
+    "filterKids": "Passend für Anzahl Kinder",
+    "filterTeamCount": "Anzahl Teams",
+    "teamCount": "{count, plural, one {# Team} other {# Teams}}",
+    "kidsRange": "{min}–{max} Kinder",
+    "kidsFrom": "ab {min} Kindern",
+    "kidsTo": "bis {max} Kinder"
   },
   "settings": {
     "title": "Einstellungen",
@@ -325,7 +329,7 @@
       "noTeams": "Keiner Riege zugeordnet",
       "account": "Hat ein Konto",
       "empty": "Noch keine Leitenden erfasst.",
-      "deleteConfirm": "«{name}» löschen? Kommt die Person in Lektionen, Programmblöcken oder als Konto vor, wird sie stattdessen archiviert und bleibt in alten Lektionen sichtbar.",
+      "deleteConfirm": "«{name}» löschen? Kommt die Person in Lektionen vor oder hat sie ein Konto, wird sie stattdessen archiviert und bleibt in alten Lektionen sichtbar.",
       "archived": "«{name}» wurde archiviert, weil sie noch verwendet wird.",
       "deleted": "«{name}» wurde gelöscht.",
       "archivedTitle": "Archivierte Leitende"
@@ -456,7 +460,9 @@
     "organization": "Organisation",
     "sketches": "Skizzen",
     "material": "Material",
-    "responsible": "Verantwortlich"
+    "responsible": "Verantwortlich",
+    "teamCount": "Anzahl Teams",
+    "participants": "Anzahl Kinder"
   },
   "richText": {
     "toolbar": "Textformatierung",

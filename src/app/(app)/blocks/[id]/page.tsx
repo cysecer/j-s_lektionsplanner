@@ -14,7 +14,7 @@ import { db } from "@/lib/db";
 import { formatDate, formatNumber } from "@/lib/format";
 import { richTextSchema, type RichText } from "@/lib/rich-text/schema";
 import { parsePageInput } from "@/lib/server/params";
-import { ageLabel } from "../block-card";
+import { ageLabel, kidsLabel } from "../block-card";
 import { BlockActions } from "./block-actions";
 import { AssetImage } from "@/components/asset-image";
 
@@ -36,6 +36,7 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
 
   const section = block.suggestedSection;
   const age = await ageLabel(block.ageMin, block.ageMax);
+  const kids = await kidsLabel(block.minParticipants, block.maxParticipants);
   const customValues = (block.customValues ?? {}) as Record<string, unknown>;
   const facts: [string, string][] = [
     [
@@ -49,10 +50,14 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
     [t("blocks.difficultyLabel"), block.difficulty ? t(`difficulty.${block.difficulty}`) : ""],
     [t("blocks.age"), age ?? ""],
     [
+      t("blockFields.teamCount"),
+      block.teamCount === null ? "" : t("blocks.teamCount", { count: block.teamCount }),
+    ],
+    [t("blockFields.participants"), kids ?? ""],
+    [
       t("blocks.team"),
       block.teams.length ? block.teams.map((x) => x.team.name).join(", ") : t("blocks.clubWide"),
     ],
-    [t("blockFields.responsible"), block.responsibleCoach?.name ?? block.responsibleText ?? ""],
   ];
 
   return (

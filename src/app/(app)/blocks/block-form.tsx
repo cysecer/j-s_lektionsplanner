@@ -33,7 +33,6 @@ export type BlockFormOptions = {
   tags: { id: string; name: string }[];
   teams: { id: string; name: string }[];
   sections: { id: string; builtin: BuiltinSection | null; name: string | null }[];
-  coaches: { id: string; name: string }[];
   fields: { id: string; label: string; type: CustomFieldType }[];
 };
 
@@ -71,7 +70,6 @@ export function BlockForm({
     organization: useId(),
     sketches: useId(),
     material: useId(),
-    responsible: useId(),
     tags: useId(),
     teams: useId(),
     section: useId(),
@@ -123,8 +121,6 @@ export function BlockForm({
       router.push(`/blocks/${result.id}`);
     }
   }
-
-  const responsibleKind = values.responsible.kind;
 
   return (
     <form onSubmit={submit} noValidate className="grid gap-6">
@@ -196,6 +192,38 @@ export function BlockForm({
               />
             </div>
           </div>
+          <div className="grid gap-5 sm:grid-cols-3">
+            <FormField
+              label={t("blocks.form.teamCount")}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={BLOCK_LIMITS.teamCountMax}
+              value={String(values.teamCount ?? "")}
+              onChange={(e) => set("teamCount", e.target.value)}
+              error={error("teamCount")}
+            />
+            <FormField
+              label={t("blocks.form.minParticipants")}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={BLOCK_LIMITS.participantsMax}
+              value={String(values.minParticipants ?? "")}
+              onChange={(e) => set("minParticipants", e.target.value)}
+              error={error("minParticipants")}
+            />
+            <FormField
+              label={t("blocks.form.maxParticipants")}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={BLOCK_LIMITS.participantsMax}
+              value={String(values.maxParticipants ?? "")}
+              onChange={(e) => set("maxParticipants", e.target.value)}
+              error={error("maxParticipants")}
+            />
+          </div>
         </div>
       </SectionCard>
 
@@ -262,62 +290,6 @@ export function BlockForm({
               errors={listErrors("material")}
             />
           </Field>
-          <fieldset className="grid gap-3">
-            <legend id={ids.responsible} className="mb-1 text-sm font-medium">
-              {t("blockFields.responsible")}
-            </legend>
-            <div className="grid gap-1 sm:grid-cols-3">
-              {(["none", "coach", "text"] as const).map((kind) => (
-                <Label
-                  key={kind}
-                  className="hover:bg-accent flex min-h-11 items-center gap-3 rounded-md px-2 font-normal"
-                >
-                  <input
-                    type="radio"
-                    name={ids.responsible}
-                    className="size-4"
-                    checked={responsibleKind === kind}
-                    onChange={() =>
-                      set(
-                        "responsible",
-                        kind === "none"
-                          ? { kind }
-                          : kind === "coach"
-                            ? { kind, coachId: options.coaches[0]?.id ?? "" }
-                            : { kind, text: "" },
-                      )
-                    }
-                    disabled={kind === "coach" && options.coaches.length === 0}
-                  />
-                  {t(
-                    kind === "none"
-                      ? "blocks.form.responsibleNone"
-                      : kind === "coach"
-                        ? "blocks.form.responsibleCoach"
-                        : "blocks.form.responsibleText",
-                  )}
-                </Label>
-              ))}
-            </div>
-            {values.responsible.kind === "coach" ? (
-              <ChoiceSelect
-                id={`${ids.responsible}-coach`}
-                label={t("blocks.form.responsibleCoach")}
-                value={values.responsible.coachId}
-                onChange={(coachId) => set("responsible", { kind: "coach", coachId })}
-                options={options.coaches.map((c) => ({ value: c.id, label: c.name }))}
-              />
-            ) : null}
-            {values.responsible.kind === "text" ? (
-              <FormField
-                label={t("blocks.form.responsibleTextLabel")}
-                value={values.responsible.text}
-                maxLength={100}
-                onChange={(e) => set("responsible", { kind: "text", text: e.target.value })}
-                error={error("responsible.text")}
-              />
-            ) : null}
-          </fieldset>
         </div>
       </SectionCard>
 

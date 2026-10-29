@@ -13,9 +13,6 @@ export default async function NewBlockPage() {
   const initial = {
     ...EMPTY_BLOCK,
     teamIds: options.teams.some((x) => x.id === viewer.activeTeamId) ? [viewer.activeTeamId!] : [],
-    responsible: viewer.coachId
-      ? ({ kind: "coach", coachId: viewer.coachId } as const)
-      : EMPTY_BLOCK.responsible,
   };
   return (
     <div className="mx-auto max-w-3xl">

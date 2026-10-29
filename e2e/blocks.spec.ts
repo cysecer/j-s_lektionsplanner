@@ -28,6 +28,11 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
   await page.getByLabel("Dauer (Minuten)").fill("15");
   await page.getByLabel("Alter von").fill("6");
   await page.getByLabel("Alter bis").fill("10");
+  await page.getByLabel("Anzahl Teams").fill("2");
+  await page.getByLabel("Mindestanzahl Kinder").fill("16");
+  await page.getByLabel("Max. Anzahl Kinder").fill("6");
+  // Responsible persons are assigned per lesson, not on the block.
+  await expect(page.getByText("Verantwortlich")).toHaveCount(0);
 
   const description = page.getByRole("textbox", { name: "Erklärung" });
   await description.click();
@@ -58,6 +63,12 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
 
   await page.getByRole("checkbox", { name: "Fangspiel" }).check();
   await page.getByRole("button", { name: "Speichern" }).click();
+  await expect(
+    page.getByText("Die Mindestanzahl darf nicht höher sein als die Höchstanzahl."),
+  ).toBeVisible();
+  await page.getByLabel("Mindestanzahl Kinder").fill("6");
+  await page.getByLabel("Max. Anzahl Kinder").fill("16");
+  await page.getByRole("button", { name: "Speichern" }).click();
 
   await expect(page).toHaveURL(/\/blocks\/[0-9a-f-]{36}$/);
   await expect(page.getByRole("heading", { name: "Schwänzchenfangen", level: 1 })).toBeVisible();
@@ -65,6 +76,8 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
   await expect(page.getByText("Paarweise an der Hand")).toBeVisible();
   await expect(page.getByText("6–10 Jahre")).toBeVisible();
   await expect(page.getByText("15 Minuten")).toBeVisible();
+  await expect(page.getByText("2 Teams")).toBeVisible();
+  await expect(page.getByText("6–16 Kinder")).toBeVisible();
   await expect(
     page.getByText("Dieser Programmblock wurde noch in keiner Lektion verwendet."),
   ).toBeVisible();
@@ -116,6 +129,20 @@ test("search, filters and robust URL parameters", async ({ page }) => {
   await page.goto("/blocks?durMax=10&team=all");
   await expect(page.getByRole("link", { name: /^Appell/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Keulenfussball/ })).toHaveCount(0);
+
+  // Group size: 24 kids rules out Mattenfussball (max. 20), not Keulenfussball (min. 6).
+  await page.goto("/blocks?kids=24&team=all");
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Mattenfussball/ })).toHaveCount(0);
+  // Exact team count: of the demo games only Dschungelspiel is played in 2 teams.
+  await page.goto("/blocks?teamCount=2&team=all");
+  await expect(page.getByRole("link", { name: /Dschungelspiel/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Mattenfussball/ })).toHaveCount(0);
+  // Filtering by responsible coach no longer exists; the parameter is ignored.
+  await page.goto("/blocks?coach=00000000-0000-4000-8000-000000000000&team=all");
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Mattenfussball/ })).toBeVisible();
 
   // Invalid parameters are ignored, never an error page.
   const response = await page.goto(

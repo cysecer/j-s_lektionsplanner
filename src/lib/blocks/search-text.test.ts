@@ -11,7 +11,6 @@ describe("buildSearchText", () => {
       variations: ["2er Teams verteidigen eine Keule"],
       organization: richTextFromParagraphs(""),
       material: ["Keulen", "4 Fussbälle"],
-      responsibleText: "  ",
       customTexts: ["Quelle: Jugi-Handbuch"],
     });
     expect(text).toBe(

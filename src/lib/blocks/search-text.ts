@@ -8,7 +8,6 @@ export type SearchableBlockContent = {
   variations: string[];
   organization: RichText | null;
   material: string[];
-  responsibleText: string | null;
   /** Plain-text values of custom fields marked as searchable. */
   customTexts: string[];
 };
@@ -25,7 +24,6 @@ export function buildSearchText(block: SearchableBlockContent): string {
     ...block.variations,
     richTextToPlainText(block.organization),
     ...block.material,
-    block.responsibleText ?? "",
     ...block.customTexts,
   ]
     .map((part) => part.trim())

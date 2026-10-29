@@ -36,7 +36,8 @@ export async function BlockFilters({
     search.durMax !== undefined ||
     search.difficulty ||
     search.age !== undefined ||
-    search.coach,
+    search.kids !== undefined ||
+    search.teamCount !== undefined,
   );
   const sectionName = (s: Options["sections"][number]) =>
     s.name ?? (s.builtin ? t(`sections.${s.builtin}`) : "");
@@ -156,15 +157,28 @@ export async function BlockFilters({
             />
           </label>
           <label className="grid gap-1 text-sm font-medium">
-            {t("blocks.coach")}
-            <select name="coach" defaultValue={search.coach ?? ""} className={selectClass}>
-              <option value="">{t("blocks.anyCoach")}</option>
-              {options.coaches.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+            {t("blocks.filterKids")}
+            <Input
+              name="kids"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={500}
+              defaultValue={search.kids ?? ""}
+              className="h-11 text-base"
+            />
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            {t("blocks.filterTeamCount")}
+            <Input
+              name="teamCount"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={50}
+              defaultValue={search.teamCount ?? ""}
+              className="h-11 text-base"
+            />
           </label>
           {options.tags.length > 0 ? (
             <fieldset className="grid gap-1 sm:col-span-2 lg:col-span-3">

@@ -36,6 +36,9 @@ type BlockSeed = {
   section: "INTRO" | "MAIN" | "END";
   ageMin?: number;
   ageMax?: number;
+  teamCount?: number;
+  minParticipants?: number;
+  maxParticipants?: number;
   difficulty?: Difficulty;
 };
 
@@ -63,6 +66,8 @@ const blocks: BlockSeed[] = [
     section: "INTRO",
     ageMin: 6,
     ageMax: 12,
+    teamCount: 2,
+    minParticipants: 8,
     difficulty: "EASY",
   },
   {
@@ -78,6 +83,7 @@ const blocks: BlockSeed[] = [
     section: "MAIN",
     ageMin: 7,
     ageMax: 14,
+    minParticipants: 6,
     difficulty: "MEDIUM",
   },
   {
@@ -93,6 +99,8 @@ const blocks: BlockSeed[] = [
     section: "MAIN",
     ageMin: 7,
     ageMax: 14,
+    minParticipants: 6,
+    maxParticipants: 20,
     difficulty: "MEDIUM",
   },
   {
@@ -193,6 +201,9 @@ async function main() {
           suggestedSectionId: sectionIds[b.section],
           ageMin: b.ageMin,
           ageMax: b.ageMax,
+          teamCount: b.teamCount,
+          minParticipants: b.minParticipants,
+          maxParticipants: b.maxParticipants,
           difficulty: b.difficulty,
           searchText: buildSearchText({
             title: b.title,
@@ -201,7 +212,6 @@ async function main() {
             variations: b.variations ?? [],
             organization: b.organization ?? null,
             material: b.material ?? [],
-            responsibleText: null,
             customTexts: [],
           }),
           tags: { create: b.tags.map((t) => ({ tagId: tags[t]! })) },
@@ -245,6 +255,9 @@ async function main() {
         variations: b.variations ?? [],
         organization: b.organization,
         material: b.material ?? [],
+        teamCount: b.teamCount,
+        minParticipants: b.minParticipants,
+        maxParticipants: b.maxParticipants,
       };
     };
 

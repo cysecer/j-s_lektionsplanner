@@ -10,13 +10,15 @@ export const EMPTY_BLOCK: BlockFormValues = {
   variations: [],
   organization: null,
   material: [],
-  responsible: { kind: "none" },
   sketchAssetIds: [],
   tagIds: [],
   teamIds: [],
   suggestedSectionId: null,
   ageMin: "",
   ageMax: "",
+  teamCount: "",
+  minParticipants: "",
+  maxParticipants: "",
   difficulty: null,
   customValues: {},
 };
@@ -34,17 +36,15 @@ export function blockToFormValues(block: StoredBlock, activeFieldIds: string[]):
     variations: block.variations,
     organization: block.organization as RichText | null,
     material: block.material,
-    responsible: block.responsibleCoachId
-      ? { kind: "coach", coachId: block.responsibleCoachId }
-      : block.responsibleText
-        ? { kind: "text", text: block.responsibleText }
-        : { kind: "none" },
     sketchAssetIds: block.sketches.map((s) => s.assetId),
     tagIds: block.tags.map((t) => t.tagId),
     teamIds: block.teams.map((t) => t.teamId),
     suggestedSectionId: block.suggestedSectionId,
     ageMin: block.ageMin === null ? "" : String(block.ageMin),
     ageMax: block.ageMax === null ? "" : String(block.ageMax),
+    teamCount: block.teamCount === null ? "" : String(block.teamCount),
+    minParticipants: block.minParticipants === null ? "" : String(block.minParticipants),
+    maxParticipants: block.maxParticipants === null ? "" : String(block.maxParticipants),
     difficulty: block.difficulty,
     customValues: Object.fromEntries(
       Object.entries(stored).filter(([id]) => activeFieldIds.includes(id)),
