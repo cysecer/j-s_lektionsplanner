@@ -236,7 +236,6 @@
       "goals": "Finamiras / finamiras d'emprender",
       "notes": "Indicaziuns / remartgas",
       "presentCoaches": "Manaders preschents",
-      "status": "Status",
       "more": "Ulteriuras indicaziuns"
     },
     "save": {
@@ -325,7 +324,12 @@
     },
     "view": {
       "noItems": "En questa part n'è nagut planisà."
-    }
+    },
+    "finish": "Finir",
+    "finished": "La lecziun è finida.",
+    "reopen": "Enavos al sboz",
+    "reopened": "La lecziun è puspè in sboz. Midadas vegnan memorisadas automaticamain.",
+    "statusNotChanged": "Status betg midà, la lecziun n'ha betg pudì vegnir memorisada."
   },
   "blocks": {
     "title": "Blocs da program",

@@ -236,7 +236,6 @@
       "goals": "Goals / learning objectives",
       "notes": "Notes / remarks",
       "presentCoaches": "Coaches present",
-      "status": "Status",
       "more": "More details"
     },
     "save": {
@@ -325,7 +324,12 @@
     },
     "view": {
       "noItems": "Nothing is planned in this section."
-    }
+    },
+    "finish": "Mark as final",
+    "finished": "The lesson is final.",
+    "reopen": "Back to draft",
+    "reopened": "The lesson is a draft again. Changes are saved automatically.",
+    "statusNotChanged": "Status not changed, the lesson could not be saved."
   },
   "blocks": {
     "title": "Program blocks",

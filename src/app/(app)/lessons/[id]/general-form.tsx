@@ -7,7 +7,7 @@ import { FormField } from "@/components/form-field";
 import { RichTextEditor } from "@/components/rich-text/rich-text-editor";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Difficulty, LessonStatus } from "@/generated/prisma/enums";
+import { Difficulty } from "@/generated/prisma/enums";
 import { firstFieldError } from "@/lib/i18n-keys";
 import type { LessonOptions } from "@/lib/lessons/queries";
 import type { LessonGeneralValues } from "@/lib/lessons/schema";
@@ -31,7 +31,6 @@ export function GeneralForm({
   const t = useTranslations();
   const ids = {
     team: useId(),
-    status: useId(),
     difficulty: useId(),
     layout: useId(),
     coaches: useId(),
@@ -115,22 +114,6 @@ export function GeneralForm({
             onChange={(presentCoachIds) => onChange({ presentCoachIds })}
           />
         ) : null}
-
-        <div className="grid gap-2 sm:max-w-xs">
-          <Label htmlFor={ids.status}>{t("lessons.general.status")}</Label>
-          <select
-            id={ids.status}
-            value={values.status}
-            onChange={(e) => onChange({ status: e.target.value as LessonStatus })}
-            className={selectClass}
-          >
-            {Object.values(LessonStatus).map((s) => (
-              <option key={s} value={s}>
-                {t(`lessons.status.${s}`)}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <details className="group rounded-lg border">
           <summary className="hover:bg-accent flex min-h-11 cursor-pointer items-center px-4 font-medium">

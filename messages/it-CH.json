@@ -236,7 +236,6 @@
       "goals": "Obiettivi / obiettivi di apprendimento",
       "notes": "Indicazioni / osservazioni",
       "presentCoaches": "Monitori presenti",
-      "status": "Stato",
       "more": "Altre informazioni"
     },
     "save": {
@@ -325,7 +324,12 @@
     },
     "view": {
       "noItems": "In questa parte non è pianificato nulla."
-    }
+    },
+    "finish": "Completa",
+    "finished": "La lezione è pronta.",
+    "reopen": "Torna a bozza",
+    "reopened": "La lezione è di nuovo una bozza. Le modifiche vengono salvate automaticamente.",
+    "statusNotChanged": "Stato non modificato, non è stato possibile salvare la lezione."
   },
   "blocks": {
     "title": "Blocchi di programma",

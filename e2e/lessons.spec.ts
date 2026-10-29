@@ -62,6 +62,15 @@ test("plan a lesson: library, quick items, timing, autosave", async ({ page }) =
   expect(await itemTitles(page, "Hauptteil")).toEqual(["Keulenfussball", "Mattenfussball"]);
   expect(await itemTitles(page, "Einleitung")).toEqual(["Information Turnier"]);
   await expect(page.getByLabel("Lektionstitel")).toHaveValue("Ballspiele");
+
+  // Finish with one click at the top, and back to draft.
+  await page.getByRole("button", { name: "Fertigstellen" }).click();
+  await expect(page.getByText("Lektion ist fertig.")).toBeVisible();
+  await page.reload();
+  await expect(page.getByText("Fertig", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Zurück zu Entwurf" }).click();
+  await expect(page.getByText(/Lektion ist wieder ein Entwurf/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Fertigstellen" })).toBeVisible();
 });
 
 test("reorder with buttons and keyboard, move between sections", async ({ page }) => {

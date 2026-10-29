@@ -236,7 +236,6 @@
       "goals": "Zielsetzungen / Lernziele",
       "notes": "Hinweise / Bemerkungen",
       "presentCoaches": "Anwesende Leitende",
-      "status": "Status",
       "more": "Weitere Angaben"
     },
     "save": {
@@ -325,7 +324,12 @@
     },
     "view": {
       "noItems": "In diesem Abschnitt ist nichts geplant."
-    }
+    },
+    "finish": "Fertigstellen",
+    "finished": "Lektion ist fertig.",
+    "reopen": "Zurück zu Entwurf",
+    "reopened": "Lektion ist wieder ein Entwurf. Änderungen werden automatisch gespeichert.",
+    "statusNotChanged": "Status nicht geändert, die Lektion konnte nicht gespeichert werden."
   },
   "blocks": {
     "title": "Programmblöcke",

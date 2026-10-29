@@ -236,7 +236,6 @@
       "goals": "Objectifs / objectifs d'apprentissage",
       "notes": "Remarques",
       "presentCoaches": "Moniteurs présents",
-      "status": "Statut",
       "more": "Autres informations"
     },
     "save": {
@@ -325,7 +324,12 @@
     },
     "view": {
       "noItems": "Rien n'est prévu dans cette partie."
-    }
+    },
+    "finish": "Terminer",
+    "finished": "La leçon est terminée.",
+    "reopen": "Revenir au brouillon",
+    "reopened": "La leçon est de nouveau un brouillon. Les modifications sont enregistrées automatiquement.",
+    "statusNotChanged": "Statut non modifié, la leçon n'a pas pu être enregistrée."
   },
   "blocks": {
     "title": "Blocs de programme",

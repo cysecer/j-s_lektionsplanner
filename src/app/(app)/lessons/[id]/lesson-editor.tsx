@@ -1,6 +1,14 @@
 "use client";
 
-import { AlertTriangle, ArrowLeft, Check, Loader2, Plus } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Check,
+  CircleCheckBig,
+  Loader2,
+  Plus,
+  Undo2,
+} from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,6 +22,7 @@ import { actionErrorMessage, describeFieldErrors } from "@/lib/i18n-keys";
 import { normalize, type EditorItem } from "@/lib/lessons/editor-model";
 import type { LessonOptions } from "@/lib/lessons/queries";
 import type { LessonGeneralValues } from "@/lib/lessons/schema";
+import type { LessonStatus } from "@/generated/prisma/enums";
 import type { FieldErrors } from "@/lib/server/result";
 import { saveLessonAction } from "../actions";
 import { GeneralForm } from "./general-form";
@@ -73,8 +82,8 @@ export function LessonEditor({
   );
 
   const save = useCallback(
-    async (manual = false) => {
-      if (inFlight.current) return;
+    async (manual = false): Promise<boolean> => {
+      if (inFlight.current) return false;
       inFlight.current = true;
       const startedAt = changes.current;
       setSaveState("saving");
@@ -93,18 +102,39 @@ export function LessonEditor({
         // Changes made while saving are saved by the next round.
         setSaveState(changes.current === startedAt ? "saved" : "dirty");
         if (manual) toast.success(t("lessons.save.saved"));
-        return;
+        return true;
       }
       if (result.error === "conflict" && result.code === "lessonChanged") {
         setSaveState("conflict");
-        return;
+        return false;
       }
       setFieldErrors(result.fieldErrors);
       setSaveState(result.error === "validation" ? "invalid" : "error");
       if (manual) toast.error(actionErrorMessage(t, result));
+      return false;
     },
     [lessonId, t],
   );
+
+  /** Finish or reopen the lesson; saved right away together with any pending changes. */
+  async function changeStatus(status: LessonStatus) {
+    const previous = latest.current.general.status;
+    const next = { ...latest.current.general, status };
+    latest.current = { ...latest.current, general: next };
+    setGeneral(next);
+    markDirty();
+    if (await save()) {
+      toast.success(status === "FINAL" ? t("lessons.finished") : t("lessons.reopened"));
+      return;
+    }
+    // Not saved: keep editing as before, the error summary says what is missing.
+    latest.current = {
+      ...latest.current,
+      general: { ...latest.current.general, status: previous },
+    };
+    setGeneral((g) => ({ ...g, status: previous }));
+    toast.error(t("lessons.statusNotChanged"));
+  }
 
   // Autosave drafts shortly after the last change.
   useEffect(() => {
@@ -170,6 +200,26 @@ export function LessonEditor({
               {t("lessons.save.saveNow")}
             </Button>
           ) : null}
+          {general.status === "DRAFT" ? (
+            <Button
+              className="h-11"
+              disabled={saveState === "saving" || saveState === "conflict"}
+              onClick={() => void changeStatus("FINAL")}
+            >
+              <CircleCheckBig aria-hidden />
+              {t("lessons.finish")}
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              className="h-11"
+              disabled={saveState === "saving" || saveState === "conflict"}
+              onClick={() => void changeStatus("DRAFT")}
+            >
+              <Undo2 aria-hidden />
+              {t("lessons.reopen")}
+            </Button>
+          )}
           <LessonActions lessonId={lessonId} title={general.title} />
         </div>
       </div>
