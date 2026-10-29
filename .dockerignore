@@ -1,0 +1,16 @@
+# Keep the build context small and free of secrets and personal data.
+.git
+.next
+node_modules
+.env
+.env.*
+!.env.example
+docs
+storage
+storage-e2e
+test-results
+playwright-report
+coverage
+.vscode
+*.tsbuildinfo
+src/generated

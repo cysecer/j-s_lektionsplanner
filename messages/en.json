@@ -566,7 +566,8 @@
       "teamRolesHint": "Teams without access are invisible to the person: neither their lessons nor their blocks.",
       "editTeams": "Edit teams",
       "teamsTitle": "Teams of {name}",
-      "teamsIntro": "Per team: Coach (plan and edit) or Read only."
+      "teamsIntro": "Per team: Coach (plan and edit) or Read only.",
+      "invitedNoEmail": "Invitation for {email} created, but the email could not be sent. Share the link below directly."
     },
     "tags": {
       "title": "Categories",

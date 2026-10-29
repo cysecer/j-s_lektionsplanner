@@ -1,0 +1,78 @@
+# Production on a single server. Everything runs as background services and
+# starts again after a reboot (Docker itself must be enabled as a service).
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Settings come from .env (see .env.example). Details: README.md →
+# "Auf einem Server installieren".
+
+name: lektionsplaner
+
+x-app-env: &app-env
+  env_file: ${ENV_FILE:-.env}
+  environment:
+    DATABASE_URL: postgresql://lektionsplaner:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/lektionsplaner
+    STORAGE_DIR: /data/storage
+    # The PDF renderer reaches the app inside its own container.
+    INTERNAL_APP_URL: http://127.0.0.1:3000
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lektionsplaner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: lektionsplaner
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lektionsplaner"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Applies database migrations, then exits. The app starts only afterwards.
+  migrate:
+    build: { context: ., target: tools }
+    <<: *app-env
+    command: ["migrate"]
+    restart: "no"
+    depends_on:
+      db: { condition: service_healthy }
+
+  app:
+    build: { context: ., target: app }
+    <<: *app-env
+    restart: unless-stopped
+    # Only reachable from this server: nginx in front terminates HTTPS.
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    volumes:
+      - storage:/data/storage
+    # Chromium for the PDF export needs more shared memory than the default.
+    shm_size: "256mb"
+    depends_on:
+      db: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+
+  # One-off commands: docker compose -f docker-compose.prod.yml run --rm tools <command>
+  tools:
+    build: { context: ., target: tools }
+    <<: *app-env
+    profiles: ["tools"]
+    depends_on:
+      db: { condition: service_healthy }
+
+volumes:
+  db-data:
+  storage:
+
+# Fixed address range, so TRUSTED_PROXIES can name the gateway nginx's
+# requests arrive from (172.30.0.1).
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+          gateway: 172.30.0.1

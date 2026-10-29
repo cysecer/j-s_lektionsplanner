@@ -89,3 +89,29 @@ export async function deleteAssetIfUnused(assetId: string) {
   await db.asset.delete({ where: { id: assetId } });
   await storage.delete(asset.storageKey);
 }
+
+/** Uploads not attached to anything after this long are abandoned forms. */
+export const UNUSED_UPLOAD_GRACE_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Deletes images that were uploaded but never attached (a form closed
+ * without saving), once they are older than a day. Runs with each upload,
+ * so storage stays clean without a scheduled job.
+ */
+export async function sweepUnusedUploads(clubId: string): Promise<number> {
+  const candidates = await db.asset.findMany({
+    where: {
+      clubId,
+      createdAt: { lt: new Date(Date.now() - UNUSED_UPLOAD_GRACE_MS) },
+      logoOfClub: { is: null },
+      blockSketches: { none: {} },
+      lessonItemSketches: { none: {} },
+    },
+    select: { id: true },
+    orderBy: { createdAt: "asc" },
+    take: 50,
+  });
+  // deleteAssetIfUnused also checks custom image fields before deleting.
+  for (const { id } of candidates) await deleteAssetIfUnused(id);
+  return candidates.length;
+}

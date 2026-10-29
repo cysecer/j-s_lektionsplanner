@@ -42,7 +42,7 @@ test("all five languages render the main navigation", async ({ page }) => {
   ] as const;
 
   for (const [language, ...links] of expected) {
-    await page.getByRole("button", { name: /^(Sprache|Langue|Lingua|Language)$/ }).click();
+    await page.getByRole("button", { name: /^(Sprache|Langue|Lingua|Language):/ }).click();
     await page.getByRole("menuitemradio", { name: language }).click();
     const nav = page.getByRole("navigation").first();
     for (const link of links) await expect(nav.getByRole("link", { name: link })).toBeVisible();

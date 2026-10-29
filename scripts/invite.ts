@@ -44,19 +44,20 @@ async function main() {
     return;
   }
 
-  const { url } = await createInvitation({
+  const { url, emailError } = await createInvitation({
     clubId: clubs[0]!.id,
     email: args.data.email,
     // From the command line: one role for all teams (or admin).
-    access:
-      args.data.role === "ADMIN"
-        ? { kind: "admin" }
-        : { kind: "all", role: args.data.role },
+    access: args.data.role === "ADMIN" ? { kind: "admin" } : { kind: "all", role: args.data.role },
     coachId: null,
     locale: args.data.locale,
     invitedById: null,
   });
-  console.log(`Invitation for ${args.data.email} (${args.data.role}) to ${clubs[0]!.name} sent.`);
+  console.log(
+    emailError
+      ? `Invitation for ${args.data.email} (${args.data.role}) to ${clubs[0]!.name} created; no email sent (${emailError}).`
+      : `Invitation for ${args.data.email} (${args.data.role}) to ${clubs[0]!.name} sent.`,
+  );
   console.log(`Link (valid 7 days): ${url}`);
 }
 

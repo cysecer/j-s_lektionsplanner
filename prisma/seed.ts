@@ -7,7 +7,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, type Difficulty } from "../src/generated/prisma/client";
-import { COMPACT_LAYOUT, DEFAULT_LAYOUT, layoutConfigSchema } from "../src/lib/layout/schema";
+import { createClubBase } from "../src/lib/club/create";
 import { buildSearchText } from "../src/lib/blocks/search-text";
 import { richTextSchema, type RichText } from "../src/lib/rich-text/schema";
 import { richTextFromBullets, richTextFromParagraphs } from "../src/lib/rich-text/utils";
@@ -130,26 +130,15 @@ async function main() {
   }
 
   await db.$transaction(async (tx) => {
-    const club = await tx.club.create({
-      data: { name: "TV Musterdorf", pdfFooterText: "J+S-Kindersport" },
+    const {
+      club,
+      clubId,
+      defaultLayoutId,
+      sections: sectionIds,
+    } = await createClubBase(tx, {
+      name: "TV Musterdorf",
+      pdfFooterText: "J+S-Kindersport",
     });
-    const clubId = club.id;
-
-    const [standard] = await Promise.all([
-      tx.layout.create({
-        data: { clubId, name: "Standard", config: layoutConfigSchema.parse(DEFAULT_LAYOUT) },
-      }),
-      tx.layout.create({
-        data: { clubId, name: "Kompakt", config: layoutConfigSchema.parse(COMPACT_LAYOUT) },
-      }),
-    ]);
-    await tx.club.update({ where: { id: clubId }, data: { defaultLayoutId: standard.id } });
-
-    const sectionIds: Record<BlockSeed["section"], string> = {
-      INTRO: (await tx.section.create({ data: { clubId, builtin: "INTRO", sortOrder: 0 } })).id,
-      MAIN: (await tx.section.create({ data: { clubId, builtin: "MAIN", sortOrder: 1 } })).id,
-      END: (await tx.section.create({ data: { clubId, builtin: "END", sortOrder: 2 } })).id,
-    };
 
     const teamNames = ["Kids", "TuVo", "Jugi"];
     const teams = Object.fromEntries(
@@ -226,7 +215,7 @@ async function main() {
       data: {
         clubId,
         teamId: teams.Kids,
-        layoutId: standard.id,
+        layoutId: defaultLayoutId,
         title: "Spiele",
         authorName: "Andrea Keller",
         date: new Date("2018-11-28T00:00:00Z"),

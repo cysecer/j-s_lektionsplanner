@@ -566,7 +566,8 @@
       "teamRolesHint": "La persona non vede i gruppi senza accesso: né le loro lezioni né i loro blocchi.",
       "editTeams": "Modifica gruppi",
       "teamsTitle": "Gruppi di {name}",
-      "teamsIntro": "Per gruppo: monitore/monitrice (pianificare e modificare) o sola lettura."
+      "teamsIntro": "Per gruppo: monitore/monitrice (pianificare e modificare) o sola lettura.",
+      "invitedNoEmail": "Invito per {email} creato, ma non è stato possibile inviare l’e-mail. Condividi direttamente il link qui sotto."
     },
     "tags": {
       "title": "Categorie",

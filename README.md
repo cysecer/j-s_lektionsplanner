@@ -3,15 +3,222 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 10c – Rechte pro Riege).
+## Auf einem Server installieren
 
-## Voraussetzungen
+Die App läuft auf dem Server in Docker: Datenbank, App und ein Hilfscontainer für einmalige
+Befehle. Node.js oder npm braucht es dort nicht. Alles läuft im Hintergrund und startet nach
+einem Neustart des Servers von selbst wieder. HTTPS übernimmt ein nginx vor der App.
 
-- Node.js 24 oder neuer
-- Docker Desktop (oder Docker Engine mit Compose) – Entwicklung und Produktion nutzen dieselbe
-  Postgres-Datenbank
+```text
+Browser ──https──▶ nginx (Port 443, Zertifikat) ──http──▶ 127.0.0.1:3000 App ──▶ Postgres
+```
 
-## Lokal starten
+### 1. Voraussetzungen
+
+- Linux-Server (z. B. Debian oder Ubuntu) mit mindestens 2 GB RAM (die PDF-Erstellung braucht
+  einen Browser im Hintergrund)
+- Eine Domain, die auf den Server zeigt, z. B. `lektionen.tv-muster.ch`
+- Docker Engine mit Compose-Plugin, als Dienst aktiviert:
+  ```bash
+  curl -fsSL https://get.docker.com | sh
+  sudo systemctl enable --now docker
+  ```
+- nginx und certbot für das HTTPS-Zertifikat:
+  ```bash
+  sudo apt install nginx certbot python3-certbot-nginx
+  ```
+
+### 2. Code holen und konfigurieren
+
+```bash
+git clone https://github.com/cysecer/j-s_lektionsplanner.git /opt/lektionsplaner
+cd /opt/lektionsplaner
+cp .env.production.example .env
+```
+
+In `.env` drei Werte setzen (Erklärungen stehen in der Datei):
+
+| Variable            | Wert                                                        |
+| ------------------- | ----------------------------------------------------------- |
+| `APP_URL`           | Öffentliche Adresse, z. B. `https://lektionen.tv-muster.ch` |
+| `AUTH_SECRET`       | Ausgabe von `openssl rand -base64 48`                       |
+| `POSTGRES_PASSWORD` | Ausgabe von `openssl rand -base64 32`                       |
+
+`APP_URL` muss genau die Adresse sein, die im Browser steht: Daraus entstehen die Links in
+Einladungen und Anmelde-E-Mails, und Passkeys werden an diese Domain gebunden. Später die Domain zu
+wechseln heisst, dass alle ihre Passkeys neu einrichten (Anmeldelink und Passwort gehen weiter).
+
+`.env` enthält Geheimnisse: `chmod 600 .env`, nie ins Git.
+
+### 3. Starten
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Beim ersten Mal dauert der Build einige Minuten. Danach laufen `db` und `app` dauerhaft; vor
+jedem Start aktualisiert ein kurzer `migrate`-Container die Datenbank. Kontrolle:
+
+```bash
+docker compose -f docker-compose.prod.yml ps        # app: "healthy"
+curl -I http://127.0.0.1:3000/login                 # HTTP/1.1 200
+```
+
+### 4. Verein anlegen und erste Admin-Person einladen
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm tools setup \
+  --club "TV Muster" --admin du@tv-muster.ch --footer "J+S-Kindersport"
+```
+
+Das legt den (leeren) Verein mit den Abschnitten Einleitung, Hauptteil und Ausklang sowie den
+Layouts «Standard» und «Kompakt» an und gibt einen **Einladungslink** aus (7 Tage gültig). Weil
+noch kein Mailserver eingerichtet ist, wird keine E-Mail verschickt: den Link nach Schritt 5 im
+Browser öffnen, Namen eingeben, fertig. Danach bietet die App an, einen Passkey einzurichten.
+
+### 5. nginx und HTTPS
+
+`/etc/nginx/sites-available/lektionsplaner` anlegen (Domain anpassen):
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name lektionen.tv-muster.ch;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+
+        # Ohne diese Zeile schlägt jedes Speichern fehl ("Invalid Server Actions request").
+        proxy_set_header Host              $host;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Echte Client-IP für die Anmelde-Sperre (TRUSTED_PROXIES in .env).
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+
+        # Bild-Uploads bis 15 MB (nginx erlaubt sonst nur 1 MB).
+        client_max_body_size 20m;
+        # PDF-Erstellung und E-Mail-Versand dauern einige Sekunden.
+        proxy_read_timeout 90s;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/lektionsplaner /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d lektionen.tv-muster.ch --redirect
+```
+
+certbot holt das Zertifikat bei Let's Encrypt, stellt nginx auf HTTPS um, leitet HTTP auf HTTPS
+weiter und erneuert das Zertifikat automatisch. Jetzt den Einladungslink aus Schritt 4 öffnen.
+
+Die App ist nur über `127.0.0.1` erreichbar, also nur über nginx. `TRUSTED_PROXIES=172.30.0.1` in
+`.env` passt zum festen Docker-Netz aus `docker-compose.prod.yml` und muss nicht geändert werden.
+
+### 6. In der App einrichten
+
+1. **Einstellungen → E-Mail**: Mailserver des Hosting-Anbieters eintragen, «Testmail an mich
+   senden». Ab jetzt gehen Einladungen und Anmeldelinks per E-Mail raus.
+2. **Einstellungen → Verein**: Logo, Fusszeile, Startzeit, PDF-Kontingent für Lesende.
+3. **Einstellungen → Riegen und Leitende** erfassen, dann unter **Personen** einladen (Rolle für
+   alle Riegen oder pro Riege).
+
+### Updates
+
+```bash
+cd /opt/lektionsplaner
+git pull
+docker compose -f docker-compose.prod.yml up -d --build
+docker image prune -f        # alte Images aufräumen
+```
+
+Migrationen laufen dabei automatisch, Daten bleiben erhalten. Wer gerade eine Lektion bearbeitet,
+muss nach dem Update eventuell einmal neu laden.
+
+### Backup und Wiederherstellung
+
+Zu sichern sind die Datenbank und der Upload-Ordner (Logo, Skizzen). PDFs werden nie gespeichert.
+
+**Tägliches Backup einrichten (optional).** Das Skript sichert beides in `/var/backups/lektionsplaner`
+und löscht Sicherungen, die älter als 14 Tage sind. Als `/opt/lektionsplaner/backup.sh` speichern:
+
+```bash
+#!/bin/sh
+# Daily backup of the Lektionsplaner: database dump + uploaded images.
+set -eu
+
+APP_DIR=/opt/lektionsplaner
+BACKUP_DIR=/var/backups/lektionsplaner
+KEEP_DAYS=14
+STAMP=$(date +%F_%H%M)
+
+mkdir -p "$BACKUP_DIR"
+chmod 700 "$BACKUP_DIR"
+cd "$APP_DIR"
+
+# Database (custom format, compressed; restore with pg_restore)
+docker compose -f docker-compose.prod.yml exec -T db \
+  pg_dump -U lektionsplaner -Fc lektionsplaner > "$BACKUP_DIR/db-$STAMP.dump.tmp"
+mv "$BACKUP_DIR/db-$STAMP.dump.tmp" "$BACKUP_DIR/db-$STAMP.dump"
+
+# Uploaded images (Docker volume)
+docker run --rm -v lektionsplaner_storage:/data:ro -v "$BACKUP_DIR":/backup alpine \
+  tar czf "/backup/storage-$STAMP.tar.gz" -C /data .
+
+# Remove old backups
+find "$BACKUP_DIR" -type f \( -name 'db-*.dump' -o -name 'storage-*.tar.gz' \) \
+  -mtime +"$KEEP_DAYS" -delete
+
+echo "$(date -Iseconds) backup ok: db-$STAMP.dump, storage-$STAMP.tar.gz"
+```
+
+Ausführbar machen, einmal von Hand testen und dann täglich um 02:30 Uhr laufen lassen:
+
+```bash
+sudo chmod 700 /opt/lektionsplaner/backup.sh
+sudo /opt/lektionsplaner/backup.sh && ls -lh /var/backups/lektionsplaner
+echo '30 2 * * * root /opt/lektionsplaner/backup.sh >> /var/log/lektionsplaner-backup.log 2>&1' \
+  | sudo tee /etc/cron.d/lektionsplaner-backup
+```
+
+Ob es läuft, zeigt `tail /var/log/lektionsplaner-backup.log`. Ein Backup auf demselben Server
+schützt vor Bedienfehlern, aber nicht vor einem Plattenausfall: die Dateien zusätzlich regelmässig
+auf einen anderen Rechner kopieren (z. B. `rsync` oder der Backup-Dienst des Hosting-Anbieters).
+
+**Wiederherstellen** (z. B. auf einer frischen Installation nach Schritt 3; Dateinamen anpassen):
+
+```bash
+cd /opt/lektionsplaner
+docker compose -f docker-compose.prod.yml stop app
+docker compose -f docker-compose.prod.yml exec -T db \
+  pg_restore -U lektionsplaner -d lektionsplaner --clean --if-exists \
+  < /var/backups/lektionsplaner/db-2026-10-29_0230.dump
+docker run --rm -v lektionsplaner_storage:/data -v /var/backups/lektionsplaner:/backup alpine \
+  tar xzf /backup/storage-2026-10-29_0230.tar.gz -C /data
+docker compose -f docker-compose.prod.yml start app
+```
+
+Dazu `.env` sicher aufbewahren: Ohne denselben `AUTH_SECRET` lässt sich das gespeicherte
+SMTP-Passwort nicht mehr entschlüsseln (es muss dann neu eingegeben werden), und alle werden
+abgemeldet.
+
+### Nützliche Befehle
+
+| Befehl (`docker compose -f docker-compose.prod.yml …`) | Zweck                             |
+| ------------------------------------------------------ | --------------------------------- |
+| `logs -f app`                                          | Protokoll der App verfolgen       |
+| `ps`                                                   | Zustand der Container             |
+| `restart app`                                          | App neu starten                   |
+| `run --rm tools invite --email x@y.ch --role ADMIN`    | Person per Kommandozeile einladen |
+| `down`                                                 | Alles stoppen (Daten bleiben)     |
+
+## Entwicklung
+
+Voraussetzungen: Node.js 24 oder neuer und Docker Desktop (oder Docker Engine mit Compose).
+Entwicklung und Produktion nutzen dieselbe Postgres-Version.
+
+### Lokal starten
 
 ```bash
 cp .env.example .env          # Werte bei Bedarf anpassen
@@ -32,7 +239,7 @@ Alle E-Mails werden in der Entwicklung von Mailpit abgefangen: <http://localhost
 Nach einem Update mit neuen Migrationen (`npm run db:migrate`) den Entwicklungsserver neu starten:
 der laufende Server hält sonst den alten Datenbank-Client im Speicher.
 
-## Befehle
+### Befehle
 
 | Befehl               | Zweck                                        |
 | -------------------- | -------------------------------------------- |
@@ -48,6 +255,7 @@ der laufende Server hält sonst den alten Datenbank-Client im Speicher.
 | `npm run db:seed`    | Demodaten laden (nur in leere Datenbank)     |
 | `npm run db:reset`   | Datenbank leeren, migrieren, Demodaten laden |
 | `npm run invite`     | Person einladen (`--email`, `--role`)        |
+| `npm run setup`      | Leeren Verein anlegen + erste Admin-Person   |
 
 ## Datenmodell
 
@@ -88,7 +296,8 @@ das Versandprotokoll wird nach 180 Tagen gelöscht.
 
 ## Konfiguration
 
-Alle Umgebungsvariablen sind in [.env.example](.env.example) dokumentiert und werden beim Start
+Alle Umgebungsvariablen sind in [.env.example](.env.example) (Entwicklung) und
+[.env.production.example](.env.production.example) (Server) dokumentiert und werden beim Start
 validiert ([src/lib/env-schema.ts](src/lib/env-schema.ts)). Fehlt ein Wert oder ist er ungültig,
 bricht die App mit einer verständlichen Meldung ab.
 

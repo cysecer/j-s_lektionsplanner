@@ -41,7 +41,8 @@ export function LanguageSwitcher({ showName = false }: { showName?: boolean }) {
           variant="ghost"
           className="h-11"
           disabled={pending}
-          aria-label={t("header.language")}
+          // The visible language name is part of the name (WCAG 2.5.3 "label in name").
+          aria-label={`${t("header.language")}: ${LANGUAGE_NAMES[locale as keyof typeof LANGUAGE_NAMES]}`}
         >
           <Languages aria-hidden className="size-5" />
           <span className={showName ? "" : "sr-only lg:not-sr-only"}>

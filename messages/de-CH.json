@@ -566,7 +566,8 @@
       "teamRolesHint": "Riegen ohne Zugang sieht die Person nicht: weder Lektionen noch Programmblöcke dieser Riege.",
       "editTeams": "Riegen bearbeiten",
       "teamsTitle": "Riegen von {name}",
-      "teamsIntro": "Pro Riege: Leiter/-in (planen und bearbeiten) oder Nur lesen."
+      "teamsIntro": "Pro Riege: Leiter/-in (planen und bearbeiten) oder Nur lesen.",
+      "invitedNoEmail": "Einladung für {email} erstellt, aber die E-Mail konnte nicht gesendet werden. Gib den Link unten direkt weiter."
     },
     "tags": {
       "title": "Kategorien",

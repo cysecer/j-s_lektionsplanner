@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   // classic dynamic rendering model instead.
   cacheComponents: false,
   poweredByHeader: false,
+  // Self-contained server for the Docker image (set in the Dockerfile only;
+  // on Windows the standalone copy would need symlink rights).
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   // Native modules must not be bundled.
   serverExternalPackages: ["@node-rs/argon2", "sharp", "heic-convert", "playwright-core"],
   turbopack: {

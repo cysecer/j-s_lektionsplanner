@@ -25,7 +25,9 @@ export const createInvitationSchema = z.strictObject({
 
 /**
  * Creates an invitation, revoking any open one for the same address, and
- * emails the link. Returns the link so admins can also share it directly.
+ * emails the link. Returns the link so admins can also share it directly –
+ * also when the email could not be sent (e.g. no mail server set up yet):
+ * then `emailError` names the reason.
  */
 export async function createInvitation(raw: z.input<typeof createInvitationSchema>) {
   const input = createInvitationSchema.parse(raw);
@@ -63,17 +65,22 @@ export async function createInvitation(raw: z.input<typeof createInvitationSchem
   });
 
   const url = new URL(`/invite/${token}`, env.APP_URL).toString();
-  await sendInvitationEmail({
-    clubId: input.clubId,
-    to: input.email,
-    url,
-    locale: input.locale,
-    clubName: club.name,
-    role: access.role,
-    inviterName: inviter?.name ?? null,
-    validDays: INVITATION_VALID_DAYS,
-  });
-  return { url };
+  try {
+    await sendInvitationEmail({
+      clubId: input.clubId,
+      to: input.email,
+      url,
+      locale: input.locale,
+      clubName: club.name,
+      role: access.role,
+      inviterName: inviter?.name ?? null,
+      validDays: INVITATION_VALID_DAYS,
+    });
+  } catch (error) {
+    if (!(error instanceof ActionFailure)) throw error;
+    return { url, emailError: error.code ?? "mailFailed" };
+  }
+  return { url, emailError: null };
 }
 
 /** Team roles may only name active teams of the club. */

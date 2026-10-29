@@ -566,7 +566,8 @@
       "teamRolesHint": "La persuna na vesa betg las gruppas senza access: ni lur lecziuns ni lur blocs.",
       "editTeams": "Modifitgar las gruppas",
       "teamsTitle": "Gruppas da {name}",
-      "teamsIntro": "Per gruppa: manadra/manader (planisar e modifitgar) u mo leger."
+      "teamsIntro": "Per gruppa: manadra/manader (planisar e modifitgar) u mo leger.",
+      "invitedNoEmail": "Invitaziun per {email} creada, ma l’e-mail n’ha betg pudì vegnir tramess. Dà vinavant directamain il link sutvart."
     },
     "tags": {
       "title": "Categorias",

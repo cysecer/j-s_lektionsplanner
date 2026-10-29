@@ -110,6 +110,29 @@ Keine Schnittstelle ohne Validierung:
   E-Mail und 30 E-Mails pro Person und Tag; auch fehlgeschlagene Versuche zählen. Das
   Versandprotokoll (wer, wann, an wen, Betreff) wird nach 180 Tagen gelöscht.
 
+## HTTP-Header und Content Security Policy
+
+- Jede Antwort trägt eine Content Security Policy mit einem neuen Nonce pro Anfrage
+  ([src/proxy.ts](src/proxy.ts), [src/lib/server/security-headers.ts](src/lib/server/security-headers.ts)):
+  Skripte nur von der App selbst und nur mit Nonce (`strict-dynamic`), keine fremden Quellen,
+  `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`. Inline-
+  Style-Attribute bleiben erlaubt, weil Drag & Drop und Popovers Elemente damit positionieren.
+- Dazu `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+  `Referrer-Policy: strict-origin-when-cross-origin`, `Cross-Origin-Opener-Policy: same-origin`,
+  eine restriktive `Permissions-Policy` und bei https `Strict-Transport-Security`.
+- Die E2E-Tests schlagen fehl, sobald der Browser in irgendeinem Test etwas wegen der CSP
+  blockiert; die Policy wird so gegen die echte Nutzung geprüft.
+
+## Betrieb
+
+- Die App läuft im Container als unprivilegierter Benutzer `node` und lauscht nur auf
+  `127.0.0.1`; von aussen erreichbar ist sie nur über nginx (HTTPS).
+- Geheimnisse stehen nur in `.env` auf dem Server (nicht im Image: Build-Platzhalter gelten nur
+  für den Build-Befehl). Das Docker-Image enthält keine Testdaten und keine `docs/`.
+- Hochgeladene Bilder, die nach 24 Stunden an nichts hängen (z. B. Formular ohne Speichern
+  geschlossen), werden beim nächsten Upload gelöscht. PDFs werden nie gespeichert.
+- Datenbank und Upload-Ordner sind Docker-Volumes; Backup und Wiederherstellung: README.
+
 ## Löschen und Archivieren
 
 Riegen, Leitende und Zusatzfelder, die in Lektionen oder Programmblöcken vorkommen, werden beim

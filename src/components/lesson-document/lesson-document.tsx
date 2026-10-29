@@ -224,7 +224,7 @@ function ConditionValue({ field, doc }: { field: ConditionField; doc: LessonDocu
                 {t(`difficulty.${d}`)}
               </strong>
             ) : (
-              <span key={d} className="text-black/45" aria-hidden={doc.difficulty !== null}>
+              <span key={d} className="text-black/60" aria-hidden={doc.difficulty !== null}>
                 {t(`difficulty.${d}`)}
               </span>
             ),

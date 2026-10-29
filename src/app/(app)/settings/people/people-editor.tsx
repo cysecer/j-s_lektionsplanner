@@ -28,7 +28,7 @@ import {
 import type { TeamRole } from "@/generated/prisma/enums";
 import { LANGUAGE_NAMES, LOCALES, type Locale } from "@/i18n/config";
 import type { AccessValue } from "@/lib/auth/team-access";
-import { firstFieldError } from "@/lib/i18n-keys";
+import { actionErrorMessage, firstFieldError } from "@/lib/i18n-keys";
 import { useAction } from "@/lib/use-action";
 import {
   invitePersonAction,
@@ -490,15 +490,23 @@ function InviteDialog({
               locale: values.locale,
             },
             {
-              success: t("settings.people.invited", { email: values.email.trim() }),
               labels: {
                 email: t("settings.people.email"),
                 "access.teams": t("settings.people.teamRoles"),
               },
             },
           );
-          if (result) setLink(result.url);
-          return result !== undefined;
+          if (!result) return false;
+          setLink(result.url);
+          if (result.emailError) {
+            // The invitation exists; only the email failed (e.g. no mail server yet).
+            toast.warning(t("settings.people.invitedNoEmail", { email: values.email.trim() }), {
+              description: actionErrorMessage(t, { error: "internal", code: result.emailError }),
+            });
+          } else {
+            toast.success(t("settings.people.invited", { email: values.email.trim() }));
+          }
+          return true;
         }}
       >
         <FormField

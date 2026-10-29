@@ -54,7 +54,7 @@ export const invitePersonAction = action({
     });
     if (member) throw new ActionFailure("conflict", "alreadyMember");
     if (input.coachId) await assertCoachAvailable(viewer.clubId, input.coachId);
-    const { url } = await createInvitation({
+    const { url, emailError } = await createInvitation({
       clubId: viewer.clubId,
       email: input.email,
       access: input.access,
@@ -63,7 +63,7 @@ export const invitePersonAction = action({
       invitedById: viewer.userId,
     });
     done();
-    return { url };
+    return { url, emailError };
   },
 });
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hasRole } from "@/lib/auth/roles";
-import { storeImage, uploadPurposeSchema } from "@/lib/assets/service";
+import { storeImage, sweepUnusedUploads, uploadPurposeSchema } from "@/lib/assets/service";
 import { MAX_UPLOAD_BYTES } from "@/lib/images/process";
 import { ActionFailure } from "@/lib/server/result";
 import { route } from "@/lib/server/route";
@@ -19,6 +19,10 @@ export const POST = route({
       throw new ActionFailure("forbidden");
     }
     const asset = await storeImage(viewer.clubId, file!, query.purpose);
+    // Housekeeping must never make the upload itself fail.
+    await sweepUnusedUploads(viewer.clubId).catch((error: unknown) =>
+      console.error("[uploads] cleanup failed", error),
+    );
     return NextResponse.json(asset, { status: 201 });
   },
 });
