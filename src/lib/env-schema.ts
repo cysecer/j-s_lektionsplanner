@@ -48,6 +48,15 @@ export const envSchema = z.object({
   /** e.g. "Lektionsplaner <noreply@example.ch>" */
   MAIL_FROM: z.string().min(3),
 
+  /**
+   * How the server reaches itself to render PDFs: a headless browser opens an
+   * internal print page. Defaults to APP_URL; behind a reverse proxy set the
+   * direct address (e.g. http://127.0.0.1:3000) to skip the round trip.
+   */
+  INTERNAL_APP_URL: z.url({ protocol: /^https?$/ }).optional(),
+  /** PDFs rendered at the same time (each needs a browser tab, roughly 100 MB). */
+  PDF_CONCURRENCY: intFromString(1, 8).default(2),
+
   /** Directory for uploaded images (local storage). */
   STORAGE_DIR: z.string().min(1).default("./storage"),
 

@@ -443,7 +443,9 @@
       "logoAlt": "Logo di {name}",
       "noLogo": "Nessun logo caricato.",
       "removeLogo": "Rimuovi logo",
-      "removeLogoConfirm": "Il logo verrà rimosso da tutti i PDF futuri."
+      "removeLogoConfirm": "Il logo verrà rimosso da tutti i PDF futuri.",
+      "readerPdfLimit": "PDF al giorno per i lettori",
+      "readerPdfLimitHint": "Quanti PDF può creare al giorno una persona con diritti di lettura. 0 = nessuno. Monitori e admin non hanno limiti."
     },
     "teams": {
       "title": "Gruppi",
@@ -624,7 +626,9 @@
     "unknownLayout": "L'impaginazione PDF scelta non esiste più.",
     "nameTaken": "Questo nome è già in uso.",
     "unknownField": "Un campo aggiuntivo dell'impaginazione non esiste più o è archiviato.",
-    "layoutIsDefault": "L'impaginazione standard non può essere eliminata. Scegli prima un'altra come standard."
+    "layoutIsDefault": "L'impaginazione standard non può essere eliminata. Scegli prima un'altra come standard.",
+    "pdfQuota": "Hai raggiunto il limite giornaliero di PDF. Domani sarà di nuovo possibile.",
+    "pdfFailed": "Non è stato possibile creare il PDF. Riprova."
   },
   "sections": {
     "INTRO": "Introduzione",
@@ -694,5 +698,12 @@
       "goals": "Obiettivi/obiettivi di apprendimento",
       "notes": "Indicazioni/osservazioni"
     }
+  },
+  "pdf": {
+    "download": "Scarica PDF",
+    "creating": "Creazione del PDF …",
+    "remaining": "{count, plural, =0 {Oggi nessun altro PDF} one {Oggi ancora # PDF} other {Oggi ancora # PDF}}",
+    "pageOf": "Pagina {page} di {pages}",
+    "fileWord": "Preparazione-lezione"
   }
 }

@@ -17,6 +17,7 @@ export const updateClubAction = action({
         pdfFooterText: input.pdfFooterText,
         defaultStartTimeMinutes: input.defaultStartTime,
         defaultDurationMinutes: input.defaultDurationMinutes,
+        readerPdfDailyLimit: input.readerPdfDailyLimit,
       },
     });
     revalidatePath("/settings", "layout");

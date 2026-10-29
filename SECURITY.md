@@ -45,6 +45,20 @@ Keine Schnittstelle ohne Validierung:
   `X-Content-Type-Options: nosniff` und einer restriktiven Content-Security-Policy.
 - Gespeicherte Dateien werden nie überschrieben; Dateinamen erzeugt die App selbst.
 
+## PDF-Export
+
+- Die Druckseite `/print/lessons/:id` ist die einzige Seite ohne Session. Sie verlangt ein
+  Token, das die PDF-Route erzeugt: HMAC-signiert (abgeleitet von `AUTH_SECRET`), an Verein und
+  Lektion gebunden, 60 Sekunden gültig und nur einmal verwendbar. Ungültige Tokens ergeben 404.
+- Der Renderer-Browser läuft ohne JavaScript, ohne Cookies der Person und darf nur die App
+  selbst aufrufen; alle anderen Anfragen werden blockiert. Bilder werden als Data-URIs
+  eingebettet, statt über die Asset-Route geladen.
+- Text in der Fusszeilen-Vorlage (HTML) wird escaped.
+- PDFs werden nur im Speicher erzeugt und gestreamt, nie auf die Festplatte geschrieben.
+  Gleichzeitige Renderings sind begrenzt (`PDF_CONCURRENCY`), jedes hat ein Zeitlimit.
+- Lesende haben ein serverseitig erzwungenes Tageskontingent (Sperre pro Person gegen parallele
+  Anfragen); Leitende und Admins sind auf 200 pro Tag begrenzt.
+
 ## Löschen und Archivieren
 
 Riegen, Leitende und Zusatzfelder, die in Lektionen oder Programmblöcken vorkommen, werden beim

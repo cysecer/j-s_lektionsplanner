@@ -17,6 +17,7 @@ export default async function ClubSettingsPage() {
       logoAssetId: true,
       defaultStartTimeMinutes: true,
       defaultDurationMinutes: true,
+      readerPdfDailyLimit: true,
     },
   });
 
@@ -29,6 +30,7 @@ export default async function ClubSettingsPage() {
             pdfFooterText: club.pdfFooterText ?? "",
             defaultStartTime: formatTimeOfDay(club.defaultStartTimeMinutes),
             defaultDurationMinutes: String(club.defaultDurationMinutes),
+            readerPdfDailyLimit: String(club.readerPdfDailyLimit),
           }}
         />
       </SectionCard>

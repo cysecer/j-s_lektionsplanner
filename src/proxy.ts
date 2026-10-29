@@ -8,6 +8,8 @@ const PUBLIC_PATHS = [
   /^\/forgot-password$/,
   /^\/reset-password$/,
   /^\/api\/auth\//,
+  // PDF renderer only; the page itself checks a one-time token.
+  /^\/print\/lessons\/[0-9a-f-]{36}$/,
 ];
 
 /**

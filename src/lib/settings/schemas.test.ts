@@ -40,12 +40,14 @@ describe("club settings", () => {
         pdfFooterText: "",
         defaultStartTime: "18:00",
         defaultDurationMinutes: "90",
+        readerPdfDailyLimit: "0",
       }),
     ).toEqual({
       name: "TV Musterdorf",
       pdfFooterText: null,
       defaultStartTime: 1080,
       defaultDurationMinutes: 90,
+      readerPdfDailyLimit: 0,
     });
   });
 
@@ -55,6 +57,10 @@ describe("club settings", () => {
     { defaultDurationMinutes: "1441" },
     { defaultDurationMinutes: "90.5" },
     { defaultDurationMinutes: "neunzig" },
+    { readerPdfDailyLimit: "" },
+    { readerPdfDailyLimit: "-1" },
+    { readerPdfDailyLimit: "1001" },
+    { readerPdfDailyLimit: "2.5" },
     { extra: "field" },
   ])("rejects %j", (patch) => {
     const base = {
@@ -62,6 +68,7 @@ describe("club settings", () => {
       pdfFooterText: "",
       defaultStartTime: "18:00",
       defaultDurationMinutes: "90",
+      readerPdfDailyLimit: "10",
     };
     expect(clubSettingsSchema.safeParse({ ...base, ...patch }).success).toBe(false);
   });

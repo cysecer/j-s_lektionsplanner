@@ -443,7 +443,9 @@
       "logoAlt": "Logo of {name}",
       "noLogo": "No logo uploaded yet.",
       "removeLogo": "Remove logo",
-      "removeLogoConfirm": "The logo will be removed from all future PDFs."
+      "removeLogoConfirm": "The logo will be removed from all future PDFs.",
+      "readerPdfLimit": "PDFs per day for readers",
+      "readerPdfLimitHint": "How many PDFs a person with read-only access may create per day. 0 = none. Coaches and admins are not limited."
     },
     "teams": {
       "title": "Groups",
@@ -624,7 +626,9 @@
     "unknownLayout": "The selected PDF layout no longer exists.",
     "nameTaken": "This name is already taken.",
     "unknownField": "A custom field in the layout no longer exists or is archived.",
-    "layoutIsDefault": "The default layout cannot be deleted. Make another layout the default first."
+    "layoutIsDefault": "The default layout cannot be deleted. Make another layout the default first.",
+    "pdfQuota": "You have reached your daily PDF limit. You can create more tomorrow.",
+    "pdfFailed": "The PDF could not be created. Please try again."
   },
   "sections": {
     "INTRO": "Warm-up",
@@ -694,5 +698,12 @@
       "goals": "Goals/learning objectives",
       "notes": "Notes/remarks"
     }
+  },
+  "pdf": {
+    "download": "Download PDF",
+    "creating": "Creating PDF …",
+    "remaining": "{count, plural, =0 {No more PDFs today} one {# PDF left today} other {# PDFs left today}}",
+    "pageOf": "Page {page} of {pages}",
+    "fileWord": "Lesson-plan"
   }
 }

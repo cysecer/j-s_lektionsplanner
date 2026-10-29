@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { withoutPrefix } from "@/components/blocks/content-fields";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { PdfDownloadButton } from "@/components/pdf-download-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -139,13 +140,17 @@ export function LessonEditor({
     toast.error(t("lessons.statusNotChanged"));
   }
 
-  /** Pending changes are saved first, so the preview shows the current state. */
-  async function openPreview() {
+  /** Pending changes are saved first, so preview and PDF show the current state. */
+  async function savedFirst() {
     if (saveState !== "saved" && !(await save())) {
       toast.error(t("lessons.preview.saveFirst"));
-      return;
+      return false;
     }
-    router.push(`/lessons/${lessonId}/preview`);
+    return true;
+  }
+
+  async function openPreview() {
+    if (await savedFirst()) router.push(`/lessons/${lessonId}/preview`);
   }
 
   // Autosave drafts shortly after the last change.
@@ -241,6 +246,7 @@ export function LessonEditor({
             <Eye aria-hidden />
             {t("lessons.preview.open")}
           </Button>
+          <PdfDownloadButton lessonId={lessonId} remaining={null} beforeDownload={savedFirst} />
           <LessonActions lessonId={lessonId} title={general.title} />
         </div>
       </div>

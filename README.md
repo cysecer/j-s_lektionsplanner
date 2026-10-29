@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 8 – Layout-Editor und Leseansicht).
+> Status: im Aufbau (Phase 9 – PDF-Export).
 
 ## Voraussetzungen
 
@@ -17,6 +17,7 @@ Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 cp .env.example .env          # Werte bei Bedarf anpassen
 docker compose up -d          # Postgres + Mailpit
 npm install                   # erzeugt auch den Prisma-Client
+npx playwright install chromium --only-shell   # Browser für den PDF-Export (einmalig)
 npm run db:migrate            # Datenbankschema anlegen
 npm run db:seed               # Demodaten (Beispiel-Lektion "Spiele")
 npm run invite -- --email du@example.ch --role ADMIN   # erste Administratorin einladen
@@ -58,6 +59,18 @@ verändern alte Lektionen nicht. Die Volltextsuche nutzt Postgres mit deutscher 
 Für die E2E-Tests einmalig den Browser installieren: `npx playwright install chromium`. Die
 E2E-Tests nutzen eine eigene Datenbank (`lektionsplaner_e2e`), die bei jedem Lauf neu angelegt
 wird; deine Entwicklungsdaten bleiben unberührt. Docker (Postgres + Mailpit) muss laufen.
+
+## PDF-Export
+
+PDFs erzeugt ein Headless-Chromium auf dem Server: Er öffnet eine interne Druckseite der App
+(Zugang nur mit einem signierten Einmal-Token, eine Minute gültig) und druckt sie als A4. Das PDF
+wird direkt an den Browser gestreamt und **nie gespeichert**, es kann also keine Festplatte
+füllen. Programmpunkte werden nie über einen Seitenumbruch geteilt; die Spaltenköpfe wiederholen
+sich, jede Seite trägt Fusszeile und Seitenzahl.
+
+Lesende haben ein Tageskontingent (Standard 10, einstellbar unter Einstellungen → Verein).
+Gezählt wird pro Kalendertag in Zürcher Zeit; das Protokoll (wer, wann, welche Lektion) wird
+nach 90 Tagen gelöscht.
 
 ## Konfiguration
 

@@ -3,10 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { LessonDocumentView } from "@/components/lesson-document/lesson-document";
+import { PdfDownloadButton } from "@/components/pdf-download-button";
 import { Button } from "@/components/ui/button";
 import type { Viewer } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getDocumentClub, getLessonDocument, resolveLayout } from "@/lib/lessons/document-queries";
+import { remainingPdfs } from "@/lib/pdf/quota";
 import { LayoutSwitcher } from "./layout-switcher";
 
 /**
@@ -28,7 +30,7 @@ export async function LessonDocumentPage({
   const result = await getLessonDocument(viewer.clubId, lessonId, sectionTitle);
   if (!result) notFound();
 
-  const [layout, club, layouts] = await Promise.all([
+  const [layout, club, layouts, remaining] = await Promise.all([
     resolveLayout(viewer.clubId, layoutId ?? result.layoutId),
     getDocumentClub(viewer.clubId),
     db.layout.findMany({
@@ -36,6 +38,7 @@ export async function LessonDocumentPage({
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
+    remainingPdfs(viewer),
   ]);
   const canEdit = viewer.permissions.editLessons;
 
@@ -48,9 +51,12 @@ export async function LessonDocumentPage({
             {canEdit ? t("lessons.preview.backToEditor") : t("lessons.back")}
           </Link>
         </Button>
-        {layouts.length > 1 && layout.id ? (
-          <LayoutSwitcher layouts={layouts} current={layout.id} />
-        ) : null}
+        <div className="flex flex-wrap items-center gap-3">
+          {layouts.length > 1 && layout.id ? (
+            <LayoutSwitcher layouts={layouts} current={layout.id} />
+          ) : null}
+          <PdfDownloadButton lessonId={lessonId} layoutId={layoutId} remaining={remaining} />
+        </div>
       </div>
       <h1 className="sr-only">{result.document.title}</h1>
       <div className="overflow-x-auto rounded-lg border bg-white p-4 shadow-sm sm:p-8 print:overflow-visible print:border-0 print:p-0 print:shadow-none">

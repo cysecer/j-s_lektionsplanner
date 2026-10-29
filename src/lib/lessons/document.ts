@@ -53,6 +53,8 @@ export type DocumentClub = {
   footerText: string | null;
   /** Custom fields that layouts may reference (archived ones included, for old lessons). */
   fields: { id: string; label: string; type: string }[];
+  /** Images as data URIs by asset id, where there is no session to load them (PDF). */
+  inlineAssets?: Record<string, string>;
 };
 
 type LessonRow = {

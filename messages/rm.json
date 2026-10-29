@@ -443,7 +443,9 @@
       "logoAlt": "Logo da {name}",
       "noLogo": "Anc nagin logo chargià si.",
       "removeLogo": "Allontanar il logo",
-      "removeLogoConfirm": "Il logo vegn allontanà da tut ils PDFs futurs."
+      "removeLogoConfirm": "Il logo vegn allontanà da tut ils PDFs futurs.",
+      "readerPdfLimit": "PDFs per di per lecturs",
+      "readerPdfLimitHint": "Quants PDFs ina persuna cun dretgs da lectura dastga crear per di. 0 = nagins. Manaders ed admins n'èn betg limitads."
     },
     "teams": {
       "title": "Gruppas",
@@ -624,7 +626,9 @@
     "unknownLayout": "La structura PDF tschernida n'exista betg pli.",
     "nameTaken": "Quest num è gia occupà.",
     "unknownField": "In champ supplementar da la structura n'exista betg pli u è archivà.",
-    "layoutIsDefault": "La structura da standard na po betg vegnir stizzada. Tscherna l'emprim in'autra sco standard."
+    "layoutIsDefault": "La structura da standard na po betg vegnir stizzada. Tscherna l'emprim in'autra sco standard.",
+    "pdfQuota": "Ti has cuntanschì tia limita dal di per PDFs. Damaun vai puspè.",
+    "pdfFailed": "Il PDF n'ha betg pudì vegnir creà. Emprova per plaschair anc ina giada."
   },
   "sections": {
     "INTRO": "Introducziun",
@@ -694,5 +698,12 @@
       "goals": "Finamiras/finamiras d'emprender",
       "notes": "Indicaziuns/remartgas"
     }
+  },
+  "pdf": {
+    "download": "Telechargiar il PDF",
+    "creating": "Il PDF vegn creà …",
+    "remaining": "{count, plural, =0 {Oz nagins PDFs pli} one {Oz anc # PDF} other {Oz anc # PDFs}}",
+    "pageOf": "Pagina {page} da {pages}",
+    "fileWord": "Preparaziun-da-lecziun"
   }
 }

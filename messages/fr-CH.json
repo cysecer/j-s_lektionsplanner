@@ -443,7 +443,9 @@
       "logoAlt": "Logo de {name}",
       "noLogo": "Aucun logo téléversé.",
       "removeLogo": "Supprimer le logo",
-      "removeLogoConfirm": "Le logo sera retiré de tous les futurs PDF."
+      "removeLogoConfirm": "Le logo sera retiré de tous les futurs PDF.",
+      "readerPdfLimit": "PDF par jour pour les lecteurs",
+      "readerPdfLimitHint": "Nombre de PDF qu'une personne avec droits de lecture peut créer par jour. 0 = aucun. Les moniteurs et admins ne sont pas limités."
     },
     "teams": {
       "title": "Groupes",
@@ -624,7 +626,9 @@
     "unknownLayout": "La mise en page PDF choisie n'existe plus.",
     "nameTaken": "Ce nom est déjà utilisé.",
     "unknownField": "Un champ supplémentaire de la mise en page n'existe plus ou est archivé.",
-    "layoutIsDefault": "La mise en page standard ne peut pas être supprimée. Choisis d'abord une autre mise en page standard."
+    "layoutIsDefault": "La mise en page standard ne peut pas être supprimée. Choisis d'abord une autre mise en page standard.",
+    "pdfQuota": "Tu as atteint ta limite quotidienne de PDF. Ce sera à nouveau possible demain.",
+    "pdfFailed": "Le PDF n'a pas pu être créé. Merci de réessayer."
   },
   "sections": {
     "INTRO": "Mise en train",
@@ -694,5 +698,12 @@
       "goals": "Objectifs/objectifs d'apprentissage",
       "notes": "Remarques"
     }
+  },
+  "pdf": {
+    "download": "Télécharger le PDF",
+    "creating": "Création du PDF …",
+    "remaining": "{count, plural, =0 {Plus de PDF aujourd'hui} one {Encore # PDF aujourd'hui} other {Encore # PDF aujourd'hui}}",
+    "pageOf": "Page {page} sur {pages}",
+    "fileWord": "Preparation-lecon"
   }
 }

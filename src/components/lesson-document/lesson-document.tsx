@@ -18,6 +18,13 @@ import { formatClockTime } from "@/lib/lessons/timing";
 import { richTextSchema, type RichText } from "@/lib/rich-text/schema";
 import { cn } from "@/lib/utils";
 
+/**
+ * Block flow only (margins, no grid/flex gaps): Chromium sizes grid
+ * containers wrongly when a table row inside moves to the next page, so
+ * the following content would overlap it in the PDF.
+ */
+const RICH_TEXT = "block space-y-[0.3em]";
+
 const FONT_SIZE: Record<TextSize, string> = { small: "8.5pt", medium: "10pt", large: "11.5pt" };
 
 /**
@@ -43,11 +50,11 @@ export function LessonDocumentView({
 
   return (
     <article
-      className={cn("lesson-document grid gap-[1.2em] bg-white text-black", className)}
+      className={cn("lesson-document space-y-[1.2em] bg-white text-black", className)}
       style={{ fontSize: FONT_SIZE[settings.textSize] }}
     >
       <header className="flex items-start justify-between gap-4">
-        <div className="grid gap-[0.4em]">
+        <div className="space-y-[0.4em]">
           <p className="text-[1.6em] font-bold">{club.name}</p>
           <p>
             <span>{t("lessonTitle")}: </span>
@@ -63,6 +70,7 @@ export function LessonDocumentView({
         {settings.showLogo && club.logoAssetId ? (
           <AssetImage
             assetId={club.logoAssetId}
+            src={club.inlineAssets?.[club.logoAssetId]}
             alt={club.name}
             className="max-h-[6em] max-w-[12em] object-contain"
           />
@@ -70,7 +78,7 @@ export function LessonDocumentView({
       </header>
 
       {settings.conditions.length > 0 ? (
-        <section className="grid gap-[0.4em]">
+        <section className="space-y-[0.4em]">
           <h2 className="font-bold">{t("conditions")}</h2>
           <table className="w-full table-fixed border-collapse">
             <colgroup>
@@ -94,15 +102,15 @@ export function LessonDocumentView({
       ) : null}
 
       {settings.boxes.map((box) => (
-        <section key={box} className="grid break-inside-avoid gap-[0.4em]">
+        <section key={box} className="break-inside-avoid space-y-[0.4em]">
           <h2 className="font-bold">{t(`boxes.${box}`)}:</h2>
           <div className={cn(cellClass, "min-h-[2.5em]")}>
-            <RichTextView value={doc[box]} />
+            <RichTextView className={RICH_TEXT} value={doc[box]} />
           </div>
         </section>
       ))}
 
-      <section className="grid gap-[0.8em]">
+      <section className="space-y-[0.8em]">
         <h2 className="font-bold">{t("contents")}:</h2>
         {doc.sections.map((section) => (
           <SectionTable
@@ -176,7 +184,7 @@ function SectionTable({
             <tr key={item.id} className="break-inside-avoid">
               {columns.map((c) => (
                 <td key={c.id} className={cellClass}>
-                  <div className="grid gap-[0.5em]">
+                  <div className="space-y-[0.5em]">
                     {c.fields.map((f) => (
                       <FieldValue
                         key={f.field}
@@ -234,7 +242,7 @@ function ConditionValue({ field, doc }: { field: ConditionField; doc: LessonDocu
     case "presentCoaches":
       return doc.presentCoaches.join(", ");
     case "safety":
-      return <RichTextView value={doc.safety} />;
+      return <RichTextView className={RICH_TEXT} value={doc.safety} />;
   }
 }
 
@@ -276,7 +284,13 @@ function FieldValue({
         label={showLabel ? def.label : null}
         block={def.type === "LONG_TEXT" || def.type === "LIST" || def.type === "IMAGE"}
       >
-        <CustomValue type={def.type} value={value} label={def.label} locale={locale} />
+        <CustomValue
+          type={def.type}
+          value={value}
+          label={def.label}
+          locale={locale}
+          inlineAssets={club.inlineAssets}
+        />
       </Labeled>
     );
   }
@@ -308,7 +322,7 @@ function FieldValue({
     case "organization":
       return item[field] ? (
         <Labeled label={label} block>
-          <RichTextView value={item[field]} />
+          <RichTextView className={RICH_TEXT} value={item[field]} />
         </Labeled>
       ) : null;
     case "variations":
@@ -328,6 +342,7 @@ function FieldValue({
             <AssetImage
               key={id}
               assetId={id}
+              src={club.inlineAssets?.[id]}
               alt={t("blocks.sketchAlt", { number: i + 1, title: item.title })}
               className="max-h-[16em] w-full object-contain"
             />
@@ -370,7 +385,7 @@ function Labeled({
   if (!label) return <div>{children}</div>;
   if (block) {
     return (
-      <div className="grid gap-[0.2em]">
+      <div className="space-y-[0.2em]">
         <p className="font-bold">{label}:</p>
         {children}
       </div>
@@ -389,15 +404,17 @@ function CustomValue({
   value,
   label,
   locale,
+  inlineAssets,
 }: {
   type: string;
   value: unknown;
   label: string;
   locale: Locale;
+  inlineAssets: Record<string, string> | undefined;
 }) {
   if (type === "LONG_TEXT") {
     const doc = richTextSchema.safeParse(value);
-    return doc.success ? <RichTextView value={doc.data as RichText} /> : null;
+    return doc.success ? <RichTextView className={RICH_TEXT} value={doc.data as RichText} /> : null;
   }
   if (type === "LIST" && Array.isArray(value)) {
     return (
@@ -411,7 +428,12 @@ function CustomValue({
   if (type === "NUMBER" && typeof value === "number") return <>{formatNumber(value, locale)}</>;
   if (type === "IMAGE" && typeof value === "string") {
     return (
-      <AssetImage assetId={value} alt={label} className="max-h-[16em] w-full object-contain" />
+      <AssetImage
+        assetId={value}
+        src={inlineAssets?.[value]}
+        alt={label}
+        className="max-h-[16em] w-full object-contain"
+      />
     );
   }
   return <>{String(value)}</>;

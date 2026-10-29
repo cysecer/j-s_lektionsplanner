@@ -443,7 +443,9 @@
       "logoAlt": "Logo von {name}",
       "noLogo": "Noch kein Logo hochgeladen.",
       "removeLogo": "Logo entfernen",
-      "removeLogoConfirm": "Das Logo wird aus allen künftigen PDFs entfernt."
+      "removeLogoConfirm": "Das Logo wird aus allen künftigen PDFs entfernt.",
+      "readerPdfLimit": "PDFs pro Tag für Lesende",
+      "readerPdfLimitHint": "Wie viele PDFs eine Person mit Leserechten pro Tag erstellen darf. 0 = keine. Leitende und Admins sind nicht begrenzt."
     },
     "teams": {
       "title": "Riegen",
@@ -624,7 +626,9 @@
     "unknownLayout": "Das gewählte PDF-Layout existiert nicht mehr.",
     "nameTaken": "Dieser Name ist schon vergeben.",
     "unknownField": "Ein Zusatzfeld im Layout gibt es nicht mehr oder es ist archiviert.",
-    "layoutIsDefault": "Das Standard-Layout kann nicht gelöscht werden. Wähle zuerst ein anderes als Standard."
+    "layoutIsDefault": "Das Standard-Layout kann nicht gelöscht werden. Wähle zuerst ein anderes als Standard.",
+    "pdfQuota": "Du hast dein Tageslimit für PDFs erreicht. Morgen geht es wieder.",
+    "pdfFailed": "Das PDF konnte nicht erstellt werden. Bitte versuche es nochmals."
   },
   "sections": {
     "INTRO": "Einleitung",
@@ -694,5 +698,12 @@
       "goals": "Zielsetzungen/Lernziele",
       "notes": "Hinweise/Bemerkungen"
     }
+  },
+  "pdf": {
+    "download": "PDF herunterladen",
+    "creating": "PDF wird erstellt …",
+    "remaining": "{count, plural, =0 {Heute keine PDFs mehr} one {Heute noch # PDF} other {Heute noch # PDFs}}",
+    "pageOf": "Seite {page} von {pages}",
+    "fileWord": "Lektionsvorbereitung"
   }
 }

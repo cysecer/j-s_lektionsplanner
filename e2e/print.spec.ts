@@ -1,18 +1,14 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
 import { acceptInvitation, invite, uniqueEmail } from "./helpers";
+import { overlappingText, readPdf } from "./pdf-helpers";
 
-/** Text of each PDF page, read with PDF.js. */
-async function pdfPages(pdf: Buffer): Promise<string[]> {
-  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const doc = await getDocument({ data: new Uint8Array(pdf), useSystemFonts: true }).promise;
-  const pages: string[] = [];
-  for (let n = 1; n <= doc.numPages; n++) {
-    const content = await (await doc.getPage(n)).getTextContent();
-    pages.push(content.items.map((i) => ("str" in i ? i.str : "")).join(" "));
-  }
-  await doc.cleanup();
-  return pages;
+async function pdfPages(pdf: Uint8Array): Promise<string[]> {
+  const pages = await readPdf(pdf);
+  // Text drawn over other text means the layout broke at a page break.
+  for (const [i, page] of pages.entries())
+    expect(overlappingText(page), `page ${i + 1}`).toEqual([]);
+  return pages.map((p) => p.text);
 }
 
 const count = (text: string, needle: string) => text.split(needle).length - 1;

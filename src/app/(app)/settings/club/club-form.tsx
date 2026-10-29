@@ -13,6 +13,7 @@ type Values = {
   pdfFooterText: string;
   defaultStartTime: string;
   defaultDurationMinutes: string;
+  readerPdfDailyLimit: string;
 };
 
 export function ClubForm({ initial }: { initial: Values }) {
@@ -32,6 +33,7 @@ export function ClubForm({ initial }: { initial: Values }) {
         pdfFooterText: t("settings.club.footer"),
         defaultStartTime: t("settings.club.defaultStartTime"),
         defaultDurationMinutes: t("settings.club.defaultDuration"),
+        readerPdfDailyLimit: t("settings.club.readerPdfLimit"),
       },
     });
   }
@@ -79,6 +81,19 @@ export function ClubForm({ initial }: { initial: Values }) {
           error={error("defaultDurationMinutes")}
         />
       </div>
+      <FormField
+        label={t("settings.club.readerPdfLimit")}
+        type="number"
+        inputMode="numeric"
+        min={0}
+        max={1000}
+        value={values.readerPdfDailyLimit}
+        onChange={set("readerPdfDailyLimit")}
+        required
+        className="sm:max-w-xs"
+        hint={t("settings.club.readerPdfLimitHint")}
+        error={error("readerPdfDailyLimit")}
+      />
       <div>
         <Button type="submit" className="h-11" disabled={pending}>
           {t("common.save")}

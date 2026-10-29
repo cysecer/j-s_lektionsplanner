@@ -39,6 +39,15 @@ export const clubSettingsSchema = z.strictObject({
   pdfFooterText: z.union([z.literal("").transform(() => null), displayName(120)]),
   defaultStartTime: clockTimeSchema,
   defaultDurationMinutes: durationMinutesSchema,
+  /** PDFs per reader and day; 0 = readers cannot export. Empty is an error, not 0. */
+  readerPdfDailyLimit: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.coerce
+      .number({ message: "validation.wholeNumber" })
+      .int({ message: "validation.wholeNumber" })
+      .min(0, { message: "validation.numberMin" })
+      .max(1000, { message: "validation.numberMax" }),
+  ),
 });
 
 export const clubLogoSchema = z.strictObject({ assetId: z.uuid().nullable() });

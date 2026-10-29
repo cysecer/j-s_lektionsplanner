@@ -54,6 +54,8 @@ model Club {
   defaultStartTimeMinutes Int      @default(1080)
   /// Pre-filled planned lesson duration in minutes.
   defaultDurationMinutes  Int      @default(90)
+  /// PDFs a reader may create per day (Europe/Zurich calendar day).
+  readerPdfDailyLimit     Int      @default(10)
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
 
@@ -70,6 +72,7 @@ model Club {
   lessons       Lesson[]
   memberships   Membership[]
   invitations   Invitation[]
+  pdfExports    PdfExport[]
 }
 
 /// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
@@ -322,6 +325,7 @@ model Lesson {
   layout         Layout?       @relation(fields: [layoutId], references: [id], onDelete: SetNull)
   presentCoaches LessonCoach[]
   items          LessonItem[]
+  pdfExports     PdfExport[]
 
   @@index([clubId, date])
   @@index([clubId, teamId, date])
@@ -421,6 +425,7 @@ model User {
   passkeys           Passkey[]
   memberships        Membership[]
   invitationsCreated Invitation[] @relation("InvitedBy")
+  pdfExports         PdfExport[]
 
   @@map("user")
 }
@@ -545,4 +550,21 @@ model Invitation {
   invitedBy User?  @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
 
   @@index([clubId, email])
+}
+
+/// One generated PDF. The file itself is never stored: it is streamed to
+/// the browser. Rows count against the reader quota and are kept 90 days.
+model PdfExport {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clubId    String   @db.Uuid
+  userId    String   @db.Uuid
+  lessonId  String?  @db.Uuid
+  createdAt DateTime @default(now())
+
+  club   Club    @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson? @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
 }
