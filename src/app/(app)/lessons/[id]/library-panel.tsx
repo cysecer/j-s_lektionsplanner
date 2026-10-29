@@ -41,7 +41,7 @@ export function LibraryPanel({
   const [results, setResults] = useState<Result[]>([]);
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const sectionName = (s: LessonOptions["sections"][number]) =>
     s.name ?? (s.builtin ? t(`sections.${s.builtin}`) : "");
 
@@ -231,8 +231,8 @@ function LibraryResult({
         </button>
       ) : null}
       <div className="min-w-0 flex-1 px-1">
-        <p className="truncate font-medium">{block.title}</p>
-        <p className="text-muted-foreground truncate text-xs">
+        <p className="font-medium break-words">{block.title}</p>
+        <p className="text-muted-foreground text-xs break-words">
           {[
             block.durationMinutes !== null
               ? t("units.minutesShort", { count: block.durationMinutes })

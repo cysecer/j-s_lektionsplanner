@@ -132,3 +132,8 @@
     @apply font-sans;
   }
 }
+
+/* Pages that need the room (the lesson editor with its library) widen the shell. */
+body:has([data-wide-page]) .app-container {
+  max-width: 100rem;
+}

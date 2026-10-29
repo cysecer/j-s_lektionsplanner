@@ -151,7 +151,7 @@ export function LessonEditor({
   );
 
   return (
-    <div className="grid gap-6">
+    <div data-wide-page className="grid gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Button asChild variant="ghost" className="-ml-3 h-11">
           <Link href="/lessons">
@@ -206,7 +206,7 @@ export function LessonEditor({
       ) : null}
 
       <LessonDnd items={items} sectionOrder={sectionOrder} updateItems={updateItems}>
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_26rem] 2xl:grid-cols-[minmax(0,1fr)_30rem]">
           <div className="grid min-w-0 gap-6">
             <div className="flex flex-wrap items-baseline gap-3">
               <h1 className="text-3xl font-semibold tracking-tight">

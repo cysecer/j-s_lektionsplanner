@@ -116,7 +116,19 @@ test("editing a library item asks where the change applies", async ({ page }) =>
   await dialog.getByLabel("Name oder Beschreibung").fill("Gast-Leiterin");
   await dialog.getByRole("button", { name: "Übernehmen" }).click();
   await expect(dialog).toBeHidden();
-  await expect(section(page, "Ausklang").getByText("Verantwortlich: Gast-Leiterin")).toBeVisible();
+  await expect(section(page, "Ausklang").getByLabel("Appell: Name oder Beschreibung")).toHaveValue(
+    "Gast-Leiterin",
+  );
+
+  // Leaders are assigned right on the card, without opening the dialog.
+  const leader = section(page, "Ausklang").getByLabel("Appell: Verantwortlich");
+  await leader.selectOption({ label: "Marco Steiner" });
+  await expect(section(page, "Ausklang").getByLabel("Appell: Name oder Beschreibung")).toHaveCount(
+    0,
+  );
+  await saved(page);
+  await page.reload();
+  await expect(leader.locator("option:checked")).toHaveText("Marco Steiner");
 
   // Content change → choice: only for this training.
   await page.getByRole("button", { name: "Appell: Bearbeiten" }).click();

@@ -20,7 +20,7 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { GripVertical } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { actionErrorMessage } from "@/lib/i18n-keys";
 import { insertItem, itemsOf, moveItem, type EditorItem } from "@/lib/lessons/editor-model";
@@ -44,6 +44,11 @@ const collisionDetection: CollisionDetection = (args) =>
     : closestCorners(args);
 
 export const sectionDroppableId = (sectionId: string) => `section:${sectionId}`;
+
+const DropSectionContext = createContext<string | null>(null);
+
+/** Section a dragged block would land in right now (null when not dragging). */
+export const useDropSection = () => useContext(DropSectionContext);
 export const libraryDraggableId = (blockId: string) => `library:${blockId}`;
 
 /**
@@ -64,6 +69,7 @@ export function LessonDnd({
 }) {
   const t = useTranslations();
   const [active, setActive] = useState<DragData | null>(null);
+  const [dropSection, setDropSection] = useState<string | null>(null);
   const latest = useRef(items);
   useEffect(() => {
     latest.current = items;
@@ -86,14 +92,16 @@ export function LessonDnd({
   }
 
   function onDragStart(event: DragStartEvent) {
-    setActive(dataOf(event.active.data));
+    const data = dataOf(event.active.data);
+    setActive(data);
+    setDropSection(data?.type === "item" ? data.sectionId : null);
   }
 
   function onDragOver(event: DragOverEvent) {
     const activeData = dataOf(event.active.data);
-    if (!event.over || activeData?.type !== "item") return;
-    const target = targetOf(event.over.id, dataOf(event.over.data));
-    if (!target) return;
+    const target = event.over ? targetOf(event.over.id, dataOf(event.over.data)) : null;
+    setDropSection(target?.sectionId ?? null);
+    if (!event.over || !target || activeData?.type !== "item") return;
     const current = latest.current.find((i) => i.id === event.active.id);
     // Live-move across sections while hovering; same-section order is settled on drop.
     if (current && current.sectionId !== target.sectionId) {
@@ -106,6 +114,7 @@ export function LessonDnd({
   async function onDragEnd(event: DragEndEvent) {
     const activeData = dataOf(event.active.data);
     setActive(null);
+    setDropSection(null);
     if (!event.over || !activeData) return;
     const target = targetOf(event.over.id, dataOf(event.over.data));
     if (!target) return;
@@ -154,13 +163,16 @@ export function LessonDnd({
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragEnd={(e) => void onDragEnd(e)}
-      onDragCancel={() => setActive(null)}
+      onDragCancel={() => {
+        setActive(null);
+        setDropSection(null);
+      }}
       accessibility={{
         announcements,
         screenReaderInstructions: { draggable: t("lessons.dnd.instructions") },
       }}
     >
-      {children}
+      <DropSectionContext value={dropSection}>{children}</DropSectionContext>
       <DragOverlay>
         {active ? (
           <div className="bg-background flex items-center gap-2 rounded-lg border p-3 shadow-lg">

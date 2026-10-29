@@ -12,6 +12,7 @@ import {
   Pencil,
   Plus,
   Trash2,
+  UserRound,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useState, type FormEvent } from "react";
@@ -26,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import type { Responsible } from "@/lib/blocks/schema";
 import {
   blankItem,
   itemsOf,
@@ -40,7 +42,8 @@ import type { LessonGeneralValues } from "@/lib/lessons/schema";
 import { computeLessonTiming, formatClockTime, type LessonTiming } from "@/lib/lessons/timing";
 import { cn } from "@/lib/utils";
 import { ItemDialog } from "./item-dialog";
-import { sectionDroppableId, type DragData } from "./lesson-dnd";
+import { sectionDroppableId, useDropSection, type DragData } from "./lesson-dnd";
+import { ResponsibleSelect } from "./responsible-select";
 
 type Section = LessonOptions["sections"][number];
 
@@ -84,7 +87,8 @@ export function SectionBoard({
           items={itemsOf(items, section.id)}
           timing={timing}
           sections={options.sections.map((s) => ({ id: s.id, name: sectionName(s) }))}
-          coachName={(id) => options.coaches.find((c) => c.id === id)?.name ?? ""}
+          coaches={options.coaches}
+          presentCoachIds={general.presentCoachIds}
           itemErrorIds={itemErrorIds}
           onEdit={setEditing}
           onNudge={(id, dir) => updateItems((list) => nudgeItem(list, sectionOrder, id, dir))}
@@ -92,6 +96,9 @@ export function SectionBoard({
             updateItems((list) => moveItem(list, sectionOrder, id, sectionId, null))
           }
           onRemove={(id) => updateItems((list) => list.filter((i) => i.id !== id))}
+          onResponsible={(id, responsible) =>
+            updateItems((list) => list.map((i) => (i.id === id ? { ...i, responsible } : i)))
+          }
           onQuickAdd={(title, minutes) =>
             updateItems((list) => [
               ...list,
@@ -175,12 +182,14 @@ function SectionColumn({
   items,
   timing,
   sections,
-  coachName,
+  coaches,
+  presentCoachIds,
   itemErrorIds,
   onEdit,
   onNudge,
   onMove,
   onRemove,
+  onResponsible,
   onQuickAdd,
 }: {
   section: Section;
@@ -188,22 +197,32 @@ function SectionColumn({
   items: EditorItem[];
   timing: LessonTiming;
   sections: { id: string; name: string }[];
-  coachName: (id: string) => string;
+  coaches: LessonOptions["coaches"];
+  presentCoachIds: string[];
   itemErrorIds: Set<string>;
   onEdit: (id: string) => void;
   onNudge: (id: string, direction: -1 | 1) => void;
   onMove: (id: string, sectionId: string) => void;
   onRemove: (id: string) => void;
+  onResponsible: (id: string, responsible: Responsible) => void;
   onQuickAdd: (title: string, minutes: string) => void;
 }) {
   const t = useTranslations();
   const headingId = useId();
   const data: DragData = { type: "section", sectionId: section.id, title };
-  const { setNodeRef, isOver } = useDroppable({ id: sectionDroppableId(section.id), data });
+  const { setNodeRef } = useDroppable({ id: sectionDroppableId(section.id), data });
+  const highlighted = useDropSection() === section.id;
   const total = timing.sections[section.id]?.totalMinutes ?? 0;
 
   return (
-    <section aria-labelledby={headingId} className="grid gap-3">
+    <section
+      ref={setNodeRef}
+      aria-labelledby={headingId}
+      className={cn(
+        "-m-2 grid gap-3 rounded-xl p-2 ring-2 ring-transparent transition-colors",
+        highlighted && "bg-primary/5 ring-primary/50",
+      )}
+    >
       <div className="flex items-baseline justify-between gap-2 border-b pb-1">
         <h2 id={headingId} className="text-sm font-semibold tracking-wider uppercase">
           {title}
@@ -212,13 +231,7 @@ function SectionColumn({
           {t("units.minutesShort", { count: total })}
         </span>
       </div>
-      <div
-        ref={setNodeRef}
-        className={cn(
-          "grid min-h-16 gap-2 rounded-xl p-1 transition-colors",
-          isOver && "bg-primary/5 ring-primary/40 ring-2",
-        )}
-      >
+      <div className="grid min-h-16 gap-2">
         <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
           {items.length === 0 ? (
             <p className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
@@ -234,12 +247,14 @@ function SectionColumn({
                 sectionId={section.id}
                 timing={timing}
                 sections={sections}
-                coachName={coachName}
+                coaches={coaches}
+                presentCoachIds={presentCoachIds}
                 hasError={itemErrorIds.has(item.id)}
                 onEdit={() => onEdit(item.id)}
                 onNudge={(dir) => onNudge(item.id, dir)}
                 onMove={(to) => onMove(item.id, to)}
                 onRemove={() => onRemove(item.id)}
+                onResponsible={(responsible) => onResponsible(item.id, responsible)}
               />
             ))
           )}
@@ -257,12 +272,14 @@ function ItemCard({
   sectionId,
   timing,
   sections,
-  coachName,
+  coaches,
+  presentCoachIds,
   hasError,
   onEdit,
   onNudge,
   onMove,
   onRemove,
+  onResponsible,
 }: {
   item: EditorItem;
   index: number;
@@ -270,12 +287,14 @@ function ItemCard({
   sectionId: string;
   timing: LessonTiming;
   sections: { id: string; name: string }[];
-  coachName: (id: string) => string;
+  coaches: LessonOptions["coaches"];
+  presentCoachIds: string[];
   hasError: boolean;
   onEdit: () => void;
   onNudge: (direction: -1 | 1) => void;
   onMove: (sectionId: string) => void;
   onRemove: () => void;
+  onResponsible: (responsible: Responsible) => void;
 }) {
   const t = useTranslations();
   const data: DragData = { type: "item", sectionId, title: item.title };
@@ -290,12 +309,6 @@ function ItemCard({
   } = useSortable({ id: item.id, data });
   const clock = timing.items[item.id]?.startTimeMinutes ?? null;
   const minutes = parseMinutes(item.durationMinutes);
-  const responsible =
-    item.responsible.kind === "coach"
-      ? coachName(item.responsible.coachId)
-      : item.responsible.kind === "text"
-        ? item.responsible.text
-        : null;
   const title = item.title || t("lessons.untitled");
 
   return (
@@ -325,32 +338,50 @@ function ItemCard({
           <div className="text-muted-foreground">{t("units.minutesShort", { count: minutes })}</div>
         ) : null}
       </div>
-      <button
-        type="button"
-        onClick={onEdit}
-        className="hover:bg-accent focus-visible:ring-ring/50 grid min-h-11 min-w-0 flex-1 content-start gap-1 rounded-md px-2 py-1.5 text-left outline-none focus-visible:ring-3"
-      >
-        <span className="font-medium">{title}</span>
-        <span className="flex flex-wrap items-center gap-1 text-sm">
-          {responsible ? (
-            <span className="text-muted-foreground">
-              {t("lessons.items.responsible", { name: responsible })}
-            </span>
+      <div className="grid min-w-0 flex-1 gap-1">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="hover:bg-accent focus-visible:ring-ring/50 grid min-h-11 min-w-0 content-start gap-1 rounded-md px-2 py-1.5 text-left outline-none focus-visible:ring-3"
+        >
+          <span className="font-medium">{title}</span>
+          <span className="flex flex-wrap items-center gap-1 text-sm empty:hidden">
+            {item.modifiedLocally ? (
+              <Badge variant="outline">{t("lessons.items.modified")}</Badge>
+            ) : null}
+            {!item.sourceBlockId ? (
+              <Badge variant="outline">{t("lessons.items.oneOff")}</Badge>
+            ) : null}
+            {hasError ? (
+              <Badge variant="destructive">
+                <AlertTriangle aria-hidden />
+                {t("lessons.save.failed")}
+              </Badge>
+            ) : null}
+          </span>
+        </button>
+        <div className="flex flex-wrap items-center gap-2 px-2 pb-1">
+          <UserRound aria-hidden className="text-muted-foreground size-4 shrink-0" />
+          <ResponsibleSelect
+            value={item.responsible}
+            onChange={onResponsible}
+            coaches={coaches}
+            presentCoachIds={presentCoachIds}
+            aria-label={`${title}: ${t("lessons.itemDialog.responsible")}`}
+            className="h-10 max-w-xs min-w-0 flex-1 basis-48 text-sm"
+          />
+          {item.responsible.kind === "text" ? (
+            <Input
+              value={item.responsible.text}
+              maxLength={100}
+              aria-label={`${title}: ${t("lessons.itemDialog.responsibleText")}`}
+              placeholder={t("lessons.itemDialog.responsibleText")}
+              onChange={(e) => onResponsible({ kind: "text", text: e.target.value })}
+              className="h-10 max-w-xs min-w-0 flex-1 basis-48 text-sm"
+            />
           ) : null}
-          {item.modifiedLocally ? (
-            <Badge variant="outline">{t("lessons.items.modified")}</Badge>
-          ) : null}
-          {!item.sourceBlockId ? (
-            <Badge variant="outline">{t("lessons.items.oneOff")}</Badge>
-          ) : null}
-          {hasError ? (
-            <Badge variant="destructive">
-              <AlertTriangle aria-hidden />
-              {t("lessons.save.failed")}
-            </Badge>
-          ) : null}
-        </span>
-      </button>
+        </div>
+      </div>
       <div
         className="flex shrink-0 flex-wrap items-center justify-end"
         role="group"

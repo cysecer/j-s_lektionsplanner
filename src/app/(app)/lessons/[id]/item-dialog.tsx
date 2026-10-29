@@ -29,6 +29,7 @@ import type { LessonOptions } from "@/lib/lessons/queries";
 import { lessonItemSchema } from "@/lib/lessons/schema";
 import { toFieldErrors, type FieldErrors } from "@/lib/server/result";
 import { createBlockFromItemAction, overwriteBlockFromItemAction } from "../actions";
+import { ResponsibleSelect } from "./responsible-select";
 
 /** Content fields that make up the library block (not placement or responsible). */
 const CONTENT_KEYS = [
@@ -148,13 +149,6 @@ export function ItemDialog({
     onClose();
   }
 
-  const present = options.coaches.filter((c) => presentCoachIds.includes(c.id));
-  const others = options.coaches.filter((c) => !presentCoachIds.includes(c.id));
-  const responsibleValue =
-    values.responsible.kind === "coach"
-      ? `coach:${values.responsible.coachId}`
-      : values.responsible.kind;
-
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
@@ -199,47 +193,13 @@ export function ItemDialog({
 
             <div className="grid gap-2">
               <Label htmlFor={responsibleId}>{t("lessons.itemDialog.responsible")}</Label>
-              <select
+              <ResponsibleSelect
                 id={responsibleId}
-                value={responsibleValue}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setValues((x) => ({
-                    ...x,
-                    responsible:
-                      v === "none"
-                        ? { kind: "none" }
-                        : v === "text"
-                          ? {
-                              kind: "text",
-                              text: x.responsible.kind === "text" ? x.responsible.text : "",
-                            }
-                          : { kind: "coach", coachId: v.slice("coach:".length) },
-                  }));
-                }}
-                className="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 text-base outline-none focus-visible:ring-3"
-              >
-                <option value="none">{t("lessons.itemDialog.responsibleNone")}</option>
-                {present.length > 0 ? (
-                  <optgroup label={t("lessons.itemDialog.presentGroup")}>
-                    {present.map((c) => (
-                      <option key={c.id} value={`coach:${c.id}`}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                ) : null}
-                {others.length > 0 ? (
-                  <optgroup label={t("lessons.itemDialog.otherGroup")}>
-                    {others.map((c) => (
-                      <option key={c.id} value={`coach:${c.id}`}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                ) : null}
-                <option value="text">{t("lessons.itemDialog.freeText")}</option>
-              </select>
+                value={values.responsible}
+                onChange={(responsible) => setValues((x) => ({ ...x, responsible }))}
+                coaches={options.coaches}
+                presentCoachIds={presentCoachIds}
+              />
               {values.responsible.kind === "text" ? (
                 <FormField
                   label={t("lessons.itemDialog.responsibleText")}

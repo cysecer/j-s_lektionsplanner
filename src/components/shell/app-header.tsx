@@ -26,7 +26,7 @@ export async function AppHeader({ viewer }: { viewer: Viewer }) {
       >
         {t("nav.skipToContent")}
       </a>
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-2 px-4">
+      <div className="app-container mx-auto flex h-16 w-full max-w-6xl items-center gap-2 px-4">
         <MobileNav items={items} teams={teams} activeTeamId={viewer.activeTeamId} />
         <Link
           href="/lessons"
