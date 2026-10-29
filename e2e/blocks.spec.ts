@@ -23,6 +23,8 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
   // Server-side validation shows up next to the field.
   await page.getByRole("button", { name: "Speichern" }).click();
   await expect(page.getByText("Pflichtfeld.").first()).toBeVisible();
+  // A rejected save always says so, even for fields the form does not show.
+  await expect(page.getByText("Bitte prüfe deine Eingaben.")).toBeVisible();
 
   await page.getByLabel("Name des Spiels / der Übung").fill("Schwänzchenfangen");
   await page.getByLabel("Dauer (Minuten)").fill("15");

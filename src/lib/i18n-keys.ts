@@ -21,7 +21,11 @@ export function firstFieldError(
   field: string,
   values?: Record<string, string | number>,
 ) {
-  const key = fieldErrors?.[field]?.[0];
+  // Nested paths (e.g. "description.content.0") belong to their top field.
+  const path = fieldErrors?.[field]
+    ? field
+    : Object.keys(fieldErrors ?? {}).find((p) => p.startsWith(`${field}.`));
+  const key = path ? fieldErrors?.[path]?.[0] : undefined;
   return key ? translateKey(t, key, values) : undefined;
 }
 

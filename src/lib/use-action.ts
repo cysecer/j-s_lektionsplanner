@@ -31,8 +31,9 @@ export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
             return;
           }
           setFieldErrors(result.fieldErrors);
-          // Field errors are shown next to the inputs; everything else as a toast.
-          if (!result.fieldErrors || result.code) toast.error(actionErrorMessage(t, result));
+          // Always say that saving failed: field errors are additionally shown next
+          // to the inputs, but a form may not display every field the server checks.
+          toast.error(actionErrorMessage(t, result));
           resolve(undefined);
         });
       }),

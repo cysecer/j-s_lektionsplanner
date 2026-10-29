@@ -28,6 +28,9 @@ Den Einladungslink findest du in Mailpit (<http://localhost:8025>) oder in der A
 
 Alle E-Mails werden in der Entwicklung von Mailpit abgefangen: <http://localhost:8025>.
 
+Nach einem Update mit neuen Migrationen (`npm run db:migrate`) den Entwicklungsserver neu starten:
+der laufende Server hält sonst den alten Datenbank-Client im Speicher.
+
 ## Befehle
 
 | Befehl               | Zweck                                        |
