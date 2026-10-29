@@ -12,7 +12,7 @@ import { UserMenu } from "./user-menu";
 export async function AppHeader({ viewer }: { viewer: Viewer }) {
   const t = await getTranslations();
   const teams = await db.team.findMany({
-    where: { clubId: viewer.clubId },
+    where: { clubId: viewer.clubId, archivedAt: null },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     select: { id: true, name: true },
   });

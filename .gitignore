@@ -48,6 +48,7 @@ next-env.d.ts
 
 # local uploads (dev storage)
 /storage/
+/storage-e2e/
 
 # generated prisma client
 /src/generated/

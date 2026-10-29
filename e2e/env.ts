@@ -3,6 +3,7 @@ import "dotenv/config";
 export const E2E_PORT = Number(process.env.E2E_PORT ?? 3100);
 export const E2E_DATABASE = "lektionsplaner_e2e";
 export const E2E_APP_URL = `http://localhost:${E2E_PORT}`;
+export const E2E_STORAGE_DIR = "./storage-e2e";
 export const MAILPIT_URL = process.env.MAILPIT_URL ?? "http://localhost:8025";
 
 function devDatabaseUrl(): URL {
@@ -32,6 +33,7 @@ export function e2eServerEnv(): Record<string, string> {
     ALLOW_INSECURE_APP_URL: "true",
     AUTH_MAX_FAILED_SIGNINS: "3",
     SMTP_REQUIRE_TLS: "false",
+    STORAGE_DIR: E2E_STORAGE_DIR,
     PORT: String(E2E_PORT),
   };
 }

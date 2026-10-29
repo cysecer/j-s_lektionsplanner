@@ -74,15 +74,17 @@ model Club {
 
 /// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
 model Team {
-  id                      String   @id @default(uuid(7)) @db.Uuid
-  clubId                  String   @db.Uuid
+  id                      String    @id @default(uuid(7)) @db.Uuid
+  clubId                  String    @db.Uuid
   name                    String
-  sortOrder               Int      @default(0)
+  sortOrder               Int       @default(0)
   /// Overrides the club default when set (teams often train at other times).
   defaultStartTimeMinutes Int?
   defaultDurationMinutes  Int?
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  /// Archived instead of deleted when lessons still refer to it.
+  archivedAt              DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
   club          Club               @relation(fields: [clubId], references: [id], onDelete: Cascade)
   coaches       CoachTeam[]
@@ -96,11 +98,13 @@ model Team {
 
 /// Leiter/-in. Just a name; optionally linked to teams (and later to a user).
 model Coach {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  clubId    String   @db.Uuid
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String    @id @default(uuid(7)) @db.Uuid
+  clubId     String    @db.Uuid
+  name       String
+  /// Archived instead of deleted when lessons or blocks still refer to it.
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   club                 Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
   teams                CoachTeam[]
@@ -166,6 +170,8 @@ model CustomField {
   searchable Boolean         @default(true)
   /// Filterable in the library (short text, number).
   filterable Boolean         @default(false)
+  /// Archived fields stay readable in existing lessons but leave editors and layouts.
+  archivedAt DateTime?
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
 

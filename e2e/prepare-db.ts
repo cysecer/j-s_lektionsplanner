@@ -4,7 +4,8 @@
  */
 import { execSync } from "node:child_process";
 import { Client } from "pg";
-import { E2E_DATABASE, e2eDatabaseUrl, adminDatabaseUrl } from "./env";
+import { rmSync } from "node:fs";
+import { E2E_DATABASE, E2E_STORAGE_DIR, e2eDatabaseUrl, adminDatabaseUrl } from "./env";
 
 async function main() {
   const admin = new Client({ connectionString: adminDatabaseUrl() });
@@ -12,6 +13,8 @@ async function main() {
   await admin.query(`DROP DATABASE IF EXISTS "${E2E_DATABASE}" WITH (FORCE)`);
   await admin.query(`CREATE DATABASE "${E2E_DATABASE}"`);
   await admin.end();
+
+  rmSync(E2E_STORAGE_DIR, { recursive: true, force: true });
 
   const env = { ...process.env, DATABASE_URL: e2eDatabaseUrl() };
   execSync("npx prisma migrate deploy", { stdio: "inherit", env });

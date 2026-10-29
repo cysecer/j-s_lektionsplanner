@@ -48,6 +48,9 @@ export const envSchema = z.object({
   /** e.g. "Lektionsplaner <noreply@example.ch>" */
   MAIL_FROM: z.string().min(3),
 
+  /** Directory for uploaded images (local storage). */
+  STORAGE_DIR: z.string().min(1).default("./storage"),
+
   /** Only for running a production build locally (e2e tests). Never set on a server. */
   ALLOW_INSECURE_APP_URL: z
     .enum(["true", "false"])

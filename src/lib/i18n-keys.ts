@@ -28,3 +28,15 @@ export function firstFieldError(
 export function errorMessage(t: T, error: ActionErrorKind) {
   return t(`errors.${error}`);
 }
+
+/** Specific message for a failure code (e.g. "lastAdmin") if one exists, else the generic one. */
+export function actionErrorMessage(t: T, failure: { error: ActionErrorKind; code?: string }) {
+  if (
+    failure.code &&
+    /^[A-Za-z]+$/.test(failure.code) &&
+    t.has(`errorCodes.${failure.code}` as never)
+  ) {
+    return t(`errorCodes.${failure.code}` as never);
+  }
+  return errorMessage(t, failure.error);
+}

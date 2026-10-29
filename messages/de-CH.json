@@ -14,7 +14,18 @@
     "loading": "Wird geladen …",
     "or": "oder",
     "close": "Schliessen",
-    "unknownError": "Etwas ist schiefgelaufen. Bitte versuche es nochmals."
+    "unknownError": "Etwas ist schiefgelaufen. Bitte versuche es nochmals.",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten",
+    "restore": "Wiederherstellen",
+    "optional": "optional",
+    "minutes": "Minuten",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "none": "Keine",
+    "saved": "Gespeichert."
   },
   "roles": {
     "ADMIN": "Administrator/-in",
@@ -111,7 +122,11 @@
     "richTextTooLong": "Der Text ist zu lang.",
     "layoutColumnLabelRequired": "Jede Spalte braucht eine Überschrift.",
     "layoutDuplicateColumn": "Doppelte Spalte.",
-    "layoutDuplicateField": "Ein Feld darf nur in einer Spalte vorkommen."
+    "layoutDuplicateField": "Ein Feld darf nur in einer Spalte vorkommen.",
+    "durationRange": "Bitte eine ganze Zahl zwischen 1 und 1440 Minuten eingeben.",
+    "imageTooLarge": "Die Datei ist zu gross (höchstens 15 MB).",
+    "imageUnsupportedType": "Bitte PNG, JPG oder HEIC verwenden.",
+    "imageUnreadable": "Das Bild konnte nicht gelesen werden."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -175,7 +190,141 @@
   "settings": {
     "title": "Einstellungen",
     "intro": "Verein, Riegen, Leitende, Personen und PDF-Layout verwalten.",
-    "comingSoon": "Die Einstellungen werden als Nächstes gebaut."
+    "nav": {
+      "label": "Bereiche der Einstellungen",
+      "club": "Verein",
+      "teams": "Riegen",
+      "coaches": "Leitende",
+      "people": "Personen",
+      "tags": "Kategorien",
+      "sections": "Abschnitte",
+      "fields": "Zusatzfelder",
+      "layout": "PDF-Layout"
+    },
+    "club": {
+      "title": "Verein",
+      "intro": "Name, Logo und Standardwerte für neue Lektionen.",
+      "name": "Vereinsname",
+      "footer": "Fusszeile im PDF",
+      "footerHint": "Zum Beispiel «J+S-Kindersport». Leer lassen für keine Fusszeile.",
+      "defaultStartTime": "Standard-Startzeit",
+      "defaultStartTimeHint": "Wird bei neuen Lektionen vorausgefüllt. Riegen können eine eigene Zeit haben.",
+      "defaultDuration": "Standard-Lektionsdauer",
+      "defaultDurationHint": "In Minuten. Wird bei neuen Lektionen vorausgefüllt.",
+      "logo": "Logo",
+      "logoHint": "Erscheint im Kopf des PDF.",
+      "logoAlt": "Logo von {name}",
+      "noLogo": "Noch kein Logo hochgeladen.",
+      "removeLogo": "Logo entfernen",
+      "removeLogoConfirm": "Das Logo wird aus allen künftigen PDFs entfernt."
+    },
+    "teams": {
+      "title": "Riegen",
+      "intro": "Gruppen deines Vereins, z. B. Kids, TuVo oder Jugi. Die Reihenfolge gilt für alle Listen.",
+      "add": "Riege hinzufügen",
+      "editTitle": "Riege bearbeiten",
+      "name": "Name der Riege",
+      "defaultStartTime": "Eigene Startzeit",
+      "defaultDuration": "Eigene Lektionsdauer (Minuten)",
+      "defaultsHint": "Leer lassen, um die Vereinswerte zu übernehmen ({time}, {duration}).",
+      "clubDefaults": "Vereinsstandard",
+      "ownDefaults": "{time} · {duration}",
+      "empty": "Noch keine Riegen. Lege die erste an, z. B. «Kids».",
+      "deleteConfirm": "«{name}» löschen? Wird die Riege in Lektionen oder Programmblöcken verwendet, wird sie stattdessen archiviert: Alte Lektionen behalten sie, für Neues ist sie nicht mehr wählbar.",
+      "archived": "«{name}» wurde archiviert, weil sie noch verwendet wird.",
+      "deleted": "«{name}» wurde gelöscht.",
+      "archivedTitle": "Archivierte Riegen"
+    },
+    "coaches": {
+      "title": "Leitende",
+      "intro": "Leiterinnen und Leiter für «Verantwortlich» und «Anwesende Leitende». Ein Konto ist dafür nicht nötig.",
+      "add": "Leiter/-in hinzufügen",
+      "editTitle": "Leiter/-in bearbeiten",
+      "name": "Name",
+      "teams": "Riegen",
+      "noTeams": "Keiner Riege zugeordnet",
+      "account": "Hat ein Konto",
+      "empty": "Noch keine Leitenden erfasst.",
+      "deleteConfirm": "«{name}» löschen? Kommt die Person in Lektionen, Programmblöcken oder als Konto vor, wird sie stattdessen archiviert und bleibt in alten Lektionen sichtbar.",
+      "archived": "«{name}» wurde archiviert, weil sie noch verwendet wird.",
+      "deleted": "«{name}» wurde gelöscht.",
+      "archivedTitle": "Archivierte Leitende"
+    },
+    "people": {
+      "title": "Personen",
+      "intro": "Wer sich anmelden darf und mit welchen Rechten. Zugang gibt es nur per Einladung.",
+      "invite": "Person einladen",
+      "inviteTitle": "Person einladen",
+      "inviteIntro": "Die Person erhält eine E-Mail mit einem Link, der 7 Tage gültig ist.",
+      "email": "E-Mail-Adresse",
+      "role": "Rolle",
+      "coach": "Leiter/-in-Eintrag",
+      "coachHint": "Optional. Füllt z. B. «Autor/-in» automatisch aus.",
+      "noCoach": "Keine Verknüpfung",
+      "language": "Sprache der Einladung",
+      "send": "Einladung senden",
+      "invited": "Einladung an {email} gesendet.",
+      "linkHint": "Du kannst den Link auch direkt weitergeben:",
+      "members": "Mitglieder",
+      "you": "du",
+      "pending": "Offene Einladungen",
+      "noPending": "Keine offenen Einladungen.",
+      "expires": "gültig bis {date}",
+      "revoke": "Zurückziehen",
+      "revokeConfirm": "Die Einladung an {email} zurückziehen? Der Link funktioniert danach nicht mehr.",
+      "remove": "Entfernen",
+      "removeConfirm": "{name} aus dem Verein entfernen? Die Person wird sofort auf allen Geräten abgemeldet.",
+      "roleHints": {
+        "ADMIN": "Alles, inkl. Einstellungen und Personen",
+        "COACH": "Programmblöcke und Lektionen bearbeiten, PDFs senden",
+        "READER": "Ansehen und PDFs erstellen (begrenzt), kein Versand"
+      }
+    },
+    "tags": {
+      "title": "Kategorien",
+      "intro": "Stichworte für Programmblöcke, z. B. Fangspiel, Ballspiel, Kraft oder Koordination.",
+      "add": "Kategorie hinzufügen",
+      "name": "Name der Kategorie",
+      "empty": "Noch keine Kategorien.",
+      "usage": "{count, plural, =0 {nicht verwendet} one {in # Programmblock} other {in # Programmblöcken}}",
+      "deleteConfirm": "«{name}» löschen? Die Kategorie wird aus allen Programmblöcken entfernt."
+    },
+    "sections": {
+      "title": "Abschnitte",
+      "intro": "Die Teile einer Lektion. Die drei Standardabschnitte erscheinen in der gewählten Sprache, solange du keinen eigenen Namen vergibst.",
+      "add": "Abschnitt hinzufügen",
+      "name": "Name",
+      "builtinHint": "Leer lassen für «{name}» in der jeweiligen Sprache.",
+      "standard": "Standard",
+      "deleteConfirm": "«{name}» löschen?"
+    },
+    "fields": {
+      "title": "Zusatzfelder",
+      "intro": "Eigene Felder für Programmblöcke, z. B. «Quelle» oder «Lernziel». Sie erscheinen im Editor und lassen sich im PDF-Layout platzieren.",
+      "add": "Feld hinzufügen",
+      "editTitle": "Feld bearbeiten",
+      "label": "Bezeichnung",
+      "type": "Art",
+      "typeLocked": "Die Art kann nach dem Anlegen nicht mehr geändert werden.",
+      "types": {
+        "SHORT_TEXT": "Kurzer Text",
+        "LONG_TEXT": "Langer Text",
+        "LIST": "Liste",
+        "NUMBER": "Zahl",
+        "IMAGE": "Bild"
+      },
+      "searchable": "In der Suche berücksichtigen",
+      "filterable": "Als Filter anbieten",
+      "empty": "Noch keine Zusatzfelder.",
+      "deleteConfirm": "«{name}» löschen? Enthält das Feld bereits Werte, wird es archiviert: Alte Lektionen zeigen die Werte weiterhin.",
+      "archived": "«{name}» wurde archiviert, weil es Werte enthält.",
+      "deleted": "«{name}» wurde gelöscht.",
+      "archivedTitle": "Archivierte Felder"
+    },
+    "layout": {
+      "title": "PDF-Layout",
+      "comingSoon": "Der Layout-Editor folgt in einer späteren Phase. Bis dahin gilt das Standardlayout."
+    }
   },
   "dialog": {
     "confirm": "Bestätigen",
@@ -184,5 +333,30 @@
   "units": {
     "minutes": "{count, plural, one {# Minute} other {# Minuten}}",
     "minutesShort": "{count}'"
+  },
+  "errorCodes": {
+    "lastAdmin": "Der Verein braucht mindestens eine Administratorin oder einen Administrator.",
+    "removeSelf": "Du kannst dich nicht selbst entfernen.",
+    "coachLinked": "Diese Leiterin bzw. dieser Leiter ist bereits mit einem anderen Konto verknüpft.",
+    "alreadyMember": "Diese Person ist bereits im Verein.",
+    "sectionInUse": "Dieser Abschnitt wird in Lektionen verwendet und kann nicht gelöscht werden.",
+    "builtinSection": "Standardabschnitte können nur umbenannt werden.",
+    "reorderMismatch": "Die Liste wurde inzwischen geändert. Bitte lade die Seite neu.",
+    "unknownTeam": "Eine der gewählten Riegen existiert nicht mehr.",
+    "unknownCoach": "Die gewählte Leiterin bzw. der gewählte Leiter existiert nicht mehr.",
+    "tooLarge": "Die Datei ist zu gross (höchstens 15 MB).",
+    "unsupportedType": "Dieses Dateiformat wird nicht unterstützt. Bitte PNG, JPG oder HEIC verwenden.",
+    "unreadable": "Das Bild konnte nicht gelesen werden."
+  },
+  "sections": {
+    "INTRO": "Einleitung",
+    "MAIN": "Hauptteil",
+    "END": "Ausklang"
+  },
+  "upload": {
+    "choose": "Bild auswählen",
+    "hint": "Bild hierher ziehen, einfügen (Ctrl+V) oder auswählen.",
+    "formats": "PNG, JPG oder HEIC (iPhone), höchstens 15 MB.",
+    "uploading": "Wird hochgeladen …"
   }
 }

@@ -14,7 +14,18 @@
     "loading": "Chargement …",
     "or": "ou",
     "close": "Fermer",
-    "unknownError": "Une erreur s'est produite. Merci de réessayer."
+    "unknownError": "Une erreur s'est produite. Merci de réessayer.",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "moveUp": "Monter",
+    "moveDown": "Descendre",
+    "restore": "Restaurer",
+    "optional": "facultatif",
+    "minutes": "minutes",
+    "copy": "Copier",
+    "copied": "Copié",
+    "none": "Aucun",
+    "saved": "Enregistré."
   },
   "roles": {
     "ADMIN": "Administrateur/-trice",
@@ -111,7 +122,11 @@
     "richTextTooLong": "Le texte est trop long.",
     "layoutColumnLabelRequired": "Chaque colonne a besoin d'un titre.",
     "layoutDuplicateColumn": "Colonne en double.",
-    "layoutDuplicateField": "Un champ ne peut figurer que dans une seule colonne."
+    "layoutDuplicateField": "Un champ ne peut figurer que dans une seule colonne.",
+    "durationRange": "Merci de saisir un nombre entier entre 1 et 1440 minutes.",
+    "imageTooLarge": "Le fichier est trop volumineux (15 Mo au maximum).",
+    "imageUnsupportedType": "Merci d'utiliser PNG, JPG ou HEIC.",
+    "imageUnreadable": "L'image n'a pas pu être lue."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -175,7 +190,141 @@
   "settings": {
     "title": "Paramètres",
     "intro": "Gérer la société, les groupes, les moniteurs, les personnes et la mise en page PDF.",
-    "comingSoon": "Les paramètres seront construits prochainement."
+    "nav": {
+      "label": "Rubriques des paramètres",
+      "club": "Société",
+      "teams": "Groupes",
+      "coaches": "Moniteurs",
+      "people": "Personnes",
+      "tags": "Catégories",
+      "sections": "Parties",
+      "fields": "Champs supplémentaires",
+      "layout": "Mise en page PDF"
+    },
+    "club": {
+      "title": "Société",
+      "intro": "Nom, logo et valeurs par défaut pour les nouvelles leçons.",
+      "name": "Nom de la société",
+      "footer": "Pied de page du PDF",
+      "footerHint": "Par exemple « J+S Sport des enfants ». Laisser vide pour aucun pied de page.",
+      "defaultStartTime": "Heure de début par défaut",
+      "defaultStartTimeHint": "Préremplie pour les nouvelles leçons. Les groupes peuvent avoir leur propre heure.",
+      "defaultDuration": "Durée de leçon par défaut",
+      "defaultDurationHint": "En minutes. Préremplie pour les nouvelles leçons.",
+      "logo": "Logo",
+      "logoHint": "Apparaît en en-tête du PDF.",
+      "logoAlt": "Logo de {name}",
+      "noLogo": "Aucun logo téléversé.",
+      "removeLogo": "Supprimer le logo",
+      "removeLogoConfirm": "Le logo sera retiré de tous les futurs PDF."
+    },
+    "teams": {
+      "title": "Groupes",
+      "intro": "Les groupes de ta société, p. ex. Kids, gym parents-enfants ou jeunesse. L'ordre vaut pour toutes les listes.",
+      "add": "Ajouter un groupe",
+      "editTitle": "Modifier le groupe",
+      "name": "Nom du groupe",
+      "defaultStartTime": "Heure de début propre",
+      "defaultDuration": "Durée de leçon propre (minutes)",
+      "defaultsHint": "Laisser vide pour reprendre les valeurs de la société ({time}, {duration}).",
+      "clubDefaults": "Valeurs de la société",
+      "ownDefaults": "{time} · {duration}",
+      "empty": "Aucun groupe pour l'instant. Crée le premier, p. ex. « Kids ».",
+      "deleteConfirm": "Supprimer « {name} » ? Si le groupe est utilisé dans des leçons ou des blocs de programme, il sera archivé à la place : les anciennes leçons le conservent, mais il n'est plus sélectionnable.",
+      "archived": "« {name} » a été archivé, car il est encore utilisé.",
+      "deleted": "« {name} » a été supprimé.",
+      "archivedTitle": "Groupes archivés"
+    },
+    "coaches": {
+      "title": "Moniteurs",
+      "intro": "Monitrices et moniteurs pour « Responsable » et « Moniteurs présents ». Un compte n'est pas nécessaire.",
+      "add": "Ajouter un·e moniteur·trice",
+      "editTitle": "Modifier le moniteur ou la monitrice",
+      "name": "Nom",
+      "teams": "Groupes",
+      "noTeams": "Aucun groupe attribué",
+      "account": "A un compte",
+      "empty": "Aucun moniteur enregistré.",
+      "deleteConfirm": "Supprimer « {name} » ? Si la personne figure dans des leçons, des blocs de programme ou a un compte, elle sera archivée et reste visible dans les anciennes leçons.",
+      "archived": "« {name} » a été archivé·e, car encore utilisé·e.",
+      "deleted": "« {name} » a été supprimé·e.",
+      "archivedTitle": "Moniteurs archivés"
+    },
+    "people": {
+      "title": "Personnes",
+      "intro": "Qui peut se connecter et avec quels droits. L'accès se fait uniquement sur invitation.",
+      "invite": "Inviter une personne",
+      "inviteTitle": "Inviter une personne",
+      "inviteIntro": "La personne reçoit un e-mail avec un lien valable 7 jours.",
+      "email": "Adresse e-mail",
+      "role": "Rôle",
+      "coach": "Fiche moniteur",
+      "coachHint": "Facultatif. Remplit p. ex. « Auteur·e » automatiquement.",
+      "noCoach": "Aucun lien",
+      "language": "Langue de l'invitation",
+      "send": "Envoyer l'invitation",
+      "invited": "Invitation envoyée à {email}.",
+      "linkHint": "Tu peux aussi transmettre le lien directement :",
+      "members": "Membres",
+      "you": "toi",
+      "pending": "Invitations en attente",
+      "noPending": "Aucune invitation en attente.",
+      "expires": "valable jusqu'au {date}",
+      "revoke": "Retirer",
+      "revokeConfirm": "Retirer l'invitation envoyée à {email} ? Le lien ne fonctionnera plus.",
+      "remove": "Retirer",
+      "removeConfirm": "Retirer {name} de la société ? La personne sera immédiatement déconnectée de tous ses appareils.",
+      "roleHints": {
+        "ADMIN": "Tout, y compris paramètres et personnes",
+        "COACH": "Modifier blocs de programme et leçons, envoyer des PDF",
+        "READER": "Consulter et créer des PDF (limité), pas d'envoi"
+      }
+    },
+    "tags": {
+      "title": "Catégories",
+      "intro": "Mots-clés pour les blocs de programme, p. ex. jeu de poursuite, jeu de balle, force ou coordination.",
+      "add": "Ajouter une catégorie",
+      "name": "Nom de la catégorie",
+      "empty": "Aucune catégorie pour l'instant.",
+      "usage": "{count, plural, =0 {non utilisée} one {dans # bloc de programme} other {dans # blocs de programme}}",
+      "deleteConfirm": "Supprimer « {name} » ? La catégorie sera retirée de tous les blocs de programme."
+    },
+    "sections": {
+      "title": "Parties",
+      "intro": "Les parties d'une leçon. Les trois parties standard s'affichent dans la langue choisie tant que tu ne leur donnes pas de nom propre.",
+      "add": "Ajouter une partie",
+      "name": "Nom",
+      "builtinHint": "Laisser vide pour « {name} » dans la langue choisie.",
+      "standard": "Standard",
+      "deleteConfirm": "Supprimer « {name} » ?"
+    },
+    "fields": {
+      "title": "Champs supplémentaires",
+      "intro": "Champs propres pour les blocs de programme, p. ex. « Source » ou « Objectif ». Ils apparaissent dans l'éditeur et peuvent être placés dans la mise en page PDF.",
+      "add": "Ajouter un champ",
+      "editTitle": "Modifier le champ",
+      "label": "Libellé",
+      "type": "Type",
+      "typeLocked": "Le type ne peut plus être modifié après la création.",
+      "types": {
+        "SHORT_TEXT": "Texte court",
+        "LONG_TEXT": "Texte long",
+        "LIST": "Liste",
+        "NUMBER": "Nombre",
+        "IMAGE": "Image"
+      },
+      "searchable": "Inclure dans la recherche",
+      "filterable": "Proposer comme filtre",
+      "empty": "Aucun champ supplémentaire pour l'instant.",
+      "deleteConfirm": "Supprimer « {name} » ? Si le champ contient déjà des valeurs, il sera archivé : les anciennes leçons les affichent toujours.",
+      "archived": "« {name} » a été archivé, car il contient des valeurs.",
+      "deleted": "« {name} » a été supprimé.",
+      "archivedTitle": "Champs archivés"
+    },
+    "layout": {
+      "title": "Mise en page PDF",
+      "comingSoon": "L'éditeur de mise en page suivra dans une phase ultérieure. D'ici là, la mise en page standard s'applique."
+    }
   },
   "dialog": {
     "confirm": "Confirmer",
@@ -184,5 +333,30 @@
   "units": {
     "minutes": "{count, plural, one {# minute} other {# minutes}}",
     "minutesShort": "{count} min"
+  },
+  "errorCodes": {
+    "lastAdmin": "La société a besoin d'au moins un administrateur ou une administratrice.",
+    "removeSelf": "Tu ne peux pas te retirer toi-même.",
+    "coachLinked": "Ce moniteur ou cette monitrice est déjà lié·e à un autre compte.",
+    "alreadyMember": "Cette personne fait déjà partie de la société.",
+    "sectionInUse": "Cette partie est utilisée dans des leçons et ne peut pas être supprimée.",
+    "builtinSection": "Les parties standard peuvent seulement être renommées.",
+    "reorderMismatch": "La liste a changé entre-temps. Merci de recharger la page.",
+    "unknownTeam": "Un des groupes choisis n'existe plus.",
+    "unknownCoach": "Le moniteur ou la monitrice choisi·e n'existe plus.",
+    "tooLarge": "Le fichier est trop volumineux (15 Mo au maximum).",
+    "unsupportedType": "Ce format n'est pas pris en charge. Merci d'utiliser PNG, JPG ou HEIC.",
+    "unreadable": "L'image n'a pas pu être lue."
+  },
+  "sections": {
+    "INTRO": "Mise en train",
+    "MAIN": "Partie principale",
+    "END": "Retour au calme"
+  },
+  "upload": {
+    "choose": "Choisir une image",
+    "hint": "Glisse une image ici, colle-la (Ctrl+V) ou choisis-la.",
+    "formats": "PNG, JPG ou HEIC (iPhone), 15 Mo au maximum.",
+    "uploading": "Téléversement …"
   }
 }

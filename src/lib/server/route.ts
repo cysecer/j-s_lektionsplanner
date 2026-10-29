@@ -5,6 +5,7 @@ import type { Role } from "@/generated/prisma/enums";
 import { hasRole } from "@/lib/auth/roles";
 import { getViewer, type Viewer } from "@/lib/auth/session";
 import { toFailure } from "./action";
+import { readBodyLimited } from "./read-body";
 import { toFieldErrors, type ActionErrorKind } from "./result";
 
 const STATUS: Record<ActionErrorKind, number> = {
@@ -24,10 +25,16 @@ function fail(error: ActionErrorKind, extra?: object) {
   return NextResponse.json({ error, ...extra }, { status: STATUS[error] });
 }
 
+const MULTIPART_OVERHEAD = 64 * 1024;
+
 /**
  * The only way to define a route handler. Validates path params, query
- * string and JSON body with zod (each defaults to "must be empty"), checks
+ * string and the body with zod (each defaults to "must be empty"), checks
  * the session and role, and maps failures to JSON errors.
+ *
+ * The body is either JSON (`body` schema) or a single uploaded file
+ * (`file` option, multipart field "file"). Bodies are read with a hard size
+ * limit: reading stops as soon as the limit is exceeded.
  */
 export function route<
   P extends z.ZodType = Empty,
@@ -39,14 +46,18 @@ export function route<
   query?: Q;
   body?: B;
   maxBodyBytes?: number;
+  file?: { maxBytes: number };
   handler: (ctx: {
     request: NextRequest;
     viewer: Viewer;
     params: z.output<P>;
     query: z.output<Q>;
     body: z.output<B>;
+    file: Buffer | null;
   }) => Promise<Response>;
 }) {
+  if (config.body && config.file) throw new Error("route(): use either body or file");
+
   return async (request: NextRequest, context: { params: Promise<unknown> }) => {
     const viewer = await getViewer();
     if (!viewer) return fail("unauthorized");
@@ -60,15 +71,40 @@ export function route<
     if (!query.success) return fail("validation", { fieldErrors: toFieldErrors(query.error) });
 
     let rawBody: unknown = {};
+    let file: Buffer | null = null;
+
     if (config.body) {
-      const text = await request.text();
-      if (text.length > (config.maxBodyBytes ?? 100_000)) return fail("validation");
+      const bytes = await readBodyLimited(request, config.maxBodyBytes ?? 100_000);
+      if (!bytes) return fail("validation", { code: "tooLarge" });
       try {
-        rawBody = text ? JSON.parse(text) : {};
+        rawBody = bytes.length ? JSON.parse(bytes.toString("utf8")) : {};
       } catch {
         return fail("validation");
       }
     }
+
+    if (config.file) {
+      const contentType = request.headers.get("content-type") ?? "";
+      if (!contentType.startsWith("multipart/form-data")) return fail("validation");
+      const bytes = await readBodyLimited(request, config.file.maxBytes + MULTIPART_OVERHEAD);
+      if (!bytes) return fail("validation", { code: "tooLarge" });
+      let form: FormData;
+      try {
+        form = await new Response(new Uint8Array(bytes), {
+          headers: { "content-type": contentType },
+        }).formData();
+      } catch {
+        return fail("validation");
+      }
+      const entries = [...form.keys()];
+      const upload = form.get("file");
+      if (entries.length !== 1 || !(upload instanceof File)) return fail("validation");
+      if (upload.size === 0 || upload.size > config.file.maxBytes) {
+        return fail("validation", { code: "tooLarge" });
+      }
+      file = Buffer.from(await upload.arrayBuffer());
+    }
+
     const body = (config.body ?? z.unknown()).safeParse(rawBody);
     if (!body.success) return fail("validation", { fieldErrors: toFieldErrors(body.error) });
 
@@ -79,6 +115,7 @@ export function route<
         params: params.data as z.output<P>,
         query: query.data as z.output<Q>,
         body: body.data as z.output<B>,
+        file,
       });
     } catch (error) {
       const result = toFailure(error);

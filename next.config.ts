@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   cacheComponents: false,
   poweredByHeader: false,
   // Native modules must not be bundled.
-  serverExternalPackages: ["@node-rs/argon2"],
+  serverExternalPackages: ["@node-rs/argon2", "sharp", "heic-convert"],
   turbopack: {
     rules: {
       "*.css": {

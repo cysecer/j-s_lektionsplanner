@@ -114,3 +114,10 @@ export async function signInWithMagicLink(page: Page, email: string) {
   );
   await page.goto(link);
 }
+
+/** Resolves when the next server action request has completed. */
+export function nextServerAction(page: Page) {
+  return page.waitForResponse(
+    (r) => r.request().method() === "POST" && r.request().headers()["next-action"] !== undefined,
+  );
+}

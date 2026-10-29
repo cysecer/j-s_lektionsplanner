@@ -134,4 +134,23 @@ describe("source tree follows the rules", () => {
       .map((f) => f.rel);
     expect(offenders).toEqual([]);
   });
+
+  it("contains no invisible or bidirectional control characters (Trojan Source)", () => {
+    // Built from code points so this file itself stays free of them.
+    const ranges = [
+      [0x200b, 0x200f],
+      [0x2028, 0x202e],
+      [0x2066, 0x2069],
+      [0xfeff, 0xfeff],
+    ];
+    const invisible = new RegExp(
+      `[${ranges.map(([a, b]) => `${String.fromCodePoint(a!)}-${String.fromCodePoint(b!)}`).join("")}]`,
+      "u",
+    );
+    const all = walk(SRC).map((f) => ({
+      rel: path.relative(SRC, f),
+      code: readFileSync(f, "utf8"),
+    }));
+    expect(all.filter((f) => invisible.test(f.code)).map((f) => f.rel)).toEqual([]);
+  });
 });

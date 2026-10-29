@@ -14,7 +14,18 @@
     "loading": "Loading …",
     "or": "or",
     "close": "Close",
-    "unknownError": "Something went wrong. Please try again."
+    "unknownError": "Something went wrong. Please try again.",
+    "edit": "Edit",
+    "add": "Add",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "restore": "Restore",
+    "optional": "optional",
+    "minutes": "minutes",
+    "copy": "Copy",
+    "copied": "Copied",
+    "none": "None",
+    "saved": "Saved."
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -111,7 +122,11 @@
     "richTextTooLong": "The text is too long.",
     "layoutColumnLabelRequired": "Every column needs a heading.",
     "layoutDuplicateColumn": "Duplicate column.",
-    "layoutDuplicateField": "A field can only appear in one column."
+    "layoutDuplicateField": "A field can only appear in one column.",
+    "durationRange": "Please enter a whole number between 1 and 1440 minutes.",
+    "imageTooLarge": "The file is too large (15 MB at most).",
+    "imageUnsupportedType": "Please use PNG, JPG or HEIC.",
+    "imageUnreadable": "The image could not be read."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -175,7 +190,141 @@
   "settings": {
     "title": "Settings",
     "intro": "Manage the club, groups, coaches, people and the PDF layout.",
-    "comingSoon": "The settings will be built next."
+    "nav": {
+      "label": "Settings sections",
+      "club": "Club",
+      "teams": "Groups",
+      "coaches": "Coaches",
+      "people": "People",
+      "tags": "Categories",
+      "sections": "Sections",
+      "fields": "Custom fields",
+      "layout": "PDF layout"
+    },
+    "club": {
+      "title": "Club",
+      "intro": "Name, logo and defaults for new lessons.",
+      "name": "Club name",
+      "footer": "PDF footer",
+      "footerHint": "For example “J+S Kids Sport”. Leave empty for no footer.",
+      "defaultStartTime": "Default start time",
+      "defaultStartTimeHint": "Pre-filled for new lessons. Groups can have their own time.",
+      "defaultDuration": "Default lesson length",
+      "defaultDurationHint": "In minutes. Pre-filled for new lessons.",
+      "logo": "Logo",
+      "logoHint": "Shown in the PDF header.",
+      "logoAlt": "Logo of {name}",
+      "noLogo": "No logo uploaded yet.",
+      "removeLogo": "Remove logo",
+      "removeLogoConfirm": "The logo will be removed from all future PDFs."
+    },
+    "teams": {
+      "title": "Groups",
+      "intro": "Your club's groups, e.g. Kids, parent-and-child or youth. The order applies to all lists.",
+      "add": "Add group",
+      "editTitle": "Edit group",
+      "name": "Group name",
+      "defaultStartTime": "Own start time",
+      "defaultDuration": "Own lesson length (minutes)",
+      "defaultsHint": "Leave empty to use the club's values ({time}, {duration}).",
+      "clubDefaults": "Club defaults",
+      "ownDefaults": "{time} · {duration}",
+      "empty": "No groups yet. Create the first one, e.g. “Kids”.",
+      "deleteConfirm": "Delete “{name}”? If the group is used in lessons or program blocks, it will be archived instead: old lessons keep it, but it can no longer be selected.",
+      "archived": "“{name}” was archived because it's still in use.",
+      "deleted": "“{name}” was deleted.",
+      "archivedTitle": "Archived groups"
+    },
+    "coaches": {
+      "title": "Coaches",
+      "intro": "Coaches for “Responsible” and “Coaches present”. An account isn't needed.",
+      "add": "Add coach",
+      "editTitle": "Edit coach",
+      "name": "Name",
+      "teams": "Groups",
+      "noTeams": "Not assigned to a group",
+      "account": "Has an account",
+      "empty": "No coaches yet.",
+      "deleteConfirm": "Delete “{name}”? If the person appears in lessons, program blocks or has an account, they'll be archived instead and stay visible in old lessons.",
+      "archived": "“{name}” was archived because they're still referenced.",
+      "deleted": "“{name}” was deleted.",
+      "archivedTitle": "Archived coaches"
+    },
+    "people": {
+      "title": "People",
+      "intro": "Who can sign in and with which permissions. Access is by invitation only.",
+      "invite": "Invite someone",
+      "inviteTitle": "Invite someone",
+      "inviteIntro": "The person receives an email with a link that is valid for 7 days.",
+      "email": "Email address",
+      "role": "Role",
+      "coach": "Coach entry",
+      "coachHint": "Optional. Fills in e.g. “Author” automatically.",
+      "noCoach": "Not linked",
+      "language": "Language of the invitation",
+      "send": "Send invitation",
+      "invited": "Invitation sent to {email}.",
+      "linkHint": "You can also share the link directly:",
+      "members": "Members",
+      "you": "you",
+      "pending": "Pending invitations",
+      "noPending": "No pending invitations.",
+      "expires": "valid until {date}",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke the invitation to {email}? The link will stop working.",
+      "remove": "Remove",
+      "removeConfirm": "Remove {name} from the club? They will be signed out on all devices immediately.",
+      "roleHints": {
+        "ADMIN": "Everything, incl. settings and people",
+        "COACH": "Edit program blocks and lessons, send PDFs",
+        "READER": "View and create PDFs (limited), no sending"
+      }
+    },
+    "tags": {
+      "title": "Categories",
+      "intro": "Keywords for program blocks, e.g. tag game, ball game, strength or coordination.",
+      "add": "Add category",
+      "name": "Category name",
+      "empty": "No categories yet.",
+      "usage": "{count, plural, =0 {not used} one {in # program block} other {in # program blocks}}",
+      "deleteConfirm": "Delete “{name}”? The category will be removed from all program blocks."
+    },
+    "sections": {
+      "title": "Sections",
+      "intro": "The parts of a lesson. The three standard sections appear in the chosen language unless you give them your own name.",
+      "add": "Add section",
+      "name": "Name",
+      "builtinHint": "Leave empty for “{name}” in the chosen language.",
+      "standard": "Standard",
+      "deleteConfirm": "Delete “{name}”?"
+    },
+    "fields": {
+      "title": "Custom fields",
+      "intro": "Your own fields for program blocks, e.g. “Source” or “Learning goal”. They appear in the editor and can be placed in the PDF layout.",
+      "add": "Add field",
+      "editTitle": "Edit field",
+      "label": "Label",
+      "type": "Type",
+      "typeLocked": "The type can't be changed after creation.",
+      "types": {
+        "SHORT_TEXT": "Short text",
+        "LONG_TEXT": "Long text",
+        "LIST": "List",
+        "NUMBER": "Number",
+        "IMAGE": "Image"
+      },
+      "searchable": "Include in search",
+      "filterable": "Offer as a filter",
+      "empty": "No custom fields yet.",
+      "deleteConfirm": "Delete “{name}”? If the field already holds values, it will be archived: old lessons keep showing them.",
+      "archived": "“{name}” was archived because it holds values.",
+      "deleted": "“{name}” was deleted.",
+      "archivedTitle": "Archived fields"
+    },
+    "layout": {
+      "title": "PDF layout",
+      "comingSoon": "The layout editor follows in a later phase. Until then the standard layout applies."
+    }
   },
   "dialog": {
     "confirm": "Confirm",
@@ -184,5 +333,30 @@
   "units": {
     "minutes": "{count, plural, one {# minute} other {# minutes}}",
     "minutesShort": "{count} min"
+  },
+  "errorCodes": {
+    "lastAdmin": "The club needs at least one administrator.",
+    "removeSelf": "You can't remove yourself.",
+    "coachLinked": "This coach is already linked to another account.",
+    "alreadyMember": "This person is already in the club.",
+    "sectionInUse": "This section is used in lessons and can't be deleted.",
+    "builtinSection": "Standard sections can only be renamed.",
+    "reorderMismatch": "The list has changed in the meantime. Please reload the page.",
+    "unknownTeam": "One of the selected groups no longer exists.",
+    "unknownCoach": "The selected coach no longer exists.",
+    "tooLarge": "The file is too large (15 MB at most).",
+    "unsupportedType": "This file format isn't supported. Please use PNG, JPG or HEIC.",
+    "unreadable": "The image could not be read."
+  },
+  "sections": {
+    "INTRO": "Warm-up",
+    "MAIN": "Main part",
+    "END": "Cool-down"
+  },
+  "upload": {
+    "choose": "Choose image",
+    "hint": "Drag an image here, paste it (Ctrl+V) or choose one.",
+    "formats": "PNG, JPG or HEIC (iPhone), 15 MB at most.",
+    "uploading": "Uploading …"
   }
 }

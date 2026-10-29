@@ -34,6 +34,24 @@ Keine Schnittstelle ohne Validierung:
 - Formatierter Text ist auf ein strenges JSON-Format beschränkt (kein HTML), Layouts ebenfalls.
 - Die Datenbank prüft zusätzlich Wertebereiche (CHECK-Constraints).
 
+## Hochgeladene Bilder
+
+- Erlaubt sind PNG, JPEG und HEIC (iPhone), höchstens 15 MB. Das Format wird am Dateiinhalt
+  erkannt, nicht am Namen; SVG, HTML, PDF usw. werden abgelehnt.
+- Die Anfrage wird beim Lesen abgebrochen, sobald sie die Grenze überschreitet.
+- Jedes Bild wird neu kodiert, verkleinert und **ohne Metadaten** gespeichert (keine GPS-Position,
+  keine Kameradaten). Schutz vor «Dekompressionsbomben» durch eine Pixelgrenze.
+- Bilder werden nur angemeldeten Personen desselben Vereins ausgeliefert, mit
+  `X-Content-Type-Options: nosniff` und einer restriktiven Content-Security-Policy.
+- Gespeicherte Dateien werden nie überschrieben; Dateinamen erzeugt die App selbst.
+
+## Löschen und Archivieren
+
+Riegen, Leitende und Zusatzfelder, die in Lektionen oder Programmblöcken vorkommen, werden beim
+Löschen archiviert statt gelöscht, damit alte Lektionsvorbereitungen unverändert bleiben. Wird eine
+Person aus dem Verein entfernt, endet ihre Anmeldung sofort; ein Konto ohne Verein wird vollständig
+gelöscht. Der Verein behält immer mindestens eine Administratorin bzw. einen Administrator.
+
 ## Fehler melden
 
 Sicherheitsprobleme bitte nicht als öffentliches Issue, sondern direkt an die Betreiber melden.

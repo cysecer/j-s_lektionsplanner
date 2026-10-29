@@ -14,7 +14,18 @@
     "loading": "Chargiar …",
     "or": "u",
     "close": "Serrar",
-    "unknownError": "Insatge n'è betg reussì. Emprova anc ina giada."
+    "unknownError": "Insatge n'è betg reussì. Emprova anc ina giada.",
+    "edit": "Elavurar",
+    "add": "Agiuntar",
+    "moveUp": "Si",
+    "moveDown": "Giu",
+    "restore": "Restaurar",
+    "optional": "facultativ",
+    "minutes": "minutas",
+    "copy": "Copiar",
+    "copied": "Copià",
+    "none": "Nagin",
+    "saved": "Memorisà."
   },
   "roles": {
     "ADMIN": "Administratur/-a",
@@ -111,7 +122,11 @@
     "richTextTooLong": "Il text è memia lung.",
     "layoutColumnLabelRequired": "Mintga colonna dovra in titel.",
     "layoutDuplicateColumn": "Colonna dubla.",
-    "layoutDuplicateField": "In champ po cumparair mo en ina colonna."
+    "layoutDuplicateField": "In champ po cumparair mo en ina colonna.",
+    "durationRange": "Endatescha per plaschair in dumber entir tranter 1 e 1440 minutas.",
+    "imageTooLarge": "La datoteca è memia gronda (maximalmain 15 MB).",
+    "imageUnsupportedType": "Dovra per plaschair PNG, JPG u HEIC.",
+    "imageUnreadable": "Il maletg n'ha betg pudì vegnir legì."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -175,7 +190,141 @@
   "settings": {
     "title": "Configuraziun",
     "intro": "Administrar l'uniun, las gruppas, ils manaders, las persunas e la structura dal PDF.",
-    "comingSoon": "La configuraziun vegn construida sco proxim."
+    "nav": {
+      "label": "Secziuns da la configuraziun",
+      "club": "Uniun",
+      "teams": "Gruppas",
+      "coaches": "Manaders",
+      "people": "Persunas",
+      "tags": "Categorias",
+      "sections": "Parts",
+      "fields": "Champs supplementars",
+      "layout": "Structura PDF"
+    },
+    "club": {
+      "title": "Uniun",
+      "intro": "Num, logo e valurs da standard per novas lecziuns.",
+      "name": "Num da l'uniun",
+      "footer": "Lingia da pe dal PDF",
+      "footerHint": "Per exempel «G+S Sport d'uffants». Laschar vid per nagina lingia da pe.",
+      "defaultStartTime": "Temp d'entschatta da standard",
+      "defaultStartTimeHint": "Vegn emplenì ordavant per novas lecziuns. Las gruppas pon avair in agen temp.",
+      "defaultDuration": "Durada da lecziun da standard",
+      "defaultDurationHint": "En minutas. Vegn emplenida ordavant per novas lecziuns.",
+      "logo": "Logo",
+      "logoHint": "Cumpara en il chau dal PDF.",
+      "logoAlt": "Logo da {name}",
+      "noLogo": "Anc nagin logo chargià si.",
+      "removeLogo": "Allontanar il logo",
+      "removeLogoConfirm": "Il logo vegn allontanà da tut ils PDFs futurs."
+    },
+    "teams": {
+      "title": "Gruppas",
+      "intro": "Las gruppas da tia uniun, p.ex. Kids, gimnastica geniturs-uffants u giuventetgna. La successiun vala per tut las glistas.",
+      "add": "Agiuntar ina gruppa",
+      "editTitle": "Elavurar la gruppa",
+      "name": "Num da la gruppa",
+      "defaultStartTime": "Agen temp d'entschatta",
+      "defaultDuration": "Atgna durada da lecziun (minutas)",
+      "defaultsHint": "Laschar vid per surpigliar las valurs da l'uniun ({time}, {duration}).",
+      "clubDefaults": "Valurs da l'uniun",
+      "ownDefaults": "{time} · {duration}",
+      "empty": "Anc naginas gruppas. Crea l'emprima, p.ex. «Kids».",
+      "deleteConfirm": "Stizzar «{name}»? Sche la gruppa vegn duvrada en lecziuns u blocs da program, vegn ella archivada empè: Lecziuns veglias la mantegnan, ma ella na po betg pli vegnir tschernida.",
+      "archived": "«{name}» è vegnida archivada, perquai ch'ella vegn anc duvrada.",
+      "deleted": "«{name}» è vegnida stizzada.",
+      "archivedTitle": "Gruppas archivadas"
+    },
+    "coaches": {
+      "title": "Manaders",
+      "intro": "Manadras e manaders per «Responsabel» e «Manaders preschents». In conto n'è betg necessari.",
+      "add": "Agiuntar manader/-a",
+      "editTitle": "Elavurar manader/-a",
+      "name": "Num",
+      "teams": "Gruppas",
+      "noTeams": "Attribuì a nagina gruppa",
+      "account": "Ha in conto",
+      "empty": "Anc nagins manaders registrads.",
+      "deleteConfirm": "Stizzar «{name}»? Sche la persuna cumpara en lecziuns, blocs da program u ha in conto, vegn ella archivada e resta visibla en lecziuns veglias.",
+      "archived": "«{name}» è vegnì archivà, perquai ch'el vegn anc duvrà.",
+      "deleted": "«{name}» è vegnì stizzà.",
+      "archivedTitle": "Manaders archivads"
+    },
+    "people": {
+      "title": "Persunas",
+      "intro": "Tgi che dastga s'annunziar e cun tge dretgs. Access dat i mo cun invitaziun.",
+      "invite": "Envidar ina persuna",
+      "inviteTitle": "Envidar ina persuna",
+      "inviteIntro": "La persuna retschaiva in e-mail cun ina colliaziun ch'è valaivla 7 dis.",
+      "email": "Adressa dad e-mail",
+      "role": "Rolla",
+      "coach": "Inscripziun manader",
+      "coachHint": "Facultativ. Emplenescha p.ex. «Autur/-a» automaticamain.",
+      "noCoach": "Nagina colliaziun",
+      "language": "Lingua da l'invitaziun",
+      "send": "Trametter l'invitaziun",
+      "invited": "Invitaziun tramessa a {email}.",
+      "linkHint": "Ti pos er dar vinavant directamain la colliaziun:",
+      "members": "Commembers",
+      "you": "ti",
+      "pending": "Invitaziuns avertas",
+      "noPending": "Naginas invitaziuns avertas.",
+      "expires": "valaivla fin ils {date}",
+      "revoke": "Retrair",
+      "revokeConfirm": "Retrair l'invitaziun a {email}? La colliaziun na funcziuna lura betg pli.",
+      "remove": "Allontanar",
+      "removeConfirm": "Allontanar {name} da l'uniun? La persuna vegn absentada immediatamain sin tut ils apparats.",
+      "roleHints": {
+        "ADMIN": "Tut, er la configuraziun e las persunas",
+        "COACH": "Elavurar blocs da program e lecziuns, trametter PDFs",
+        "READER": "Guardar e crear PDFs (limità), nagin trametter"
+      }
+    },
+    "tags": {
+      "title": "Categorias",
+      "intro": "Pleds-clav per blocs da program, p.ex. gieu da tschiffar, gieu da balla, forza u coordinaziun.",
+      "add": "Agiuntar ina categoria",
+      "name": "Num da la categoria",
+      "empty": "Anc naginas categorias.",
+      "usage": "{count, plural, =0 {betg duvrada} one {en # bloc da program} other {en # blocs da program}}",
+      "deleteConfirm": "Stizzar «{name}»? La categoria vegn allontanada da tut ils blocs da program."
+    },
+    "sections": {
+      "title": "Parts",
+      "intro": "Las parts d'ina lecziun. Las trais parts da standard cumparan en la lingua tschernida, uschè ditg che ti na las das betg in agen num.",
+      "add": "Agiuntar ina part",
+      "name": "Num",
+      "builtinHint": "Laschar vid per «{name}» en la lingua respectiva.",
+      "standard": "Standard",
+      "deleteConfirm": "Stizzar «{name}»?"
+    },
+    "fields": {
+      "title": "Champs supplementars",
+      "intro": "Agens champs per blocs da program, p.ex. «Funtauna» u «Finamira». Els cumparan en l'editur e pon vegnir plazzads en la structura dal PDF.",
+      "add": "Agiuntar in champ",
+      "editTitle": "Elavurar il champ",
+      "label": "Designaziun",
+      "type": "Tip",
+      "typeLocked": "Il tip na po betg pli vegnir midà suenter la creaziun.",
+      "types": {
+        "SHORT_TEXT": "Text curt",
+        "LONG_TEXT": "Text lung",
+        "LIST": "Glista",
+        "NUMBER": "Dumber",
+        "IMAGE": "Maletg"
+      },
+      "searchable": "Resguardar en la tschertga",
+      "filterable": "Offrir sco filter",
+      "empty": "Anc nagins champs supplementars.",
+      "deleteConfirm": "Stizzar «{name}»? Sch'il champ cuntegna gia valurs, vegn el archivà: Lecziuns veglias mussan las valurs vinavant.",
+      "archived": "«{name}» è vegnì archivà, perquai ch'el cuntegna valurs.",
+      "deleted": "«{name}» è vegnì stizzà.",
+      "archivedTitle": "Champs archivads"
+    },
+    "layout": {
+      "title": "Structura PDF",
+      "comingSoon": "L'editur da la structura suonda en ina fasa posteriura. Fin lura vala la structura da standard."
+    }
   },
   "dialog": {
     "confirm": "Confermar",
@@ -184,5 +333,30 @@
   "units": {
     "minutes": "{count, plural, one {# minuta} other {# minutas}}",
     "minutesShort": "{count} min"
+  },
+  "errorCodes": {
+    "lastAdmin": "L'uniun dovra almain in administratur u ina administratura.",
+    "removeSelf": "Ti na pos betg allontanar tatez.",
+    "coachLinked": "Quest manader u questa manadra è gia collià cun in auter conto.",
+    "alreadyMember": "Questa persuna fa gia part da l'uniun.",
+    "sectionInUse": "Questa part vegn duvrada en lecziuns e na po betg vegnir stizzada.",
+    "builtinSection": "Las parts da standard pon mo vegnir renumnadas.",
+    "reorderMismatch": "La glista è vegnida midada en il fratemp. Chargia per plaschair danovamain la pagina.",
+    "unknownTeam": "Ina da las gruppas tschernidas n'exista betg pli.",
+    "unknownCoach": "Il manader u la manadra tschernì n'exista betg pli.",
+    "tooLarge": "La datoteca è memia gronda (maximalmain 15 MB).",
+    "unsupportedType": "Quest format na vegn betg sustegnì. Dovra per plaschair PNG, JPG u HEIC.",
+    "unreadable": "Il maletg n'ha betg pudì vegnir legì."
+  },
+  "sections": {
+    "INTRO": "Introducziun",
+    "MAIN": "Part principala",
+    "END": "Conclusiun"
+  },
+  "upload": {
+    "choose": "Tscherner in maletg",
+    "hint": "Tira in maletg nà, l'encollescha (Ctrl+V) u al tscherna.",
+    "formats": "PNG, JPG u HEIC (iPhone), maximalmain 15 MB.",
+    "uploading": "Chargiar si …"
   }
 }
