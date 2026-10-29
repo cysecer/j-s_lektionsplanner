@@ -15,7 +15,7 @@ export function displayName(max: number) {
 
 export const durationMinutesSchema = z.coerce
   .number({ message: "validation.durationRange" })
-  .int({ message: "validation.durationRange" })
+  .int({ message: "validation.wholeNumber" })
   .min(1, { message: "validation.durationRange" })
   .max(1440, { message: "validation.durationRange" });
 

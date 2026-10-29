@@ -35,7 +35,7 @@ test("club: validated settings and logo upload", async ({ page }) => {
   await duration.fill("0");
   await page.getByRole("button", { name: "Speichern" }).click();
   await expect(
-    page.getByText("Bitte eine ganze Zahl zwischen 1 und 1440 Minuten eingeben."),
+    page.getByRole("alert").filter({ hasText: "Bitte mindestens 1 eingeben." }),
   ).toBeVisible();
 
   await duration.fill("75");

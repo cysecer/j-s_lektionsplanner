@@ -25,6 +25,7 @@ import {
 import { Difficulty, type BuiltinSection, type CustomFieldType } from "@/generated/prisma/enums";
 import { BLOCK_LIMITS, type BlockFormValues } from "@/lib/blocks/schema";
 import { firstFieldError } from "@/lib/i18n-keys";
+import type { FieldErrors } from "@/lib/server/result";
 import type { RichText } from "@/lib/rich-text/schema";
 import { useAction } from "@/lib/use-action";
 import { createBlockAction, updateBlockAction } from "./actions";
@@ -93,13 +94,42 @@ export function BlockForm({
     setDirty(true);
     setValues((v) => ({ ...v, customValues: { ...v.customValues, [id]: value } }));
   }
-  const error = (path: string) => firstFieldError(t, action.fieldErrors, path);
+  // The update action wraps the values as { id, block }; strip that prefix so
+  // errors land on the same fields as when creating.
+  const fieldErrors = blockId ? withoutPrefix(update.fieldErrors, "block.") : create.fieldErrors;
+  const error = (path: string) => firstFieldError(t, fieldErrors, path);
   const listErrors = (field: string) =>
     Object.fromEntries(
-      Object.keys(action.fieldErrors ?? {})
+      Object.keys(fieldErrors ?? {})
         .filter((k) => k.startsWith(`${field}.`))
         .map((k) => [Number(k.split(".")[1]), error(k)!]),
     );
+  const labels: Record<string, string> = {
+    title: t("blockFields.title"),
+    durationMinutes: t("blockFields.duration"),
+    description: t("blockFields.description"),
+    rules: t("blockFields.rules"),
+    variations: t("blockFields.variations"),
+    organization: t("blockFields.organization"),
+    material: t("blockFields.material"),
+    sketchAssetIds: t("blockFields.sketches"),
+    tagIds: t("blocks.tags"),
+    teamIds: t("blocks.team"),
+    suggestedSectionId: t("blocks.form.suggestedSection"),
+    difficulty: t("blocks.difficultyLabel"),
+    ageMin: t("blocks.form.ageMin"),
+    ageMax: t("blocks.form.ageMax"),
+    teamCount: t("blocks.form.teamCount"),
+    minParticipants: t("blocks.form.minParticipants"),
+    maxParticipants: t("blocks.form.maxParticipants"),
+    ...Object.fromEntries(options.fields.map((f) => [`customValues.${f.id}`, f.label])),
+  };
+  const prefixedLabels = Object.fromEntries(
+    Object.entries(labels).flatMap(([k, v]) => [
+      [k, v],
+      [`block.${k}`, v],
+    ]),
+  );
   const sectionName = (s: BlockFormOptions["sections"][number]) =>
     s.name ?? (s.builtin ? t(`sections.${s.builtin}`) : "");
 
@@ -113,9 +143,10 @@ export function BlockForm({
         Object.entries(values.customValues).filter(([, v]) => !isEmptyValue(v)),
       ),
     };
+    const options = { success: t("blocks.form.saved"), labels: prefixedLabels };
     const result = blockId
-      ? await update.run({ id: blockId, block }, { success: t("blocks.form.saved") })
-      : await create.run(block, { success: t("blocks.form.saved") });
+      ? await update.run({ id: blockId, block }, options)
+      : await create.run(block, options);
     if (result) {
       setDirty(false);
       router.push(`/blocks/${result.id}`);
@@ -529,4 +560,14 @@ function CustomFieldInput({
         </Field>
       );
   }
+}
+
+function withoutPrefix(errors: FieldErrors | undefined, prefix: string): FieldErrors | undefined {
+  if (!errors) return errors;
+  return Object.fromEntries(
+    Object.entries(errors).map(([path, list]) => [
+      path.startsWith(prefix) ? path.slice(prefix.length) : path,
+      list,
+    ]),
+  );
 }

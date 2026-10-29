@@ -139,7 +139,12 @@
     "imageUnreadable": "L'image n'a pas pu être lue.",
     "numberRange": "Merci de saisir un nombre valable.",
     "ageRange": "L'âge minimum ne peut pas dépasser l'âge maximum.",
-    "participantsRange": "Le nombre minimum ne peut pas dépasser le nombre maximum."
+    "participantsRange": "Le nombre minimum ne peut pas dépasser le nombre maximum.",
+    "numberMin": "Merci de saisir au moins {min}.",
+    "numberMax": "Merci de saisir au plus {max}.",
+    "tooLongMax": "Trop long (au maximum {max}).",
+    "tooShortMin": "Trop court (au moins {min}).",
+    "wholeNumber": "Merci de saisir un nombre entier."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",

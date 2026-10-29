@@ -139,7 +139,12 @@
     "imageUnreadable": "Non è stato possibile leggere l'immagine.",
     "numberRange": "Inserisci un numero valido.",
     "ageRange": "L'età minima non può superare l'età massima.",
-    "participantsRange": "Il numero minimo non può superare il numero massimo."
+    "participantsRange": "Il numero minimo non può superare il numero massimo.",
+    "numberMin": "Inserisci almeno {min}.",
+    "numberMax": "Inserisci al massimo {max}.",
+    "tooLongMax": "Troppo lungo (al massimo {max}).",
+    "tooShortMin": "Troppo corto (almeno {min}).",
+    "wholeNumber": "Inserisci un numero intero."
   },
   "errors": {
     "unauthorized": "Accedi, per favore.",

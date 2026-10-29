@@ -139,7 +139,12 @@
     "imageUnreadable": "The image could not be read.",
     "numberRange": "Please enter a valid number.",
     "ageRange": "The minimum age can't be higher than the maximum age.",
-    "participantsRange": "The minimum can't be higher than the maximum."
+    "participantsRange": "The minimum can't be higher than the maximum.",
+    "numberMin": "Please enter at least {min}.",
+    "numberMax": "Please enter at most {max}.",
+    "tooLongMax": "Too long (at most {max}).",
+    "tooShortMin": "Too short (at least {min}).",
+    "wholeNumber": "Please enter a whole number."
   },
   "errors": {
     "unauthorized": "Please sign in.",

@@ -4,13 +4,25 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { actionErrorMessage } from "@/lib/i18n-keys";
+import { actionErrorMessage, describeFieldErrors } from "@/lib/i18n-keys";
 import type { ActionResult, FieldErrors } from "@/lib/server/result";
+
+/** Moves keyboard focus (and the view) to the first field marked invalid. */
+function focusFirstInvalid() {
+  requestAnimationFrame(() => {
+    const field = document.querySelector<HTMLElement>('[aria-invalid="true"]');
+    if (!field) return;
+    field.scrollIntoView({ block: "center", behavior: "smooth" });
+    field.focus({ preventScroll: true });
+  });
+}
 
 /**
  * Runs a server action from a client component: tracks pending state and
- * field errors, shows a toast for other failures and refreshes the page on
- * success. Returns the data on success, undefined otherwise.
+ * field errors, refreshes the page on success and always reports failures.
+ * For validation errors the toast names each invalid field (via `labels`)
+ * with what is wrong, and focus jumps to the first invalid input.
+ * Returns the data on success, undefined otherwise.
  */
 export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
   const t = useTranslations();
@@ -19,7 +31,7 @@ export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>();
 
   const run = useCallback(
-    (input: I, options?: { success?: string }) =>
+    (input: I, options?: { success?: string; labels?: Record<string, string> }) =>
       new Promise<O | undefined>((resolve) => {
         startTransition(async () => {
           const result = await fn(input);
@@ -31,9 +43,12 @@ export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
             return;
           }
           setFieldErrors(result.fieldErrors);
-          // Always say that saving failed: field errors are additionally shown next
-          // to the inputs, but a form may not display every field the server checks.
-          toast.error(actionErrorMessage(t, result));
+          const details = describeFieldErrors(t, result.fieldErrors, options?.labels);
+          toast.error(actionErrorMessage(t, result), {
+            description: details.length ? details.join("\n") : undefined,
+            classNames: { description: "whitespace-pre-line" },
+          });
+          if (result.fieldErrors) focusFirstInvalid();
           resolve(undefined);
         });
       }),

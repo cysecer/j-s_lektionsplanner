@@ -25,7 +25,15 @@ export function ClubForm({ initial }: { initial: Values }) {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    await run(values, { success: t("common.saved") });
+    await run(values, {
+      success: t("common.saved"),
+      labels: {
+        name: t("settings.club.name"),
+        pdfFooterText: t("settings.club.footer"),
+        defaultStartTime: t("settings.club.defaultStartTime"),
+        defaultDurationMinutes: t("settings.club.defaultDuration"),
+      },
+    });
   }
 
   return (

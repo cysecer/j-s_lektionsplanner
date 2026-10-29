@@ -199,10 +199,18 @@ function TeamDialog({
           defaultStartTime: values.defaultStartTime,
           defaultDurationMinutes: values.defaultDurationMinutes,
         };
+        const options = {
+          success: t("common.saved"),
+          labels: {
+            name: t("settings.teams.name"),
+            defaultStartTime: t("settings.teams.defaultStartTime"),
+            defaultDurationMinutes: t("settings.teams.defaultDuration"),
+          },
+        };
         const result =
           mode === "create"
-            ? await create.run(input, { success: t("common.saved") })
-            : await update.run({ id: team.id, ...input }, { success: t("common.saved") });
+            ? await create.run(input, options)
+            : await update.run({ id: team.id, ...input }, options);
         return result !== undefined;
       }}
     >

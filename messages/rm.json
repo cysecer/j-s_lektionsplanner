@@ -139,7 +139,12 @@
     "imageUnreadable": "Il maletg n'ha betg pudì vegnir legì.",
     "numberRange": "Endatescha per plaschair in dumber valaivel.",
     "ageRange": "La vegliadetgna minimala na dastga betg esser pli auta che la vegliadetgna maximala.",
-    "participantsRange": "Il dumber minimal na dastga betg esser pli aut ch'il dumber maximal."
+    "participantsRange": "Il dumber minimal na dastga betg esser pli aut ch'il dumber maximal.",
+    "numberMin": "Endatescha per plaschair almain {min}.",
+    "numberMax": "Endatescha per plaschair maximalmain {max}.",
+    "tooLongMax": "Memia lung (maximalmain {max}).",
+    "tooShortMin": "Memia curt (almain {min}).",
+    "wholeNumber": "Endatescha per plaschair in dumber entir."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",

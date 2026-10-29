@@ -66,7 +66,9 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
   await page.getByRole("checkbox", { name: "Fangspiel" }).check();
   await page.getByRole("button", { name: "Speichern" }).click();
   await expect(
-    page.getByText("Die Mindestanzahl darf nicht höher sein als die Höchstanzahl."),
+    page
+      .getByRole("alert")
+      .filter({ hasText: "Die Mindestanzahl darf nicht höher sein als die Höchstanzahl." }),
   ).toBeVisible();
   await page.getByLabel("Mindestanzahl Kinder").fill("6");
   await page.getByLabel("Max. Anzahl Kinder").fill("16");
@@ -84,8 +86,21 @@ test("coach creates, edits, duplicates and deletes a program block", async ({ pa
     page.getByText("Dieser Programmblock wurde noch in keiner Lektion verwendet."),
   ).toBeVisible();
 
-  // Edit
+  // Edit: an out-of-range value says exactly what is wrong, both in the
+  // notification and at the field, and the cursor jumps to that field.
   await page.getByRole("link", { name: "Bearbeiten" }).click();
+  const max = page.getByLabel("Max. Anzahl Kinder");
+  await max.fill("999");
+  await page.getByRole("button", { name: "Speichern" }).click();
+  const toast = page
+    .getByRole("listitem")
+    .filter({ hasText: "Max. Anzahl Kinder: Bitte höchstens 500 eingeben." });
+  await expect(toast).toContainText("Bitte prüfe deine Eingaben.");
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Bitte höchstens 500 eingeben." }),
+  ).toBeVisible();
+  await expect(max).toBeFocused();
+  await max.fill("16");
   await page.getByLabel("Dauer (Minuten)").fill("20");
   await page.getByRole("button", { name: "Speichern" }).click();
   await expect(page.getByText("20 Minuten")).toBeVisible();

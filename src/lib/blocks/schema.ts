@@ -30,7 +30,7 @@ const optionalInt = (min: number, max: number) =>
     z.null(),
     z.coerce
       .number({ message: "validation.numberRange" })
-      .int({ message: "validation.numberRange" })
+      .int({ message: "validation.wholeNumber" })
       .min(min, { message: "validation.numberRange" })
       .max(max, { message: "validation.numberRange" }),
   ]);
