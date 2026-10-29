@@ -86,6 +86,8 @@ model Team {
   /// Overrides the club default when set (teams often train at other times).
   defaultStartTimeMinutes Int?
   defaultDurationMinutes  Int?
+  /// Drafts are visible only to their creator (and admins) until published.
+  privateDrafts           Boolean   @default(false)
   /// Archived instead of deleted when lessons still refer to it.
   archivedAt              DateTime?
   createdAt               DateTime  @default(now())
@@ -319,12 +321,15 @@ model Lesson {
   goals                Json?
   notes                Json?
   status               LessonStatus @default(DRAFT)
+  /// Account that created the lesson; null for lessons from before this was recorded.
+  createdById          String?      @db.Uuid
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
 
   club           Club          @relation(fields: [clubId], references: [id], onDelete: Cascade)
   team           Team?         @relation(fields: [teamId], references: [id], onDelete: SetNull)
   layout         Layout?       @relation(fields: [layoutId], references: [id], onDelete: SetNull)
+  createdBy      User?         @relation("LessonsCreated", fields: [createdById], references: [id], onDelete: SetNull)
   presentCoaches LessonCoach[]
   items          LessonItem[]
   pdfExports     PdfExport[]
@@ -332,6 +337,7 @@ model Lesson {
 
   @@index([clubId, date])
   @@index([clubId, teamId, date])
+  @@index([createdById])
 }
 
 model LessonCoach {
@@ -430,6 +436,7 @@ model User {
   invitationsCreated Invitation[] @relation("InvitedBy")
   pdfExports         PdfExport[]
   mailLogs           MailLog[]
+  lessonsCreated     Lesson[]     @relation("LessonsCreated")
 
   @@map("user")
 }

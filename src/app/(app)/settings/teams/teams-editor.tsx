@@ -7,9 +7,12 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { EmptyState } from "@/components/page-header";
 import { FormDialog } from "@/components/form-dialog";
+import { TimeField } from "@/components/date-time-fields";
 import { FormField } from "@/components/form-field";
 import { MoveButtons, moveItem } from "@/components/move-buttons";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { firstFieldError } from "@/lib/i18n-keys";
 import { useAction } from "@/lib/use-action";
 import { useSyncedState } from "@/lib/use-synced-state";
@@ -26,9 +29,15 @@ type Team = {
   name: string;
   defaultStartTime: string;
   defaultDurationMinutes: string;
+  privateDrafts: boolean;
 };
 
-const blank: Omit<Team, "id"> = { name: "", defaultStartTime: "", defaultDurationMinutes: "" };
+const blank: Omit<Team, "id"> = {
+  name: "",
+  defaultStartTime: "",
+  defaultDurationMinutes: "",
+  privateDrafts: false,
+};
 
 export function TeamsEditor({
   active,
@@ -52,6 +61,11 @@ export function TeamsEditor({
   }
 
   function summary(team: Team) {
+    const times = defaultsSummary(team);
+    return team.privateDrafts ? `${times} · ${t("settings.teams.privateDraftsShort")}` : times;
+  }
+
+  function defaultsSummary(team: Team) {
     if (!team.defaultStartTime && !team.defaultDurationMinutes) {
       return t("settings.teams.clubDefaults");
     }
@@ -198,6 +212,7 @@ function TeamDialog({
           name: values.name,
           defaultStartTime: values.defaultStartTime,
           defaultDurationMinutes: values.defaultDurationMinutes,
+          privateDrafts: values.privateDrafts,
         };
         const options = {
           success: t("common.saved"),
@@ -224,12 +239,10 @@ function TeamDialog({
         error={error("name")}
       />
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField
+        <TimeField
           label={`${t("settings.teams.defaultStartTime")} (${t("common.optional")})`}
-          type="time"
-          step={300}
           value={values.defaultStartTime}
-          onChange={(e) => setValues((v) => ({ ...v, defaultStartTime: e.target.value }))}
+          onChange={(defaultStartTime) => setValues((v) => ({ ...v, defaultStartTime }))}
           error={error("defaultStartTime")}
         />
         <FormField
@@ -244,6 +257,19 @@ function TeamDialog({
           error={error("defaultDurationMinutes")}
         />
       </div>
+      <Label className="flex min-h-11 items-start gap-3 py-2 font-normal">
+        <Checkbox
+          className="mt-0.5"
+          checked={values.privateDrafts}
+          onCheckedChange={(v) => setValues((x) => ({ ...x, privateDrafts: v === true }))}
+        />
+        <span className="grid gap-1">
+          {t("settings.teams.privateDrafts")}
+          <span className="text-muted-foreground text-sm">
+            {t("settings.teams.privateDraftsHint")}
+          </span>
+        </span>
+      </Label>
     </FormDialog>
   );
 }

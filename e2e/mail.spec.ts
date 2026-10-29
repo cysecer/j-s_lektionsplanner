@@ -108,7 +108,7 @@ test("coaches send a lesson by email with the PDF attached", async ({ page }) =>
   const coachEmail = await signIn(page, "COACH", "Carla Mail");
   const anna = uniqueEmail("anna");
   const ben = uniqueEmail("ben");
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
 
@@ -163,7 +163,7 @@ test("coaches send a lesson by email with the PDF attached", async ({ page }) =>
 
 test("readers cannot send emails", async ({ page }) => {
   await signIn(page, "READER", "Rita Reader");
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await expect(page.getByRole("button", { name: "PDF herunterladen" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Per E-Mail senden" })).toHaveCount(0);

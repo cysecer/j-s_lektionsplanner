@@ -56,6 +56,8 @@ export const teamSchema = z.strictObject({
   name: displayName(60),
   defaultStartTime: optionalClockTime,
   defaultDurationMinutes: optionalDuration,
+  /** Drafts visible only to their creator (and admins) until published. */
+  privateDrafts: z.boolean(),
 });
 export const teamUpdateSchema = teamSchema.extend({ id: z.uuid() });
 

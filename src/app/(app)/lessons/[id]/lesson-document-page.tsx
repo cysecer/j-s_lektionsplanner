@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { Viewer } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { getDocumentClub, getLessonDocument, resolveLayout } from "@/lib/lessons/document-queries";
+import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { remainingPdfs } from "@/lib/pdf/quota";
 import { LayoutSwitcher } from "./layout-switcher";
 
@@ -28,7 +29,7 @@ export async function LessonDocumentPage({
   const t = await getTranslations();
   const sectionTitle = (s: { builtin: string | null; name: string | null }) =>
     s.name ?? (s.builtin ? t(`sections.${s.builtin as "INTRO"}`) : "");
-  const result = await getLessonDocument(viewer.clubId, lessonId, sectionTitle);
+  const result = await getLessonDocument(visibleLessonsWhere(viewer), lessonId, sectionTitle);
   if (!result) notFound();
 
   const [layout, club, layouts, remaining] = await Promise.all([

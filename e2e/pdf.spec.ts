@@ -18,7 +18,7 @@ async function signIn(page: Page, role: "ADMIN" | "COACH" | "READER", name: stri
 }
 
 async function openSampleLesson(page: Page) {
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
 }

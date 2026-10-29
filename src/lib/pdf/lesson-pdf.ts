@@ -4,6 +4,7 @@ import { LOCALE_COOKIE } from "@/i18n/config";
 import type { Viewer } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { toIsoDate } from "@/lib/format";
+import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { ActionFailure } from "@/lib/server/result";
 import { escapeHtml, pdfFileName } from "./filename";
 import { issuePrintToken } from "./print-access";
@@ -20,7 +21,7 @@ export async function renderLessonPdf(
   layoutId: string | null,
 ): Promise<{ pdf: Buffer; fileName: string }> {
   const lesson = await db.lesson.findFirst({
-    where: { id: lessonId, clubId: viewer.clubId },
+    where: { AND: [visibleLessonsWhere(viewer), { id: lessonId }] },
     select: { id: true, title: true, date: true, team: { select: { name: true } } },
   });
   if (!lesson) throw new ActionFailure("notFound");

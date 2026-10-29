@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useId } from "react";
 import { CheckboxGroup, Field } from "@/components/blocks/content-fields";
+import { DateField, TimeField } from "@/components/date-time-fields";
 import { FormField } from "@/components/form-field";
 import { RichTextEditor } from "@/components/rich-text/rich-text-editor";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,21 +15,29 @@ import type { LessonGeneralValues } from "@/lib/lessons/schema";
 import type { RichText } from "@/lib/rich-text/schema";
 import type { FieldErrors } from "@/lib/server/result";
 
+const alignedField = "grid content-start gap-2 sm:row-span-3 sm:grid-rows-subgrid";
+
 const selectClass =
-  "border-input bg-background focus-visible:ring-ring/50 h-11 w-full rounded-lg border px-3 text-base outline-none focus-visible:ring-3";
+  "border-input bg-background focus-visible:ring-ring/50 h-11 w-full rounded-lg border px-2.5 text-base outline-none focus-visible:ring-3 md:text-sm";
 
 export function GeneralForm({
   values,
   onChange,
   options,
   fieldErrors,
+  creator,
+  privateDraft,
 }: {
   values: LessonGeneralValues;
   onChange: (patch: Partial<LessonGeneralValues>) => void;
   options: LessonOptions;
   fieldErrors: FieldErrors | undefined;
+  creator: { name: string | null; createdAt: string };
+  /** Draft in a team whose drafts only the creator sees. */
+  privateDraft: boolean;
 }) {
   const t = useTranslations();
+  const format = useFormatter();
   const ids = {
     team: useId(),
     difficulty: useId(),
@@ -51,7 +60,22 @@ export function GeneralForm({
   return (
     <Card>
       <CardContent className="grid gap-5">
-        <h2 className="text-lg font-semibold">{t("lessons.general.heading")}</h2>
+        <div className="grid gap-1">
+          <h2 className="text-lg font-semibold">{t("lessons.general.heading")}</h2>
+          <p className="text-muted-foreground text-sm">
+            {creator.name
+              ? t("lessons.general.createdBy", {
+                  name: creator.name,
+                  date: format.dateTime(new Date(creator.createdAt), {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  }),
+                })
+              : t("lessons.general.createdByUnknown")}
+            {privateDraft ? ` · ${t("lessons.general.privateDraft")}` : null}
+          </p>
+        </div>
         <FormField
           label={t("lessons.general.title")}
           value={values.title}
@@ -59,22 +83,23 @@ export function GeneralForm({
           onChange={(e) => onChange({ title: e.target.value })}
           error={error("title")}
         />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <FormField
+        {/* Label, field and hint each share one row across the four fields
+            (subgrid), so all fields line up even when a label wraps. */}
+        <div className="grid gap-x-5 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 max-sm:[&>*+*]:mt-3 sm:max-lg:[&>*:nth-child(n+3)]:mt-3">
+          <DateField
             label={t("lessons.general.date")}
-            type="date"
             value={values.date}
-            onChange={(e) => onChange({ date: e.target.value })}
+            onChange={(date) => onChange({ date })}
             error={error("date")}
+            wrapperClassName={alignedField}
           />
-          <FormField
+          <TimeField
             label={t("lessons.general.startTime")}
-            type="time"
-            step={300}
             value={str(values.startTime)}
-            onChange={(e) => onChange({ startTime: e.target.value })}
+            onChange={(startTime) => onChange({ startTime })}
             hint={t("lessons.general.startTimeHint")}
             error={error("startTime")}
+            wrapperClassName={alignedField}
           />
           <FormField
             label={t("lessons.general.totalDuration")}
@@ -86,8 +111,9 @@ export function GeneralForm({
             value={str(values.totalDurationMinutes)}
             onChange={(e) => onChange({ totalDurationMinutes: e.target.value })}
             error={error("totalDurationMinutes")}
+            wrapperClassName={alignedField}
           />
-          <div className="grid content-start gap-2">
+          <div className={alignedField}>
             <Label htmlFor={ids.team}>{t("lessons.general.team")}</Label>
             <select
               id={ids.team}

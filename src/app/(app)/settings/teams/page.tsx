@@ -22,6 +22,7 @@ export default async function TeamsSettingsPage() {
         archivedAt: true,
         defaultStartTimeMinutes: true,
         defaultDurationMinutes: true,
+        privateDrafts: true,
       },
     }),
   ]);
@@ -33,6 +34,7 @@ export default async function TeamsSettingsPage() {
       team.defaultStartTimeMinutes === null ? "" : formatTimeOfDay(team.defaultStartTimeMinutes),
     defaultDurationMinutes:
       team.defaultDurationMinutes === null ? "" : String(team.defaultDurationMinutes),
+    privateDrafts: team.privateDrafts,
   });
 
   return (

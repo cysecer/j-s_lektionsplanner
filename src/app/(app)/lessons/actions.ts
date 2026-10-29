@@ -15,6 +15,7 @@ import {
   saveLesson,
   snapshotFromBlock,
 } from "@/lib/lessons/service";
+import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { action } from "@/lib/server/action";
 
 const idInput = z.strictObject({ id: z.uuid() });
@@ -34,7 +35,7 @@ export const saveLessonAction = action({
   role: "COACH",
   input: lessonSaveSchema,
   handler: async (input, { viewer }) => {
-    const result = await saveLesson(viewer.clubId, input);
+    const result = await saveLesson(viewer, input);
     revalidatePath("/lessons");
     return result;
   },
@@ -44,7 +45,7 @@ export const duplicateLessonAction = action({
   role: "COACH",
   input: idInput,
   handler: async ({ id }, { viewer }) => {
-    const copy = await duplicateLesson(viewer.clubId, id);
+    const copy = await duplicateLesson(viewer, id);
     revalidatePath("/lessons");
     return copy;
   },
@@ -54,9 +55,28 @@ export const deleteLessonAction = action({
   role: "COACH",
   input: idInput,
   handler: async ({ id }, { viewer }) => {
-    await deleteLesson(viewer.clubId, id);
+    await deleteLesson(visibleLessonsWhere(viewer), id);
     revalidatePath("/lessons");
     return null;
+  },
+});
+
+/** Admins delete several lessons at once from the overview. */
+export const deleteLessonsAction = action({
+  role: "ADMIN",
+  input: z.strictObject({
+    ids: z
+      .array(z.uuid())
+      .min(1)
+      .max(100)
+      .refine((ids) => new Set(ids).size === ids.length, { message: "validation.invalid" }),
+  }),
+  handler: async ({ ids }, { viewer }) => {
+    const scope = visibleLessonsWhere(viewer);
+    // One by one: each deletion also removes images no longer used anywhere.
+    for (const id of ids) await deleteLesson(scope, id);
+    revalidatePath("/lessons");
+    return { count: ids.length };
   },
 });
 

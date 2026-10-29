@@ -158,9 +158,9 @@ export async function getBlock(clubId: string, id: string) {
 }
 
 /** Lessons that contain a copy of the block (newest first). */
-export async function getBlockUsage(clubId: string, blockId: string) {
+export async function getBlockUsage(scope: Prisma.LessonWhereInput, blockId: string) {
   return db.lesson.findMany({
-    where: { clubId, items: { some: { sourceBlockId: blockId } } },
+    where: { AND: [scope, { items: { some: { sourceBlockId: blockId } } }] },
     orderBy: { date: "desc" },
     take: 50,
     select: {

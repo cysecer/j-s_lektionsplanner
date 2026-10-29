@@ -17,12 +17,13 @@ import { isRichTextEmpty } from "@/lib/rich-text/utils";
 import { ActionFailure, toFieldErrors } from "@/lib/server/result";
 import type { LessonItemInput, LessonSaveInput } from "./schema";
 import { resolveLessonDefaults } from "./timing";
+import { visibleLessonsWhere } from "./visibility";
 
 const richOrNull = (doc: RichText | null) => (doc && !isRichTextEmpty(doc) ? doc : null);
 const json = (doc: RichText | null) => richOrNull(doc) ?? Prisma.DbNull;
 
 /** Today's calendar date in Switzerland, as stored (UTC midnight). */
-function todayInZurich() {
+export function todayInZurich() {
   const iso = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Zurich" }).format(new Date());
   return new Date(`${iso}T00:00:00Z`);
 }
@@ -61,6 +62,7 @@ export async function createLesson(viewer: Viewer, title: string) {
       layoutId: club.defaultLayoutId,
       title,
       authorName: coach?.name ?? user.name,
+      createdById: viewer.userId,
       date: todayInZurich(),
       startTimeMinutes: defaults.startTimeMinutes,
       totalDurationMinutes: defaults.durationMinutes,
@@ -71,10 +73,13 @@ export async function createLesson(viewer: Viewer, title: string) {
   });
 }
 
-/** Reuse a past lesson as template: a new draft dated today with copied items. */
-export async function duplicateLesson(clubId: string, id: string) {
+/**
+ * Reuse a past lesson as template: a new draft dated today with copied
+ * items. The copy belongs to whoever made it.
+ */
+export async function duplicateLesson(viewer: Viewer, id: string) {
   const source = await db.lesson.findFirst({
-    where: { id, clubId },
+    where: { AND: [visibleLessonsWhere(viewer), { id }] },
     include: { presentCoaches: true, items: { include: { sketches: true } } },
   });
   if (!source) throw new ActionFailure("notFound");
@@ -87,6 +92,7 @@ export async function duplicateLesson(clubId: string, id: string) {
       notes: source.notes ?? Prisma.DbNull,
       date: todayInZurich(),
       status: "DRAFT",
+      createdById: viewer.userId,
       presentCoaches: { create: presentCoaches.map((c) => ({ coachId: c.coachId })) },
       items: {
         create: items.map(
@@ -107,9 +113,9 @@ export async function duplicateLesson(clubId: string, id: string) {
   });
 }
 
-export async function deleteLesson(clubId: string, id: string) {
+export async function deleteLesson(scope: Prisma.LessonWhereInput, id: string) {
   const lesson = await db.lesson.findFirst({
-    where: { id, clubId },
+    where: { AND: [scope, { id }] },
     select: { items: { select: { sketches: { select: { assetId: true } } } } },
   });
   if (!lesson) throw new ActionFailure("notFound");
@@ -130,9 +136,10 @@ async function assertAllInClub(count: Promise<number>, ids: Set<string>, code: s
  * checked against the club; archived teams/coaches are accepted only if the
  * lesson already used them (old lessons stay editable).
  */
-export async function saveLesson(clubId: string, input: LessonSaveInput) {
+export async function saveLesson(viewer: Viewer, input: LessonSaveInput) {
+  const clubId = viewer.clubId;
   const current = await db.lesson.findFirst({
-    where: { id: input.id, clubId },
+    where: { AND: [visibleLessonsWhere(viewer), { id: input.id }] },
     select: {
       updatedAt: true,
       teamId: true,

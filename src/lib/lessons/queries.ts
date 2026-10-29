@@ -1,50 +1,108 @@
 import "server-only";
+import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import type { Viewer } from "@/lib/auth/session";
 import { listMaterials } from "@/lib/blocks/queries";
+import { escapeLike } from "@/lib/blocks/search-params";
+import { todayInZurich } from "./service";
+import { visibleLessonsWhere } from "./visibility";
 
-export const LESSONS_PAGE_SIZE = 20;
+export const LESSONS_PAGE_SIZE = 25;
 
-/** Lessons of the club, newest first, optionally limited to a team. */
-export async function listLessons(
-  clubId: string,
-  options: { teamId: string | null; page: number },
-) {
-  const where = { clubId, ...(options.teamId ? { teamId: options.teamId } : {}) };
-  const [total, lessons] = await Promise.all([
-    db.lesson.count({ where }),
+export type LessonListFilter = {
+  teamId: string | null;
+  /** Upcoming: today and later, soonest first. Past: before today, newest first. */
+  when: "upcoming" | "past";
+  q?: string;
+  /** ISO dates, inclusive. */
+  from?: string;
+  to?: string;
+  page: number;
+};
+
+/**
+ * Lessons whose title or goals ("Zielsetzungen / Lernziele") contain the
+ * text. Goals are rich text (JSON): only its text nodes are searched.
+ */
+async function lessonIdsMatching(clubId: string, q: string): Promise<string[]> {
+  const like = `%${escapeLike(q.toLowerCase())}%`;
+  const rows = await db.$queryRaw<{ id: string }[]>`
+    SELECT l.id FROM "Lesson" l
+    WHERE l."clubId" = ${clubId}::uuid
+      AND (
+        lower(l.title) LIKE ${like} ESCAPE '\\'
+        OR EXISTS (
+          SELECT 1 FROM jsonb_path_query(l.goals, 'strict $.**.text') AS node(value)
+          WHERE lower(node.value #>> '{}') LIKE ${like} ESCAPE '\\'
+        )
+      )`;
+  return rows.map((r) => r.id);
+}
+
+/**
+ * The lessons a person may see (visibleLessonsWhere), filtered, split into
+ * upcoming and past. Returns the page of the chosen tab and both counts.
+ */
+export async function listLessons(viewer: Viewer, filter: LessonListFilter) {
+  const today = todayInZurich();
+  const ids = filter.q ? await lessonIdsMatching(viewer.clubId, filter.q) : null;
+  const base: Prisma.LessonWhereInput[] = [
+    visibleLessonsWhere(viewer),
+    filter.teamId ? { teamId: filter.teamId } : {},
+    filter.from ? { date: { gte: new Date(`${filter.from}T00:00:00Z`) } } : {},
+    filter.to ? { date: { lte: new Date(`${filter.to}T00:00:00Z`) } } : {},
+    ids ? { id: { in: ids } } : {},
+  ];
+  const upcoming = { AND: [...base, { date: { gte: today } }] };
+  const past = { AND: [...base, { date: { lt: today } }] };
+  const where = filter.when === "upcoming" ? upcoming : past;
+  const order = filter.when === "upcoming" ? "asc" : "desc";
+
+  const [upcomingCount, pastCount, lessons] = await Promise.all([
+    db.lesson.count({ where: upcoming }),
+    db.lesson.count({ where: past }),
     db.lesson.findMany({
       where,
-      orderBy: [{ date: "desc" }, { createdAt: "desc" }],
-      skip: (options.page - 1) * LESSONS_PAGE_SIZE,
+      orderBy: [{ date: order }, { startTimeMinutes: order }, { createdAt: order }],
+      skip: (filter.page - 1) * LESSONS_PAGE_SIZE,
       take: LESSONS_PAGE_SIZE,
       select: {
         id: true,
         title: true,
         date: true,
         status: true,
-        totalDurationMinutes: true,
+        startTimeMinutes: true,
         team: { select: { name: true } },
+        createdBy: { select: { name: true } },
         items: { select: { durationMinutes: true } },
       },
     }),
   ]);
+  const total = filter.when === "upcoming" ? upcomingCount : pastCount;
   return {
     total,
+    counts: { upcoming: upcomingCount, past: pastCount },
     pageCount: Math.max(1, Math.ceil(total / LESSONS_PAGE_SIZE)),
-    lessons: lessons.map(({ items, ...l }) => ({
+    lessons: lessons.map(({ items, createdBy, ...l }) => ({
       ...l,
+      createdByName: createdBy?.name ?? null,
       itemCount: items.length,
       plannedMinutes: items.reduce((sum, i) => sum + (i.durationMinutes ?? 0), 0),
     })),
   };
 }
 
-/** A lesson with its items in display order (section order, then item order). */
-export async function getLesson(clubId: string, id: string) {
+/**
+ * A lesson with its items in display order (section order, then item order).
+ * `scope` limits the lookup: the club, or what a person may see
+ * (visibleLessonsWhere).
+ */
+export async function getLesson(scope: Prisma.LessonWhereInput & { clubId: string }, id: string) {
   const lesson = await db.lesson.findFirst({
-    where: { id, clubId },
+    where: { AND: [scope, { id }] },
     include: {
       team: { select: { id: true, name: true } },
+      createdBy: { select: { name: true } },
       presentCoaches: { select: { coachId: true } },
       items: {
         orderBy: [{ section: { sortOrder: "asc" } }, { sortOrder: "asc" }],
@@ -68,7 +126,7 @@ export async function getLessonOptions(
     db.team.findMany({
       where: { clubId, OR: [{ archivedAt: null }, ...(usedTeamId ? [{ id: usedTeamId }] : [])] },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-      select: { id: true, name: true },
+      select: { id: true, name: true, privateDrafts: true },
     }),
     db.coach.findMany({
       where: { clubId, OR: [{ archivedAt: null }, { id: { in: usedCoachIds } }] },

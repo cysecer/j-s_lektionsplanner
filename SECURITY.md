@@ -20,6 +20,17 @@ Risiko entspricht dem einer Passwort-Zurücksetzung per E-Mail (wer das Postfach
 kommt hinein). Massnahmen: kurze Gültigkeit, Einmalverwendung, Rate-Limit, kein Hinweis auf
 existierende Konten, und die App drängt aktiv zu Passkeys.
 
+## Sichtbarkeit von Lektionen
+
+- Jede Lektion merkt sich das Konto, das sie erstellt hat.
+- Pro Riege können Admins festlegen, dass Entwürfe nur für die erstellende Person sichtbar sind,
+  bis sie veröffentlicht werden. Admins sehen immer alles.
+- Durchgesetzt wird das an einer Stelle ([src/lib/lessons/visibility.ts](src/lib/lessons/visibility.ts)),
+  durch die jede Lektionsabfrage für eine Person läuft: Liste, Editor, Vorschau, Speichern,
+  Duplizieren, Löschen, PDF, E-Mail und die Verwendungsliste der Programmblöcke. Eine fremde
+  private Lektion ergibt 404, auch über ihre direkte Adresse.
+- Mehrere Lektionen auf einmal löschen können nur Admins.
+
 ## Eingabevalidierung
 
 Keine Schnittstelle ohne Validierung:

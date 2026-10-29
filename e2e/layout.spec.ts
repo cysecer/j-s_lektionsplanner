@@ -88,7 +88,7 @@ test("build a layout: columns, fields, header; preview and lessons use it", asyn
   await expect(page.getByRole("checkbox", { name: "Sicherheitsaspekte" })).not.toBeChecked();
 
   // Any lesson can be viewed in it without changing the lesson.
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
   await page
@@ -130,7 +130,7 @@ test("build a layout: columns, fields, header; preview and lessons use it", asyn
 test("readers see the lesson as a document; layouts are admin-only", async ({ page }) => {
   await acceptInvitation(page, invite(uniqueEmail("reader"), "READER"), "Rolf Reader");
   await page.getByRole("button", { name: "Später" }).click();
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
   const doc = page.locator("article.lesson-document");

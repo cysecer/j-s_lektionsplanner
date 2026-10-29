@@ -35,7 +35,10 @@
     "all": "All",
     "from": "from",
     "to": "to",
-    "years": "years"
+    "years": "years",
+    "datePlaceholder": "DD.MM.YYYY",
+    "timePlaceholder": "HH:MM",
+    "openCalendar": "Open calendar"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -243,7 +246,10 @@
       "goals": "Goals / learning objectives",
       "notes": "Notes / remarks",
       "presentCoaches": "Coaches present",
-      "more": "More details"
+      "more": "More details",
+      "createdBy": "Created by {name} on {date}",
+      "createdByUnknown": "Creator not recorded",
+      "privateDraft": "Draft – visible only to you until you publish it"
     },
     "save": {
       "saving": "Saving …",
@@ -339,6 +345,30 @@
       "backToEditor": "Back to editing",
       "layout": "Layout",
       "saveFirst": "The lesson could not be saved. Please check your input."
+    },
+    "createdBy": "by {name}",
+    "selectAll": "Select all on this page",
+    "selectLesson": "Select “{name}”",
+    "deleteSelected": "{count, plural, one {Delete # lesson} other {Delete # lessons}}",
+    "deleteSelectedConfirm": "{count, plural, one {The selected lesson is deleted with all its items.} other {The # selected lessons are deleted with all their items.}} The library stays unchanged.",
+    "deletedMany": "{count, plural, one {# lesson deleted.} other {# lessons deleted.}}",
+    "emptyFiltered": "No lessons for this search",
+    "emptyUpcoming": "No upcoming lessons",
+    "showPast": "{count, plural, one {Show # past lesson} other {Show # past lessons}}",
+    "publish": "Publish",
+    "published": "The lesson is published and visible to everyone.",
+    "unpublished": "The lesson is a draft again and visible only to you.",
+    "filter": {
+      "q": "Search",
+      "qPlaceholder": "Title or learning goals",
+      "from": "From",
+      "to": "To",
+      "reset": "Reset"
+    },
+    "tabs": {
+      "label": "Period",
+      "upcoming": "Upcoming ({count})",
+      "past": "Past ({count})"
     }
   },
   "blocks": {
@@ -469,7 +499,10 @@
       "deleteConfirm": "Delete “{name}”? If the group is used in lessons or program blocks, it will be archived instead: old lessons keep it, but it can no longer be selected.",
       "archived": "“{name}” was archived because it's still in use.",
       "deleted": "“{name}” was deleted.",
-      "archivedTitle": "Archived groups"
+      "archivedTitle": "Archived groups",
+      "privateDrafts": "Drafts visible only to the person who created them",
+      "privateDraftsHint": "Others see a lesson of this team only once it is published. Admins always see everything.",
+      "privateDraftsShort": "private drafts"
     },
     "coaches": {
       "title": "Coaches",

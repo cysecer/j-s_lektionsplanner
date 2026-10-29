@@ -35,7 +35,10 @@
     "all": "Tous",
     "from": "de",
     "to": "à",
-    "years": "ans"
+    "years": "ans",
+    "datePlaceholder": "JJ.MM.AAAA",
+    "timePlaceholder": "HH:MM",
+    "openCalendar": "Ouvrir le calendrier"
   },
   "roles": {
     "ADMIN": "Administrateur/-trice",
@@ -243,7 +246,10 @@
       "goals": "Objectifs / objectifs d'apprentissage",
       "notes": "Remarques",
       "presentCoaches": "Moniteurs présents",
-      "more": "Autres informations"
+      "more": "Autres informations",
+      "createdBy": "Créée par {name} le {date}",
+      "createdByUnknown": "Auteur·e non enregistré·e",
+      "privateDraft": "Brouillon – visible uniquement par toi jusqu’à la publication"
     },
     "save": {
       "saving": "Enregistrement …",
@@ -339,6 +345,30 @@
       "backToEditor": "Retour à l'édition",
       "layout": "Mise en page",
       "saveFirst": "La leçon n'a pas pu être enregistrée. Merci de vérifier les saisies."
+    },
+    "createdBy": "par {name}",
+    "selectAll": "Tout sélectionner sur cette page",
+    "selectLesson": "Sélectionner « {name} »",
+    "deleteSelected": "{count, plural, one {Supprimer # leçon} other {Supprimer # leçons}}",
+    "deleteSelectedConfirm": "{count, plural, one {La leçon sélectionnée est supprimée avec tous ses points.} other {Les # leçons sélectionnées sont supprimées avec tous leurs points.}} La bibliothèque reste inchangée.",
+    "deletedMany": "{count, plural, one {# leçon supprimée.} other {# leçons supprimées.}}",
+    "emptyFiltered": "Aucune leçon pour cette recherche",
+    "emptyUpcoming": "Aucune leçon à venir",
+    "showPast": "{count, plural, one {Afficher # leçon passée} other {Afficher # leçons passées}}",
+    "publish": "Publier",
+    "published": "La leçon est publiée et visible par tout le monde.",
+    "unpublished": "La leçon est de nouveau un brouillon, visible uniquement par toi.",
+    "filter": {
+      "q": "Recherche",
+      "qPlaceholder": "Titre ou objectifs",
+      "from": "Du",
+      "to": "Au",
+      "reset": "Réinitialiser"
+    },
+    "tabs": {
+      "label": "Période",
+      "upcoming": "À venir ({count})",
+      "past": "Passées ({count})"
     }
   },
   "blocks": {
@@ -469,7 +499,10 @@
       "deleteConfirm": "Supprimer « {name} » ? Si le groupe est utilisé dans des leçons ou des blocs de programme, il sera archivé à la place : les anciennes leçons le conservent, mais il n'est plus sélectionnable.",
       "archived": "« {name} » a été archivé, car il est encore utilisé.",
       "deleted": "« {name} » a été supprimé.",
-      "archivedTitle": "Groupes archivés"
+      "archivedTitle": "Groupes archivés",
+      "privateDrafts": "Brouillons visibles uniquement par la personne qui les a créés",
+      "privateDraftsHint": "Les autres ne voient une leçon de ce groupe qu’une fois publiée. Les admins voient toujours tout.",
+      "privateDraftsShort": "brouillons privés"
     },
     "coaches": {
       "title": "Moniteurs",

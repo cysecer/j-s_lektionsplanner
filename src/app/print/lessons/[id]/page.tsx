@@ -32,7 +32,7 @@ export default async function PrintLessonPage({
   const t = await getTranslations();
   const sectionTitle = (s: { builtin: string | null; name: string | null }) =>
     s.name ?? (s.builtin ? t(`sections.${s.builtin as "INTRO"}`) : "");
-  const result = await getLessonDocument(access.clubId, id, sectionTitle);
+  const result = await getLessonDocument({ clubId: access.clubId }, id, sectionTitle);
   if (!result) notFound();
   const [layout, club] = await Promise.all([
     resolveLayout(access.clubId, access.layoutId ?? result.layoutId),

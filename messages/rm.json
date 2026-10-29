@@ -35,7 +35,10 @@
     "all": "Tuts",
     "from": "da",
     "to": "fin",
-    "years": "onns"
+    "years": "onns",
+    "datePlaceholder": "DD.MM.AAAA",
+    "timePlaceholder": "HH:MM",
+    "openCalendar": "Avrir il chalender"
   },
   "roles": {
     "ADMIN": "Administratur/-a",
@@ -243,7 +246,10 @@
       "goals": "Finamiras / finamiras d'emprender",
       "notes": "Indicaziuns / remartgas",
       "presentCoaches": "Manaders preschents",
-      "more": "Ulteriuras indicaziuns"
+      "more": "Ulteriuras indicaziuns",
+      "createdBy": "Creà da {name} ils {date}",
+      "createdByUnknown": "Autur/a betg registrà",
+      "privateDraft": "Sboz – visibel mo per tai fin che ti publitgeschas"
     },
     "save": {
       "saving": "Memorisar …",
@@ -339,6 +345,30 @@
       "backToEditor": "Enavos a l'elavuraziun",
       "layout": "Structura",
       "saveFirst": "La lecziun n'ha betg pudì vegnir memorisada. Controllescha per plaschair las endataziuns."
+    },
+    "createdBy": "da {name}",
+    "selectAll": "Tscherner tut sin questa pagina",
+    "selectLesson": "Tscherner «{name}»",
+    "deleteSelected": "{count, plural, one {Stizzar # lecziun} other {Stizzar # lecziuns}}",
+    "deleteSelectedConfirm": "{count, plural, one {La lecziun tschernida vegn stizzada cun tut ses puncts.} other {Las # lecziuns tschernidas vegnan stizzadas cun tut lur puncts.}} La biblioteca resta nunmidada.",
+    "deletedMany": "{count, plural, one {# lecziun stizzada.} other {# lecziuns stizzadas.}}",
+    "emptyFiltered": "Naginas lecziuns per questa tschertga",
+    "emptyUpcoming": "Naginas lecziuns futuras",
+    "showPast": "{count, plural, one {Mussar # lecziun passada} other {Mussar # lecziuns passadas}}",
+    "publish": "Publitgar",
+    "published": "La lecziun è publitgada e visibla per tuts.",
+    "unpublished": "La lecziun è puspè in sboz, visibel mo per tai.",
+    "filter": {
+      "q": "Tschertga",
+      "qPlaceholder": "Titel u finamiras",
+      "from": "Da",
+      "to": "Fin",
+      "reset": "Reinizialisar"
+    },
+    "tabs": {
+      "label": "Perioda",
+      "upcoming": "Futuras ({count})",
+      "past": "Passadas ({count})"
     }
   },
   "blocks": {
@@ -469,7 +499,10 @@
       "deleteConfirm": "Stizzar «{name}»? Sche la gruppa vegn duvrada en lecziuns u blocs da program, vegn ella archivada empè: Lecziuns veglias la mantegnan, ma ella na po betg pli vegnir tschernida.",
       "archived": "«{name}» è vegnida archivada, perquai ch'ella vegn anc duvrada.",
       "deleted": "«{name}» è vegnida stizzada.",
-      "archivedTitle": "Gruppas archivadas"
+      "archivedTitle": "Gruppas archivadas",
+      "privateDrafts": "Sbozs visibels mo per la persuna che als ha creà",
+      "privateDraftsHint": "Auters vesan ina lecziun da questa gruppa pir cura ch’ella è publitgada. Admins vesan adina tut.",
+      "privateDraftsShort": "sbozs privats"
     },
     "coaches": {
       "title": "Manaders",

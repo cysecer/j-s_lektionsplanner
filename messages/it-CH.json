@@ -35,7 +35,10 @@
     "all": "Tutti",
     "from": "da",
     "to": "a",
-    "years": "anni"
+    "years": "anni",
+    "datePlaceholder": "GG.MM.AAAA",
+    "timePlaceholder": "HH:MM",
+    "openCalendar": "Apri il calendario"
   },
   "roles": {
     "ADMIN": "Amministratore/-trice",
@@ -243,7 +246,10 @@
       "goals": "Obiettivi / obiettivi di apprendimento",
       "notes": "Indicazioni / osservazioni",
       "presentCoaches": "Monitori presenti",
-      "more": "Altre informazioni"
+      "more": "Altre informazioni",
+      "createdBy": "Creata da {name} il {date}",
+      "createdByUnknown": "Autore non registrato",
+      "privateDraft": "Bozza – visibile solo a te finché non la pubblichi"
     },
     "save": {
       "saving": "Salvataggio …",
@@ -339,6 +345,30 @@
       "backToEditor": "Torna alla modifica",
       "layout": "Impaginazione",
       "saveFirst": "Non è stato possibile salvare la lezione. Controlla i dati inseriti."
+    },
+    "createdBy": "di {name}",
+    "selectAll": "Seleziona tutto in questa pagina",
+    "selectLesson": "Seleziona «{name}»",
+    "deleteSelected": "{count, plural, one {Elimina # lezione} other {Elimina # lezioni}}",
+    "deleteSelectedConfirm": "{count, plural, one {La lezione selezionata viene eliminata con tutti i suoi punti.} other {Le # lezioni selezionate vengono eliminate con tutti i loro punti.}} La biblioteca resta invariata.",
+    "deletedMany": "{count, plural, one {# lezione eliminata.} other {# lezioni eliminate.}}",
+    "emptyFiltered": "Nessuna lezione per questa ricerca",
+    "emptyUpcoming": "Nessuna lezione in arrivo",
+    "showPast": "{count, plural, one {Mostra # lezione passata} other {Mostra # lezioni passate}}",
+    "publish": "Pubblica",
+    "published": "La lezione è pubblicata e visibile a tutti.",
+    "unpublished": "La lezione è di nuovo una bozza, visibile solo a te.",
+    "filter": {
+      "q": "Ricerca",
+      "qPlaceholder": "Titolo o obiettivi",
+      "from": "Dal",
+      "to": "Al",
+      "reset": "Reimposta"
+    },
+    "tabs": {
+      "label": "Periodo",
+      "upcoming": "In arrivo ({count})",
+      "past": "Passate ({count})"
     }
   },
   "blocks": {
@@ -469,7 +499,10 @@
       "deleteConfirm": "Eliminare «{name}»? Se il gruppo è usato in lezioni o blocchi di programma, verrà invece archiviato: le lezioni vecchie lo mantengono, ma non è più selezionabile.",
       "archived": "«{name}» è stato archiviato perché è ancora in uso.",
       "deleted": "«{name}» è stato eliminato.",
-      "archivedTitle": "Gruppi archiviati"
+      "archivedTitle": "Gruppi archiviati",
+      "privateDrafts": "Bozze visibili solo a chi le ha create",
+      "privateDraftsHint": "Gli altri vedono una lezione di questo gruppo solo quando è pubblicata. Gli admin vedono sempre tutto.",
+      "privateDraftsShort": "bozze private"
     },
     "coaches": {
       "title": "Monitori",

@@ -1,4 +1,5 @@
 import "server-only";
+import type { Prisma } from "@/generated/prisma/client";
 import type { BuiltinSection } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { DEFAULT_LAYOUT, parseLayoutConfig, type LayoutConfig } from "@/lib/layout/schema";
@@ -49,14 +50,14 @@ export async function resolveLayout(
 }
 
 export async function getLessonDocument(
-  clubId: string,
+  scope: Prisma.LessonWhereInput & { clubId: string },
   lessonId: string,
   sectionTitle: SectionTitle,
 ): Promise<{ document: LessonDocument; layoutId: string | null } | null> {
-  const lesson = await getLesson(clubId, lessonId);
+  const lesson = await getLesson(scope, lessonId);
   if (!lesson) return null;
   return {
-    document: await toDocument(clubId, lesson, sectionTitle),
+    document: await toDocument(scope.clubId, lesson, sectionTitle),
     layoutId: lesson.layoutId,
   };
 }
@@ -68,7 +69,7 @@ export async function getPreviewDocument(clubId: string, sectionTitle: SectionTi
     orderBy: { updatedAt: "desc" },
     select: { id: true },
   });
-  const lesson = latest ? await getLesson(clubId, latest.id) : null;
+  const lesson = latest ? await getLesson({ clubId }, latest.id) : null;
   if (lesson) return toDocument(clubId, lesson, sectionTitle);
   return null;
 }

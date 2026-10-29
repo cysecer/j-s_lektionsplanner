@@ -26,6 +26,7 @@ export const createTeamAction = action({
         name: input.name,
         defaultStartTimeMinutes: input.defaultStartTime,
         defaultDurationMinutes: input.defaultDurationMinutes,
+        privateDrafts: input.privateDrafts,
         sortOrder: nextSortOrder(existing),
       },
     });
@@ -44,6 +45,7 @@ export const updateTeamAction = action({
           name: input.name,
           defaultStartTimeMinutes: input.defaultStartTime,
           defaultDurationMinutes: input.defaultDurationMinutes,
+          privateDrafts: input.privateDrafts,
         },
       }),
     );

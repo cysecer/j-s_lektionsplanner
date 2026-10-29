@@ -93,12 +93,18 @@ test("teams: create, reorder, delete unused, archive used, restore", async ({ pa
 
   const list = page.getByRole("main").getByRole("listitem");
   await expect(list.filter({ hasText: "Leichtathletik" })).toContainText("17:00");
+  const teamNames = () => page.getByRole("main").locator("li p.font-medium").allTextContents();
+  // Other tests may have added teams too: compare with the position before.
+  const before = await teamNames();
   const moved = nextServerAction(page);
   await page.getByRole("button", { name: "Leichtathletik: Nach oben" }).click();
   await moved;
   await page.reload();
-  const names = await page.getByRole("main").locator("li p.font-medium").allTextContents();
-  expect(names.indexOf("Leichtathletik")).toBe(names.indexOf("Jugi") - 1);
+  const after = await teamNames();
+  expect(after.indexOf("Leichtathletik")).toBe(before.indexOf("Leichtathletik") - 1);
+  expect(after[after.indexOf("Leichtathletik") + 1]).toBe(
+    before[before.indexOf("Leichtathletik") - 1],
+  );
 
   // Unused → really deleted.
   await page.getByRole("button", { name: "Leichtathletik: Löschen" }).click();

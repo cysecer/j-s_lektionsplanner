@@ -77,18 +77,30 @@ describe("club settings", () => {
 describe("team defaults are optional", () => {
   it("maps empty inputs to null", () => {
     expect(
-      teamSchema.parse({ name: "Jugi", defaultStartTime: "", defaultDurationMinutes: "" }),
+      teamSchema.parse({
+        name: "Jugi",
+        defaultStartTime: "",
+        defaultDurationMinutes: "",
+        privateDrafts: false,
+      }),
     ).toEqual({
       name: "Jugi",
       defaultStartTime: null,
       defaultDurationMinutes: null,
+      privateDrafts: false,
     });
     expect(
-      teamSchema.parse({ name: "Jugi", defaultStartTime: "17:30", defaultDurationMinutes: 75 }),
+      teamSchema.parse({
+        name: "Jugi",
+        defaultStartTime: "17:30",
+        defaultDurationMinutes: 75,
+        privateDrafts: true,
+      }),
     ).toEqual({
       name: "Jugi",
       defaultStartTime: 1050,
       defaultDurationMinutes: 75,
+      privateDrafts: true,
     });
   });
 });

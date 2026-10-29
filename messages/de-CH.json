@@ -35,7 +35,10 @@
     "all": "Alle",
     "from": "von",
     "to": "bis",
-    "years": "Jahre"
+    "years": "Jahre",
+    "datePlaceholder": "TT.MM.JJJJ",
+    "timePlaceholder": "HH:MM",
+    "openCalendar": "Kalender öffnen"
   },
   "roles": {
     "ADMIN": "Administrator/-in",
@@ -243,7 +246,10 @@
       "goals": "Zielsetzungen / Lernziele",
       "notes": "Hinweise / Bemerkungen",
       "presentCoaches": "Anwesende Leitende",
-      "more": "Weitere Angaben"
+      "more": "Weitere Angaben",
+      "createdBy": "Erstellt von {name} am {date}",
+      "createdByUnknown": "Ersteller/-in nicht erfasst",
+      "privateDraft": "Entwurf – nur für dich sichtbar, bis du veröffentlichst"
     },
     "save": {
       "saving": "Wird gespeichert …",
@@ -339,6 +345,30 @@
       "backToEditor": "Zurück zum Bearbeiten",
       "layout": "Layout",
       "saveFirst": "Die Lektion konnte nicht gespeichert werden. Bitte prüfe die Eingaben."
+    },
+    "createdBy": "von {name}",
+    "selectAll": "Alle auf dieser Seite auswählen",
+    "selectLesson": "«{name}» auswählen",
+    "deleteSelected": "{count, plural, one {# Lektion löschen} other {# Lektionen löschen}}",
+    "deleteSelectedConfirm": "{count, plural, one {Die ausgewählte Lektion wird mit allen Programmpunkten gelöscht.} other {Die # ausgewählten Lektionen werden mit allen Programmpunkten gelöscht.}} Die Bibliothek bleibt unverändert.",
+    "deletedMany": "{count, plural, one {# Lektion gelöscht.} other {# Lektionen gelöscht.}}",
+    "emptyFiltered": "Keine Lektionen für diese Suche",
+    "emptyUpcoming": "Keine kommenden Lektionen",
+    "showPast": "{count, plural, one {# vergangene Lektion anzeigen} other {# vergangene Lektionen anzeigen}}",
+    "publish": "Veröffentlichen",
+    "published": "Lektion ist veröffentlicht und für alle sichtbar.",
+    "unpublished": "Lektion ist wieder ein Entwurf und nur noch für dich sichtbar.",
+    "filter": {
+      "q": "Suche",
+      "qPlaceholder": "Titel oder Lernziele",
+      "from": "Von",
+      "to": "Bis",
+      "reset": "Zurücksetzen"
+    },
+    "tabs": {
+      "label": "Zeitraum",
+      "upcoming": "Kommende ({count})",
+      "past": "Vergangene ({count})"
     }
   },
   "blocks": {
@@ -469,7 +499,10 @@
       "deleteConfirm": "«{name}» löschen? Wird die Riege in Lektionen oder Programmblöcken verwendet, wird sie stattdessen archiviert: Alte Lektionen behalten sie, für Neues ist sie nicht mehr wählbar.",
       "archived": "«{name}» wurde archiviert, weil sie noch verwendet wird.",
       "deleted": "«{name}» wurde gelöscht.",
-      "archivedTitle": "Archivierte Riegen"
+      "archivedTitle": "Archivierte Riegen",
+      "privateDrafts": "Entwürfe nur für die erstellende Person sichtbar",
+      "privateDraftsHint": "Andere sehen eine Lektion dieser Riege erst, wenn sie veröffentlicht ist. Admins sehen immer alle.",
+      "privateDraftsShort": "Entwürfe privat"
     },
     "coaches": {
       "title": "Leitende",

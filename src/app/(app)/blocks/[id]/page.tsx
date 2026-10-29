@@ -9,6 +9,7 @@ import { SectionCard } from "@/components/settings/section-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { requireViewer } from "@/lib/auth/session";
+import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { getBlock, getBlockUsage } from "@/lib/blocks/queries";
 import { db } from "@/lib/db";
 import { formatDate, formatNumber } from "@/lib/format";
@@ -23,7 +24,7 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
   const { id } = await parsePageInput(z.object({ id: z.uuid() }), params);
   const [block, usage, fields, t] = await Promise.all([
     getBlock(viewer.clubId, id),
-    getBlockUsage(viewer.clubId, id),
+    getBlockUsage(visibleLessonsWhere(viewer), id),
     // Archived fields too: their values stay visible.
     db.customField.findMany({
       where: { clubId: viewer.clubId },

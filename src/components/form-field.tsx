@@ -1,20 +1,28 @@
 import { useId, type ComponentProps } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 /** Labelled input with an accessible error message. */
 export function FormField({
   label,
   error,
   hint,
+  wrapperClassName,
   ...props
-}: ComponentProps<typeof Input> & { label: string; error?: string; hint?: string }) {
+}: ComponentProps<typeof Input> & {
+  label: string;
+  error?: string;
+  hint?: string;
+  /** Classes for the wrapper (e.g. subgrid alignment in a row of fields). */
+  wrapperClassName?: string;
+}) {
   const id = useId();
   const describedBy = [error ? `${id}-error` : null, hint ? `${id}-hint` : null]
     .filter(Boolean)
     .join(" ");
   return (
-    <div className="grid gap-2">
+    <div className={cn("grid gap-2", wrapperClassName)}>
       <Label htmlFor={id}>{label}</Label>
       <Input
         id={id}

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
+import { TimeField } from "@/components/date-time-fields";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
 import { firstFieldError } from "@/lib/i18n-keys";
@@ -57,12 +58,10 @@ export function ClubForm({ initial }: { initial: Values }) {
         error={error("pdfFooterText")}
       />
       <div className="grid gap-5 sm:grid-cols-2">
-        <FormField
+        <TimeField
           label={t("settings.club.defaultStartTime")}
-          type="time"
-          step={300}
           value={values.defaultStartTime}
-          onChange={set("defaultStartTime")}
+          onChange={(defaultStartTime) => setValues((v) => ({ ...v, defaultStartTime }))}
           required
           hint={t("settings.club.defaultStartTimeHint")}
           error={error("defaultStartTime")}

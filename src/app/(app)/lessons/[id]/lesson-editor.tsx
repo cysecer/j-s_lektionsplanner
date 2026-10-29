@@ -45,12 +45,15 @@ export function LessonEditor({
   initialGeneral,
   initialItems,
   options,
+  creator,
 }: {
   lessonId: string;
   initialVersion: string;
   initialGeneral: LessonGeneralValues;
   initialItems: EditorItem[];
   options: LessonOptions;
+  /** Who created the lesson (null for lessons from before this was recorded). */
+  creator: { name: string | null; createdAt: string };
 }) {
   const t = useTranslations();
   const router = useRouter();
@@ -59,6 +62,8 @@ export function LessonEditor({
   const [items, setItems] = useState(() => normalize(initialItems, sectionOrder));
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>();
+  // In teams with private drafts, finishing a lesson is what makes it visible.
+  const privateDrafts = options.teams.find((x) => x.id === general.teamId)?.privateDrafts ?? false;
 
   // Refs so the save routine always sees the latest values without re-creating timers.
   const version = useRef(initialVersion);
@@ -129,7 +134,11 @@ export function LessonEditor({
     setGeneral(next);
     markDirty();
     if (await save()) {
-      toast.success(status === "FINAL" ? t("lessons.finished") : t("lessons.reopened"));
+      toast.success(
+        status === "FINAL"
+          ? t(privateDrafts ? "lessons.published" : "lessons.finished")
+          : t(privateDrafts ? "lessons.unpublished" : "lessons.reopened"),
+      );
       return;
     }
     // Not saved: keep editing as before, the error summary says what is missing.
@@ -225,7 +234,7 @@ export function LessonEditor({
               onClick={() => void changeStatus("FINAL")}
             >
               <CircleCheckBig aria-hidden />
-              {t("lessons.finish")}
+              {privateDrafts ? t("lessons.publish") : t("lessons.finish")}
             </Button>
           ) : (
             <Button
@@ -301,6 +310,8 @@ export function LessonEditor({
               onChange={updateGeneral}
               options={options}
               fieldErrors={generalErrors}
+              creator={creator}
+              privateDraft={privateDrafts && general.status === "DRAFT"}
             />
 
             <SectionBoard

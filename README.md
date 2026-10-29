@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 10 – E-Mail-Versand).
+> Status: im Aufbau (Phase 10b – Lektionsübersicht und Eingaben).
 
 ## Voraussetzungen
 

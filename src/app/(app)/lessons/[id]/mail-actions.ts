@@ -6,6 +6,7 @@ import type { Viewer } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { formatDate } from "@/lib/format";
+import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { lessonMailSchema, renderLessonEmail } from "@/lib/mail/lesson-email";
 import { loggedSend } from "@/lib/mail/log";
 import { sendMail } from "@/lib/mail/send";
@@ -15,7 +16,7 @@ import { ActionFailure } from "@/lib/server/result";
 
 async function findLesson(viewer: Viewer, lessonId: string) {
   const lesson = await db.lesson.findFirst({
-    where: { id: lessonId, clubId: viewer.clubId },
+    where: { AND: [visibleLessonsWhere(viewer), { id: lessonId }] },
     select: { id: true, title: true, date: true, team: { select: { name: true } } },
   });
   if (!lesson) throw new ActionFailure("notFound");

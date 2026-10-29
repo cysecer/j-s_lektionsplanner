@@ -230,7 +230,7 @@ test("duplicate a lesson; readers only see it", async ({ page, browser }) => {
 
 test("the sample lesson shows its six items in three sections", async ({ page }) => {
   await signInAs(page, "COACH", "Sam Sample");
-  await page.goto("/lessons?team=all");
+  await page.goto("/lessons?team=all&when=past");
   // The demo lesson from the seed, dated like the paper original.
   await page.getByRole("link", { name: /28\.11\.2018/ }).click();
   await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
