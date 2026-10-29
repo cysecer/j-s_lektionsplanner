@@ -17,14 +17,14 @@ export const BLOCK_LIMITS = {
   participantsMax: 500,
 } as const;
 
-const uuidSet = (max: number) =>
+export const uuidSet = (max: number) =>
   z
     .array(z.uuid())
     .max(max)
     .refine((ids) => new Set(ids).size === ids.length, { message: "validation.invalid" });
 
 /** Number inputs arrive as strings; "" means "not set". */
-const optionalInt = (min: number, max: number) =>
+export const optionalInt = (min: number, max: number) =>
   z.union([
     z.literal("").transform(() => null),
     z.null(),
@@ -43,40 +43,63 @@ export const responsibleSchema = z.discriminatedUnion("kind", [
 ]);
 export type Responsible = z.infer<typeof responsibleSchema>;
 
+/**
+ * What a game/exercise consists of. Shared by library blocks and lesson
+ * items (a lesson item is a snapshot copy of this content).
+ */
+export const blockContentShape = {
+  title: displayName(BLOCK_LIMITS.title),
+  durationMinutes: optionalInt(0, BLOCK_LIMITS.durationMax),
+  description: richTextSchema.nullable(),
+  rules: richTextSchema.nullable(),
+  variations: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.variations),
+  organization: richTextSchema.nullable(),
+  material: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.material),
+  sketchAssetIds: uuidSet(BLOCK_LIMITS.sketches),
+  teamCount: optionalInt(1, BLOCK_LIMITS.teamCountMax),
+  minParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
+  maxParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
+  /** Validated against the club's field definitions with customValuesSchema(). */
+  customValues: z.record(z.uuid(), z.unknown()),
+};
+
+export function participantsInOrder(b: {
+  minParticipants: number | null;
+  maxParticipants: number | null;
+}) {
+  return (
+    b.minParticipants === null ||
+    b.maxParticipants === null ||
+    b.minParticipants <= b.maxParticipants
+  );
+}
+export const participantsRangeIssue = {
+  message: "validation.participantsRange",
+  path: ["maxParticipants"],
+};
+
+export const blockContentSchema = z
+  .strictObject(blockContentShape)
+  .refine(participantsInOrder, participantsRangeIssue);
+export type BlockContent = z.output<typeof blockContentSchema>;
+export type BlockContentValues = z.input<typeof blockContentSchema>;
+
 export const blockInputSchema = z
   .strictObject({
-    title: displayName(BLOCK_LIMITS.title),
-    durationMinutes: optionalInt(0, BLOCK_LIMITS.durationMax),
-    description: richTextSchema.nullable(),
-    rules: richTextSchema.nullable(),
-    variations: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.variations),
-    organization: richTextSchema.nullable(),
-    material: z.array(displayName(BLOCK_LIMITS.listItem)).max(BLOCK_LIMITS.material),
-    sketchAssetIds: uuidSet(BLOCK_LIMITS.sketches),
+    ...blockContentShape,
     tagIds: uuidSet(BLOCK_LIMITS.tags),
     /** Empty = available to the whole club. */
     teamIds: uuidSet(BLOCK_LIMITS.teams),
     suggestedSectionId: z.uuid().nullable(),
     ageMin: optionalInt(0, BLOCK_LIMITS.ageMax),
     ageMax: optionalInt(0, BLOCK_LIMITS.ageMax),
-    teamCount: optionalInt(1, BLOCK_LIMITS.teamCountMax),
-    minParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
-    maxParticipants: optionalInt(1, BLOCK_LIMITS.participantsMax),
     difficulty: z.enum(Difficulty).nullable(),
-    /** Validated against the club's field definitions with customValuesSchema(). */
-    customValues: z.record(z.uuid(), z.unknown()),
   })
   .refine((b) => b.ageMin === null || b.ageMax === null || b.ageMin <= b.ageMax, {
     message: "validation.ageRange",
     path: ["ageMax"],
   })
-  .refine(
-    (b) =>
-      b.minParticipants === null ||
-      b.maxParticipants === null ||
-      b.minParticipants <= b.maxParticipants,
-    { message: "validation.participantsRange", path: ["maxParticipants"] },
-  );
+  .refine(participantsInOrder, participantsRangeIssue);
 
 export type BlockInput = z.output<typeof blockInputSchema>;
 export type BlockFormValues = z.input<typeof blockInputSchema>;

@@ -144,7 +144,8 @@
     "numberMax": "Merci de saisir au plus {max}.",
     "tooLongMax": "Trop long (au maximum {max}).",
     "tooShortMin": "Trop court (au moins {min}).",
-    "wholeNumber": "Merci de saisir un nombre entier."
+    "wholeNumber": "Merci de saisir un nombre entier.",
+    "date": "Merci de saisir une date valable."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -198,7 +199,133 @@
   "lessons": {
     "title": "Leçons",
     "intro": "Tes préparations de leçon. Tu composes les nouvelles leçons à partir de blocs de programme.",
-    "comingSoon": "L'aperçu des leçons et l'éditeur seront construits prochainement."
+    "untitled": "Nouvelle leçon",
+    "new": "Nouvelle préparation de leçon",
+    "emptyTitle": "Aucune préparation de leçon pour l'instant",
+    "emptyBody": "Crée une nouvelle leçon et compose-la à partir des blocs de programme de la bibliothèque.",
+    "results": "{count, plural, =0 {Aucune leçon} one {# leçon} other {# leçons}}",
+    "itemsCount": "{count, plural, =0 {encore vide} one {# point du programme} other {# points du programme}}",
+    "status": {
+      "DRAFT": "Brouillon",
+      "FINAL": "Terminée"
+    },
+    "duplicate": "Dupliquer",
+    "duplicated": "Copie créée. Tu modifies maintenant la copie.",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer « {name} » ? La leçon et tous ses points du programme seront supprimés. La bibliothèque reste inchangée.",
+    "deleted": "« {name} » a été supprimée.",
+    "back": "Toutes les leçons",
+    "general": {
+      "heading": "Informations générales",
+      "title": "Titre de la leçon",
+      "author": "Auteur·e",
+      "date": "Date",
+      "team": "Groupe",
+      "noTeam": "Aucun groupe en particulier",
+      "layout": "Mise en page PDF",
+      "startTime": "Heure de début",
+      "startTimeHint": "Laisser vide si aucune heure ne doit être affichée.",
+      "totalDuration": "Durée de la leçon (minutes)",
+      "location": "Cadre / lieu d'entraînement",
+      "ageMin": "Âge de",
+      "ageMax": "Âge jusqu'à",
+      "groupSize": "Taille du groupe",
+      "difficulty": "Niveau",
+      "noDifficulty": "Non indiqué",
+      "safety": "Aspects de sécurité",
+      "goals": "Objectifs / objectifs d'apprentissage",
+      "notes": "Remarques",
+      "presentCoaches": "Moniteurs présents",
+      "status": "Statut",
+      "more": "Autres informations"
+    },
+    "save": {
+      "saving": "Enregistrement …",
+      "saved": "Toutes les modifications sont enregistrées",
+      "unsaved": "Modifications non enregistrées",
+      "failed": "Non enregistré – merci de vérifier les saisies",
+      "offline": "L'enregistrement a échoué. Nouvel essai à la prochaine modification.",
+      "conflictTitle": "Quelqu'un d'autre a modifié cette leçon",
+      "conflictBody": "Recharge la page pour voir la version actuelle. Tes modifications des dernières secondes seront perdues.",
+      "reload": "Recharger",
+      "saveNow": "Enregistrer",
+      "finalHint": "Les leçons terminées ne sont pas enregistrées automatiquement."
+    },
+    "timing": {
+      "total": "Planifié : {minutes}",
+      "budget": "Durée de la leçon : {minutes}",
+      "remaining": "encore {minutes} de libre",
+      "over": "{minutes} de trop",
+      "exact": "parfait",
+      "withoutDuration": "{count, plural, one {# point} other {# points}} sans durée",
+      "endsAt": "Fin {time}"
+    },
+    "items": {
+      "emptySection": "Rien de prévu pour l'instant. Ajoute un bloc de programme de la bibliothèque ou saisis un point court.",
+      "quickAdd": "Saisir un point court",
+      "quickAddTitle": "Titre",
+      "quickAddPlaceholder": "p. ex. information sur le tournoi d'unihockey",
+      "quickAddDuration": "Minutes",
+      "edit": "Modifier",
+      "remove": "Retirer",
+      "removeConfirm": "Retirer « {name} » de cette leçon ? La bibliothèque reste inchangée.",
+      "moveTo": "Déplacer vers …",
+      "modified": "adapté",
+      "oneOff": "seulement dans cette leçon",
+      "responsible": "Responsable : {name}",
+      "dragHandle": "Déplacer « {name} »",
+      "actions": "Actions pour « {name} »"
+    },
+    "itemDialog": {
+      "title": "Modifier le point du programme",
+      "apply": "Appliquer",
+      "saveToLibrary": "Enregistrer dans la bibliothèque",
+      "savedToLibrary": "Enregistré dans la bibliothèque.",
+      "responsible": "Responsable",
+      "responsibleNone": "Personne de désigné",
+      "presentGroup": "Présents",
+      "otherGroup": "Autres moniteurs",
+      "freeText": "Texte libre …",
+      "responsibleText": "Nom ou description",
+      "customFields": "Champs supplémentaires"
+    },
+    "choice": {
+      "title": "Où la modification doit-elle s'appliquer ?",
+      "body": "Ce point du programme provient de la bibliothèque (« {name} »).",
+      "local": "Seulement pour cet entraînement",
+      "localHint": "Le bloc de programme de la bibliothèque reste inchangé.",
+      "overwrite": "Écraser le bloc de programme enregistré",
+      "overwriteHint": "Les futures leçons utilisent la nouvelle version. Les leçons déjà planifiées restent inchangées.",
+      "asNew": "Enregistrer comme nouveau bloc de programme",
+      "asNewHint": "L'ancien bloc de programme reste, un nouveau est créé en plus.",
+      "overwritten": "Bloc de programme mis à jour dans la bibliothèque.",
+      "createdNew": "Nouveau bloc de programme enregistré dans la bibliothèque."
+    },
+    "library": {
+      "title": "Bibliothèque",
+      "open": "Ajouter un bloc de programme",
+      "search": "Rechercher des blocs de programme",
+      "insertInto": "Insérer dans",
+      "suggested": "La partie adaptée",
+      "allTeams": "Afficher les blocs de tous les groupes",
+      "add": "Ajouter",
+      "addNamed": "Ajouter « {name} »",
+      "added": "« {name} » ajouté.",
+      "dragHint": "Glisser dans une partie ou toucher « Ajouter ».",
+      "empty": "Aucun bloc de programme correspondant.",
+      "loadMore": "Afficher plus"
+    },
+    "dnd": {
+      "instructions": "Appuie sur Espace ou Entrée pour saisir. Déplace avec les flèches, dépose avec Espace ou Entrée, annule avec Échap.",
+      "picked": "« {name} » saisi.",
+      "over": "« {name} » est au-dessus de « {target} ».",
+      "overNothing": "« {name} » n'est au-dessus d'aucune cible.",
+      "dropped": "« {name} » déposé.",
+      "cancelled": "Déplacement annulé."
+    },
+    "view": {
+      "noItems": "Rien n'est prévu dans cette partie."
+    }
   },
   "blocks": {
     "title": "Blocs de programme",
@@ -438,7 +565,9 @@
     "unreadable": "L'image n'a pas pu être lue.",
     "unknownTag": "Une des catégories choisies n'existe plus.",
     "unknownSection": "La partie choisie n'existe plus.",
-    "asset": "Une image est introuvable. Merci de la téléverser à nouveau."
+    "asset": "Une image est introuvable. Merci de la téléverser à nouveau.",
+    "lessonChanged": "Cette leçon a été modifiée entre-temps à un autre endroit.",
+    "unknownLayout": "La mise en page PDF choisie n'existe plus."
   },
   "sections": {
     "INTRO": "Mise en train",

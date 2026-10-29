@@ -144,7 +144,8 @@
     "numberMax": "Please enter at most {max}.",
     "tooLongMax": "Too long (at most {max}).",
     "tooShortMin": "Too short (at least {min}).",
-    "wholeNumber": "Please enter a whole number."
+    "wholeNumber": "Please enter a whole number.",
+    "date": "Please enter a valid date."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -198,7 +199,133 @@
   "lessons": {
     "title": "Lessons",
     "intro": "Your lesson plans. You put new lessons together from program blocks.",
-    "comingSoon": "The lesson overview and editor will be built next."
+    "untitled": "New lesson",
+    "new": "New lesson plan",
+    "emptyTitle": "No lesson plans yet",
+    "emptyBody": "Create a new lesson and put it together from program blocks in the library.",
+    "results": "{count, plural, =0 {No lessons} one {# lesson} other {# lessons}}",
+    "itemsCount": "{count, plural, =0 {still empty} one {# program item} other {# program items}}",
+    "status": {
+      "DRAFT": "Draft",
+      "FINAL": "Final"
+    },
+    "duplicate": "Duplicate",
+    "duplicated": "Copy created. You are now editing the copy.",
+    "delete": "Delete",
+    "deleteConfirm": "Delete “{name}”? The lesson and all its program items will be removed. The library stays unchanged.",
+    "deleted": "“{name}” was deleted.",
+    "back": "All lessons",
+    "general": {
+      "heading": "General information",
+      "title": "Lesson title",
+      "author": "Author",
+      "date": "Date",
+      "team": "Group",
+      "noTeam": "No particular group",
+      "layout": "PDF layout",
+      "startTime": "Start time",
+      "startTimeHint": "Leave empty if no clock times should be shown.",
+      "totalDuration": "Lesson length (minutes)",
+      "location": "Venue / training location",
+      "ageMin": "Age from",
+      "ageMax": "Age to",
+      "groupSize": "Group size",
+      "difficulty": "Level",
+      "noDifficulty": "Not specified",
+      "safety": "Safety aspects",
+      "goals": "Goals / learning objectives",
+      "notes": "Notes / remarks",
+      "presentCoaches": "Coaches present",
+      "status": "Status",
+      "more": "More details"
+    },
+    "save": {
+      "saving": "Saving …",
+      "saved": "All changes saved",
+      "unsaved": "Unsaved changes",
+      "failed": "Not saved – please check your input",
+      "offline": "Saving failed. Trying again with the next change.",
+      "conflictTitle": "Someone else changed this lesson",
+      "conflictBody": "Reload the page to see the current version. Your changes from the last few seconds will be lost.",
+      "reload": "Reload",
+      "saveNow": "Save",
+      "finalHint": "Final lessons are not saved automatically."
+    },
+    "timing": {
+      "total": "Planned: {minutes}",
+      "budget": "Lesson length: {minutes}",
+      "remaining": "{minutes} left",
+      "over": "{minutes} too long",
+      "exact": "fits exactly",
+      "withoutDuration": "{count, plural, one {# item} other {# items}} without duration",
+      "endsAt": "Ends {time}"
+    },
+    "items": {
+      "emptySection": "Nothing planned yet. Add a program block from the library or enter a short item.",
+      "quickAdd": "Add a short item",
+      "quickAddTitle": "Title",
+      "quickAddPlaceholder": "e.g. information about the floorball tournament",
+      "quickAddDuration": "Minutes",
+      "edit": "Edit",
+      "remove": "Remove",
+      "removeConfirm": "Remove “{name}” from this lesson? The library stays unchanged.",
+      "moveTo": "Move to …",
+      "modified": "adapted",
+      "oneOff": "only in this lesson",
+      "responsible": "Responsible: {name}",
+      "dragHandle": "Move “{name}”",
+      "actions": "Actions for “{name}”"
+    },
+    "itemDialog": {
+      "title": "Edit program item",
+      "apply": "Apply",
+      "saveToLibrary": "Save to library",
+      "savedToLibrary": "Saved to the library.",
+      "responsible": "Responsible",
+      "responsibleNone": "Nobody assigned",
+      "presentGroup": "Present",
+      "otherGroup": "Other coaches",
+      "freeText": "Free text …",
+      "responsibleText": "Name or description",
+      "customFields": "Custom fields"
+    },
+    "choice": {
+      "title": "Where should the change apply?",
+      "body": "This program item comes from the library (“{name}”).",
+      "local": "Only for this training",
+      "localHint": "The program block in the library stays unchanged.",
+      "overwrite": "Overwrite the saved program block",
+      "overwriteHint": "Future lessons use the new version. Lessons already planned stay unchanged.",
+      "asNew": "Save as a new program block",
+      "asNewHint": "The existing program block stays; a new one is created in addition.",
+      "overwritten": "Program block updated in the library.",
+      "createdNew": "New program block saved to the library."
+    },
+    "library": {
+      "title": "Library",
+      "open": "Add program block",
+      "search": "Search program blocks",
+      "insertInto": "Insert into",
+      "suggested": "The suitable section",
+      "allTeams": "Show blocks of all groups",
+      "add": "Add",
+      "addNamed": "Add “{name}”",
+      "added": "“{name}” added.",
+      "dragHint": "Drag into a section or tap “Add”.",
+      "empty": "No matching program blocks.",
+      "loadMore": "Show more"
+    },
+    "dnd": {
+      "instructions": "Press space or enter to pick up. Move with the arrow keys, drop with space or enter, cancel with escape.",
+      "picked": "Picked up “{name}”.",
+      "over": "“{name}” is over “{target}”.",
+      "overNothing": "“{name}” is not over a target.",
+      "dropped": "Dropped “{name}”.",
+      "cancelled": "Moving cancelled."
+    },
+    "view": {
+      "noItems": "Nothing is planned in this section."
+    }
   },
   "blocks": {
     "title": "Program blocks",
@@ -438,7 +565,9 @@
     "unreadable": "The image could not be read.",
     "unknownTag": "One of the selected categories no longer exists.",
     "unknownSection": "The selected section no longer exists.",
-    "asset": "An image could not be found. Please upload it again."
+    "asset": "An image could not be found. Please upload it again.",
+    "lessonChanged": "This lesson has been changed somewhere else in the meantime.",
+    "unknownLayout": "The selected PDF layout no longer exists."
   },
   "sections": {
     "INTRO": "Warm-up",

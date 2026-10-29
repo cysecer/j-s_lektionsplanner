@@ -200,7 +200,8 @@ export async function deleteBlock(clubId: string, id: string) {
   await cleanupImages(images);
 }
 
-async function cleanupImages(ids: string[]) {
+/** Deletes the given images once nothing refers to them any more. */
+export async function cleanupImages(ids: string[]) {
   const uuid = /^[0-9a-f-]{36}$/;
   for (const id of new Set(ids)) if (uuid.test(id)) await deleteAssetIfUnused(id);
 }

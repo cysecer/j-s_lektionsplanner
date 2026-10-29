@@ -60,14 +60,16 @@ test("team filter is saved and settings are admin-only", async ({ page }) => {
   await expect(page).toHaveURL(/\/forbidden$/);
 
   await page.goto("/lessons");
-  await page.getByRole("combobox", { name: "Riege" }).click();
+  await page.getByRole("banner").getByRole("combobox", { name: "Riege" }).click();
   const saved = page.waitForResponse(
     (r) => r.request().method() === "POST" && r.request().headers()["next-action"] !== undefined,
   );
   await page.getByRole("option", { name: "TuVo" }).click();
   await saved;
   await page.reload();
-  await expect(page.getByRole("combobox", { name: "Riege" })).toHaveText(/TuVo/);
+  await expect(page.getByRole("banner").getByRole("combobox", { name: "Riege" })).toHaveText(
+    /TuVo/,
+  );
 });
 
 test("mobile: navigation lives in a menu panel", async ({ page }) => {

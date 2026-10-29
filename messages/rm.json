@@ -144,7 +144,8 @@
     "numberMax": "Endatescha per plaschair maximalmain {max}.",
     "tooLongMax": "Memia lung (maximalmain {max}).",
     "tooShortMin": "Memia curt (almain {min}).",
-    "wholeNumber": "Endatescha per plaschair in dumber entir."
+    "wholeNumber": "Endatescha per plaschair in dumber entir.",
+    "date": "Endatescha per plaschair ina data valaivla."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -198,7 +199,133 @@
   "lessons": {
     "title": "Lecziuns",
     "intro": "Tias preparaziuns da lecziuns. Novas lecziuns cumponas ti or da blocs da program.",
-    "comingSoon": "La survista da las lecziuns e l'editur vegnan construids sco proxim."
+    "untitled": "Nova lecziun",
+    "new": "Nova preparaziun da lecziun",
+    "emptyTitle": "Anc naginas preparaziuns da lecziuns",
+    "emptyBody": "Creescha ina nova lecziun e la cumpona cun blocs da program da la biblioteca.",
+    "results": "{count, plural, =0 {Naginas lecziuns} one {# lecziun} other {# lecziuns}}",
+    "itemsCount": "{count, plural, =0 {anc vida} one {# punct dal program} other {# puncts dal program}}",
+    "status": {
+      "DRAFT": "Sboz",
+      "FINAL": "Finì"
+    },
+    "duplicate": "Duplitgar",
+    "duplicated": "Copia creada. Ti elavuras ussa la copia.",
+    "delete": "Stizzar",
+    "deleteConfirm": "Stizzar «{name}»? La lecziun e tut ses puncts dal program vegnan allontanads. La biblioteca resta nunmidada.",
+    "deleted": "«{name}» è vegnida stizzada.",
+    "back": "Tut las lecziuns",
+    "general": {
+      "heading": "Indicaziuns generalas",
+      "title": "Titel da la lecziun",
+      "author": "Autur/-a",
+      "date": "Data",
+      "team": "Gruppa",
+      "noTeam": "Nagina gruppa speziala",
+      "layout": "Structura PDF",
+      "startTime": "Temp d'entschatta",
+      "startTimeHint": "Laschar vid sch'i na duain vegnir mussadas naginas uras.",
+      "totalDuration": "Durada da la lecziun (minutas)",
+      "location": "Ambient / lieu da trenament",
+      "ageMin": "Vegliadetgna da",
+      "ageMax": "Vegliadetgna fin",
+      "groupSize": "Grondezza da la gruppa",
+      "difficulty": "Nivel",
+      "noDifficulty": "Betg indicà",
+      "safety": "Aspects da segirezza",
+      "goals": "Finamiras / finamiras d'emprender",
+      "notes": "Indicaziuns / remartgas",
+      "presentCoaches": "Manaders preschents",
+      "status": "Status",
+      "more": "Ulteriuras indicaziuns"
+    },
+    "save": {
+      "saving": "Memorisar …",
+      "saved": "Tut las midadas èn memorisadas",
+      "unsaved": "Midadas betg memorisadas",
+      "failed": "Betg memorisà – controllescha per plaschair las endataziuns",
+      "offline": "Il memorisar n'è betg reussì. Nova emprova tar la proxima midada.",
+      "conflictTitle": "Insatgi auter ha midà questa lecziun",
+      "conflictBody": "Chargia danovamain la pagina per vesair la versiun actuala. Tias midadas da las ultimas secundas van a perder.",
+      "reload": "Chargiar danovamain",
+      "saveNow": "Memorisar",
+      "finalHint": "Lecziuns finidas na vegnan betg memorisadas automaticamain."
+    },
+    "timing": {
+      "total": "Planisà: {minutes}",
+      "budget": "Durada da la lecziun: {minutes}",
+      "remaining": "anc {minutes} liber",
+      "over": "{minutes} memia lung",
+      "exact": "s'accorda exactamain",
+      "withoutDuration": "{count, plural, one {# punct} other {# puncts}} senza durada",
+      "endsAt": "Fin {time}"
+    },
+    "items": {
+      "emptySection": "Anc nagut planisà. Agiunta in bloc da program da la biblioteca u endatescha in punct curt.",
+      "quickAdd": "Endatar in punct curt",
+      "quickAddTitle": "Titel",
+      "quickAddPlaceholder": "p.ex. infurmaziun davart il turnier d'unihockey",
+      "quickAddDuration": "Minutas",
+      "edit": "Elavurar",
+      "remove": "Allontanar",
+      "removeConfirm": "Allontanar «{name}» da questa lecziun? La biblioteca resta nunmidada.",
+      "moveTo": "Spustar en …",
+      "modified": "adattà",
+      "oneOff": "mo en questa lecziun",
+      "responsible": "Responsabel: {name}",
+      "dragHandle": "Spustar «{name}»",
+      "actions": "Acziuns per «{name}»"
+    },
+    "itemDialog": {
+      "title": "Elavurar il punct dal program",
+      "apply": "Applitgar",
+      "saveToLibrary": "Memorisar en la biblioteca",
+      "savedToLibrary": "Memorisà en la biblioteca.",
+      "responsible": "Responsabel",
+      "responsibleNone": "Nagin designà",
+      "presentGroup": "Preschents",
+      "otherGroup": "Ulteriurs manaders",
+      "freeText": "Text liber …",
+      "responsibleText": "Num u descripziun",
+      "customFields": "Champs supplementars"
+    },
+    "choice": {
+      "title": "Nua duai valair la midada?",
+      "body": "Quest punct dal program deriva da la biblioteca («{name}»).",
+      "local": "Mo per quest trenament",
+      "localHint": "Il bloc da program en la biblioteca resta nunmidà.",
+      "overwrite": "Surscriver il bloc da program memorisà",
+      "overwriteHint": "Lecziuns futuras dovran la nova versiun. Lecziuns gia planisadas restan nunmidadas.",
+      "asNew": "Memorisar sco nov bloc da program",
+      "asNewHint": "Il bloc da program existent resta, en pli vegn creà in nov.",
+      "overwritten": "Bloc da program actualisà en la biblioteca.",
+      "createdNew": "Nov bloc da program memorisà en la biblioteca."
+    },
+    "library": {
+      "title": "Biblioteca",
+      "open": "Agiuntar in bloc da program",
+      "search": "Tschertgar blocs da program",
+      "insertInto": "Inserir en",
+      "suggested": "La part adattada",
+      "allTeams": "Mussar ils blocs da tut las gruppas",
+      "add": "Agiuntar",
+      "addNamed": "Agiuntar «{name}»",
+      "added": "«{name}» agiuntà.",
+      "dragHint": "Tirar en ina part u smatgar sin «Agiuntar».",
+      "empty": "Nagins blocs da program adattads.",
+      "loadMore": "Mussar dapli"
+    },
+    "dnd": {
+      "instructions": "Smatga la tasta da spazi u Enter per prender. Spustar cun las tastas da frizza, depositar cun la tasta da spazi u Enter, interrumper cun Escape.",
+      "picked": "«{name}» prendì.",
+      "over": "«{name}» è sur «{target}».",
+      "overNothing": "«{name}» n'è sur nagina destinaziun.",
+      "dropped": "«{name}» deponì.",
+      "cancelled": "Spustar interrut."
+    },
+    "view": {
+      "noItems": "En questa part n'è nagut planisà."
+    }
   },
   "blocks": {
     "title": "Blocs da program",
@@ -438,7 +565,9 @@
     "unreadable": "Il maletg n'ha betg pudì vegnir legì.",
     "unknownTag": "Ina da las categorias tschernidas n'exista betg pli.",
     "unknownSection": "La part tschernida n'exista betg pli.",
-    "asset": "In maletg n'è betg vegnì chattà. Chargia per plaschair si el danovamain."
+    "asset": "In maletg n'è betg vegnì chattà. Chargia per plaschair si el danovamain.",
+    "lessonChanged": "Questa lecziun è vegnida midada en il fratemp in auter lieu.",
+    "unknownLayout": "La structura PDF tschernida n'exista betg pli."
   },
   "sections": {
     "INTRO": "Introducziun",

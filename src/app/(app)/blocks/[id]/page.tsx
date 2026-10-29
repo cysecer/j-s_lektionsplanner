@@ -169,7 +169,12 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
                 key={lesson.id}
                 className="flex flex-wrap items-baseline justify-between gap-2 py-2"
               >
-                <span className="font-medium">{lesson.title}</span>
+                <Link
+                  href={`/lessons/${lesson.id}`}
+                  className="font-medium underline-offset-4 hover:underline"
+                >
+                  {lesson.title}
+                </Link>
                 <span className="text-muted-foreground text-sm">
                   {[
                     formatDate(lesson.date, viewer.locale),

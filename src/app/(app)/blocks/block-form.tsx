@@ -1,32 +1,25 @@
 "use client";
 
-import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useState, type FormEvent, type ReactNode } from "react";
-import { AssetImage } from "@/components/asset-image";
-import { FormField } from "@/components/form-field";
-import { ImageUpload } from "@/components/image-upload";
-import { ListEditor } from "@/components/list-editor";
-import { RichTextEditor } from "@/components/rich-text/rich-text-editor";
-import { SectionCard } from "@/components/settings/section-card";
-import { SketchesEditor } from "@/components/sketches-editor";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { useEffect, useId, useState, type FormEvent } from "react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  CheckboxGroup,
+  ChoiceSelect,
+  ContentFields,
+  CustomFieldInputs,
+  GroupSizeFields,
+  withoutEmptyValues,
+  withoutPrefix,
+  type ContentSetter,
+} from "@/components/blocks/content-fields";
+import { FormField } from "@/components/form-field";
+import { SectionCard } from "@/components/settings/section-card";
+import { Button } from "@/components/ui/button";
 import { Difficulty, type BuiltinSection, type CustomFieldType } from "@/generated/prisma/enums";
 import { BLOCK_LIMITS, type BlockFormValues } from "@/lib/blocks/schema";
 import { firstFieldError } from "@/lib/i18n-keys";
-import type { FieldErrors } from "@/lib/server/result";
-import type { RichText } from "@/lib/rich-text/schema";
 import { useAction } from "@/lib/use-action";
 import { createBlockAction, updateBlockAction } from "./actions";
 
@@ -38,15 +31,6 @@ export type BlockFormOptions = {
 };
 
 const NONE = "none";
-
-function isEmptyValue(value: unknown) {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === "string" && value.trim() === "") ||
-    (Array.isArray(value) && value.length === 0)
-  );
-}
 
 export function BlockForm({
   blockId,
@@ -64,19 +48,7 @@ export function BlockForm({
   const create = useAction(createBlockAction);
   const update = useAction(updateBlockAction);
   const action = blockId ? update : create;
-  const ids = {
-    description: useId(),
-    rules: useId(),
-    variations: useId(),
-    organization: useId(),
-    sketches: useId(),
-    material: useId(),
-    tags: useId(),
-    teams: useId(),
-    section: useId(),
-    difficulty: useId(),
-    fields: useId(),
-  };
+  const ids = { tags: useId(), teams: useId(), section: useId(), difficulty: useId() };
 
   // Warn before leaving the page with unsaved changes.
   useEffect(() => {
@@ -90,20 +62,16 @@ export function BlockForm({
     setDirty(true);
     setValues((v) => ({ ...v, [key]: value }));
   }
+  const setContent: ContentSetter = (key, value) => set(key, value as BlockFormValues[typeof key]);
   function setCustom(id: string, value: unknown) {
     setDirty(true);
     setValues((v) => ({ ...v, customValues: { ...v.customValues, [id]: value } }));
   }
+
   // The update action wraps the values as { id, block }; strip that prefix so
   // errors land on the same fields as when creating.
   const fieldErrors = blockId ? withoutPrefix(update.fieldErrors, "block.") : create.fieldErrors;
   const error = (path: string) => firstFieldError(t, fieldErrors, path);
-  const listErrors = (field: string) =>
-    Object.fromEntries(
-      Object.keys(fieldErrors ?? {})
-        .filter((k) => k.startsWith(`${field}.`))
-        .map((k) => [Number(k.split(".")[1]), error(k)!]),
-    );
   const labels: Record<string, string> = {
     title: t("blockFields.title"),
     durationMinutes: t("blockFields.duration"),
@@ -139,14 +107,12 @@ export function BlockForm({
       ...values,
       variations: values.variations.map((x) => x.trim()).filter(Boolean),
       material: values.material.map((x) => x.trim()).filter(Boolean),
-      customValues: Object.fromEntries(
-        Object.entries(values.customValues).filter(([, v]) => !isEmptyValue(v)),
-      ),
+      customValues: withoutEmptyValues(values.customValues),
     };
-    const options = { success: t("blocks.form.saved"), labels: prefixedLabels };
+    const runOptions = { success: t("blocks.form.saved"), labels: prefixedLabels };
     const result = blockId
-      ? await update.run({ id: blockId, block }, options)
-      : await create.run(block, options);
+      ? await update.run({ id: blockId, block }, runOptions)
+      : await create.run(block, runOptions);
     if (result) {
       setDirty(false);
       router.push(`/blocks/${result.id}`);
@@ -223,105 +189,12 @@ export function BlockForm({
               />
             </div>
           </div>
-          <div className="grid gap-5 sm:grid-cols-3">
-            <FormField
-              label={t("blocks.form.teamCount")}
-              type="number"
-              inputMode="numeric"
-              min={1}
-              max={BLOCK_LIMITS.teamCountMax}
-              value={String(values.teamCount ?? "")}
-              onChange={(e) => set("teamCount", e.target.value)}
-              error={error("teamCount")}
-            />
-            <FormField
-              label={t("blocks.form.minParticipants")}
-              type="number"
-              inputMode="numeric"
-              min={1}
-              max={BLOCK_LIMITS.participantsMax}
-              value={String(values.minParticipants ?? "")}
-              onChange={(e) => set("minParticipants", e.target.value)}
-              error={error("minParticipants")}
-            />
-            <FormField
-              label={t("blocks.form.maxParticipants")}
-              type="number"
-              inputMode="numeric"
-              min={1}
-              max={BLOCK_LIMITS.participantsMax}
-              value={String(values.maxParticipants ?? "")}
-              onChange={(e) => set("maxParticipants", e.target.value)}
-              error={error("maxParticipants")}
-            />
-          </div>
+          <GroupSizeFields values={values} set={setContent} error={error} />
         </div>
       </SectionCard>
 
       <SectionCard title={t("blocks.form.content")}>
-        <div className="grid gap-6">
-          <Field
-            id={ids.description}
-            label={t("blockFields.description")}
-            error={error("description")}
-          >
-            <RichTextEditor
-              labelledBy={ids.description}
-              value={values.description as RichText | null}
-              onChange={(v) => set("description", v)}
-            />
-          </Field>
-          <Field id={ids.rules} label={t("blockFields.rules")} error={error("rules")}>
-            <RichTextEditor
-              labelledBy={ids.rules}
-              value={values.rules as RichText | null}
-              onChange={(v) => set("rules", v)}
-            />
-          </Field>
-          <Field id={ids.variations} label={t("blockFields.variations")}>
-            <ListEditor
-              labelledBy={ids.variations}
-              items={values.variations}
-              onChange={(v) => set("variations", v)}
-              max={BLOCK_LIMITS.variations}
-              maxLength={BLOCK_LIMITS.listItem}
-              errors={listErrors("variations")}
-            />
-          </Field>
-          <Field
-            id={ids.organization}
-            label={t("blockFields.organization")}
-            error={error("organization")}
-          >
-            <RichTextEditor
-              labelledBy={ids.organization}
-              value={values.organization as RichText | null}
-              onChange={(v) => set("organization", v)}
-            />
-          </Field>
-          <Field
-            id={ids.sketches}
-            label={t("blockFields.sketches")}
-            hint={t("blocks.form.sketchesHint")}
-          >
-            <SketchesEditor
-              assetIds={values.sketchAssetIds}
-              onChange={(v) => set("sketchAssetIds", v)}
-              max={BLOCK_LIMITS.sketches}
-              title={values.title}
-            />
-          </Field>
-          <Field id={ids.material} label={t("blockFields.material")}>
-            <ListEditor
-              labelledBy={ids.material}
-              items={values.material}
-              onChange={(v) => set("material", v)}
-              max={BLOCK_LIMITS.material}
-              maxLength={BLOCK_LIMITS.listItem}
-              errors={listErrors("material")}
-            />
-          </Field>
-        </div>
+        <ContentFields values={values} set={setContent} error={error} />
       </SectionCard>
 
       <SectionCard title={t("blocks.form.assignment")}>
@@ -346,17 +219,12 @@ export function BlockForm({
 
       {options.fields.length > 0 ? (
         <SectionCard title={t("blocks.form.customFields")}>
-          <div className="grid gap-6">
-            {options.fields.map((field) => (
-              <CustomFieldInput
-                key={field.id}
-                field={field}
-                value={values.customValues[field.id]}
-                onChange={(v) => setCustom(field.id, v)}
-                error={error(`customValues.${field.id}`)}
-              />
-            ))}
-          </div>
+          <CustomFieldInputs
+            fields={options.fields}
+            values={values.customValues}
+            onChange={setCustom}
+            error={error}
+          />
         </SectionCard>
       ) : null}
 
@@ -369,205 +237,5 @@ export function BlockForm({
         </Button>
       </div>
     </form>
-  );
-}
-
-function Field({
-  id,
-  label,
-  hint,
-  error,
-  children,
-}: {
-  id: string;
-  label: string;
-  hint?: string;
-  error?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="grid gap-2">
-      <span id={id} className="text-sm font-medium">
-        {label}
-      </span>
-      {hint ? <p className="text-muted-foreground -mt-1 text-sm">{hint}</p> : null}
-      {children}
-      {error ? (
-        <p className="text-destructive text-sm" role="alert">
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
-function ChoiceSelect({
-  id,
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
-}) {
-  return (
-    <div className="grid gap-2">
-      <Label id={id}>{label}</Label>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger size="lg" aria-labelledby={id} className="w-full">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((o) => (
-            <SelectItem key={o.value} value={o.value}>
-              {o.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-function CheckboxGroup({
-  id,
-  label,
-  hint,
-  items,
-  selected,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  hint?: string;
-  items: { id: string; name: string }[];
-  selected: string[];
-  onChange: (ids: string[]) => void;
-}) {
-  return (
-    <fieldset className="grid gap-2" aria-labelledby={id}>
-      <legend id={id} className="text-sm font-medium">
-        {label}
-      </legend>
-      {hint ? <p className="text-muted-foreground text-sm">{hint}</p> : null}
-      <div className="grid gap-1 sm:grid-cols-3">
-        {items.map((item) => (
-          <Label
-            key={item.id}
-            className="hover:bg-accent flex min-h-11 items-center gap-3 rounded-md px-2 font-normal"
-          >
-            <Checkbox
-              checked={selected.includes(item.id)}
-              onCheckedChange={(v) =>
-                onChange(
-                  v === true ? [...selected, item.id] : selected.filter((x) => x !== item.id),
-                )
-              }
-            />
-            {item.name}
-          </Label>
-        ))}
-      </div>
-    </fieldset>
-  );
-}
-
-function CustomFieldInput({
-  field,
-  value,
-  onChange,
-  error,
-}: {
-  field: BlockFormOptions["fields"][number];
-  value: unknown;
-  onChange: (value: unknown) => void;
-  error?: string;
-}) {
-  const t = useTranslations();
-  const id = useId();
-  switch (field.type) {
-    case "SHORT_TEXT":
-      return (
-        <FormField
-          label={field.label}
-          value={typeof value === "string" ? value : ""}
-          maxLength={200}
-          onChange={(e) => onChange(e.target.value)}
-          error={error}
-        />
-      );
-    case "NUMBER":
-      return (
-        <FormField
-          label={field.label}
-          type="number"
-          inputMode="decimal"
-          value={value === undefined || value === null ? "" : String(value)}
-          onChange={(e) => onChange(e.target.value)}
-          error={error}
-        />
-      );
-    case "LONG_TEXT":
-      return (
-        <Field id={id} label={field.label} error={error}>
-          <RichTextEditor
-            labelledBy={id}
-            value={(value as RichText | null) ?? null}
-            onChange={onChange}
-          />
-        </Field>
-      );
-    case "LIST":
-      return (
-        <Field id={id} label={field.label} error={error}>
-          <ListEditor
-            labelledBy={id}
-            items={Array.isArray(value) ? (value as string[]) : []}
-            onChange={onChange}
-            max={50}
-            maxLength={BLOCK_LIMITS.listItem}
-          />
-        </Field>
-      );
-    case "IMAGE":
-      return (
-        <Field id={id} label={field.label} error={error}>
-          {typeof value === "string" && value ? (
-            <div className="flex items-start gap-2">
-              <AssetImage
-                assetId={value}
-                alt={field.label}
-                className="bg-muted/40 max-h-48 rounded border object-contain"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="size-11"
-                aria-label={`${field.label}: ${t("common.remove")}`}
-                onClick={() => onChange(null)}
-              >
-                <X aria-hidden />
-              </Button>
-            </div>
-          ) : (
-            <ImageUpload purpose="field" onUploaded={(image) => onChange(image.id)} />
-          )}
-        </Field>
-      );
-  }
-}
-
-function withoutPrefix(errors: FieldErrors | undefined, prefix: string): FieldErrors | undefined {
-  if (!errors) return errors;
-  return Object.fromEntries(
-    Object.entries(errors).map(([path, list]) => [
-      path.startsWith(prefix) ? path.slice(prefix.length) : path,
-      list,
-    ]),
   );
 }

@@ -144,7 +144,8 @@
     "numberMax": "Bitte höchstens {max} eingeben.",
     "tooLongMax": "Zu lang (höchstens {max}).",
     "tooShortMin": "Zu kurz (mindestens {min}).",
-    "wholeNumber": "Bitte eine ganze Zahl eingeben."
+    "wholeNumber": "Bitte eine ganze Zahl eingeben.",
+    "date": "Bitte ein gültiges Datum eingeben."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -198,7 +199,133 @@
   "lessons": {
     "title": "Lektionen",
     "intro": "Deine Lektionsvorbereitungen. Neue Lektionen stellst du aus Programmblöcken zusammen.",
-    "comingSoon": "Die Lektionsübersicht und der Editor werden als Nächstes gebaut."
+    "untitled": "Neue Lektion",
+    "new": "Neue Lektionsvorbereitung",
+    "emptyTitle": "Noch keine Lektionsvorbereitungen",
+    "emptyBody": "Lege eine neue Lektion an und stelle sie aus Programmblöcken der Bibliothek zusammen.",
+    "results": "{count, plural, =0 {Keine Lektionen} one {# Lektion} other {# Lektionen}}",
+    "itemsCount": "{count, plural, =0 {noch leer} one {# Programmpunkt} other {# Programmpunkte}}",
+    "status": {
+      "DRAFT": "Entwurf",
+      "FINAL": "Fertig"
+    },
+    "duplicate": "Duplizieren",
+    "duplicated": "Kopie erstellt. Du bearbeitest jetzt die Kopie.",
+    "delete": "Löschen",
+    "deleteConfirm": "«{name}» löschen? Die Lektion und alle ihre Programmpunkte werden entfernt. Die Bibliothek bleibt unverändert.",
+    "deleted": "«{name}» wurde gelöscht.",
+    "back": "Alle Lektionen",
+    "general": {
+      "heading": "Allgemeine Angaben",
+      "title": "Lektionstitel",
+      "author": "Autor/-in",
+      "date": "Datum",
+      "team": "Riege",
+      "noTeam": "Keine bestimmte Riege",
+      "layout": "PDF-Layout",
+      "startTime": "Startzeit",
+      "startTimeHint": "Leer lassen, wenn keine Uhrzeiten angezeigt werden sollen.",
+      "totalDuration": "Lektionsdauer (Minuten)",
+      "location": "Kursumgebung / Trainingsort",
+      "ageMin": "Alter von",
+      "ageMax": "Alter bis",
+      "groupSize": "Gruppengrösse",
+      "difficulty": "Niveau",
+      "noDifficulty": "Nicht angegeben",
+      "safety": "Sicherheitsaspekte",
+      "goals": "Zielsetzungen / Lernziele",
+      "notes": "Hinweise / Bemerkungen",
+      "presentCoaches": "Anwesende Leitende",
+      "status": "Status",
+      "more": "Weitere Angaben"
+    },
+    "save": {
+      "saving": "Wird gespeichert …",
+      "saved": "Alle Änderungen gespeichert",
+      "unsaved": "Ungespeicherte Änderungen",
+      "failed": "Nicht gespeichert – bitte Eingaben prüfen",
+      "offline": "Speichern fehlgeschlagen. Neuer Versuch bei der nächsten Änderung.",
+      "conflictTitle": "Jemand anders hat diese Lektion geändert",
+      "conflictBody": "Lade die Seite neu, um die aktuelle Version zu sehen. Deine Änderungen der letzten Sekunden gehen dabei verloren.",
+      "reload": "Neu laden",
+      "saveNow": "Speichern",
+      "finalHint": "Fertige Lektionen werden nicht automatisch gespeichert."
+    },
+    "timing": {
+      "total": "Geplant: {minutes}",
+      "budget": "Lektionsdauer: {minutes}",
+      "remaining": "noch {minutes} frei",
+      "over": "{minutes} zu lang",
+      "exact": "passt genau",
+      "withoutDuration": "{count, plural, one {# Punkt} other {# Punkte}} ohne Dauer",
+      "endsAt": "Ende {time}"
+    },
+    "items": {
+      "emptySection": "Noch nichts geplant. Füge einen Programmblock aus der Bibliothek hinzu oder erfasse einen kurzen Punkt.",
+      "quickAdd": "Kurzen Punkt erfassen",
+      "quickAddTitle": "Titel",
+      "quickAddPlaceholder": "z. B. Information Unihockey-Turnier",
+      "quickAddDuration": "Minuten",
+      "edit": "Bearbeiten",
+      "remove": "Entfernen",
+      "removeConfirm": "«{name}» aus dieser Lektion entfernen? Die Bibliothek bleibt unverändert.",
+      "moveTo": "Verschieben nach …",
+      "modified": "angepasst",
+      "oneOff": "nur in dieser Lektion",
+      "responsible": "Verantwortlich: {name}",
+      "dragHandle": "«{name}» verschieben",
+      "actions": "Aktionen für «{name}»"
+    },
+    "itemDialog": {
+      "title": "Programmpunkt bearbeiten",
+      "apply": "Übernehmen",
+      "saveToLibrary": "In Bibliothek speichern",
+      "savedToLibrary": "In der Bibliothek gespeichert.",
+      "responsible": "Verantwortlich",
+      "responsibleNone": "Niemand bestimmt",
+      "presentGroup": "Anwesend",
+      "otherGroup": "Weitere Leitende",
+      "freeText": "Freier Text …",
+      "responsibleText": "Name oder Beschreibung",
+      "customFields": "Zusatzfelder"
+    },
+    "choice": {
+      "title": "Wo soll die Änderung gelten?",
+      "body": "Dieser Programmpunkt stammt aus der Bibliothek («{name}»).",
+      "local": "Nur für dieses Training",
+      "localHint": "Der Programmblock in der Bibliothek bleibt unverändert.",
+      "overwrite": "Gespeicherten Programmblock überschreiben",
+      "overwriteHint": "Künftige Lektionen verwenden die neue Version. Bereits geplante Lektionen bleiben unverändert.",
+      "asNew": "Als neuen Programmblock speichern",
+      "asNewHint": "Der bisherige Programmblock bleibt, zusätzlich entsteht ein neuer.",
+      "overwritten": "Programmblock in der Bibliothek aktualisiert.",
+      "createdNew": "Neuer Programmblock in der Bibliothek gespeichert."
+    },
+    "library": {
+      "title": "Bibliothek",
+      "open": "Programmblock hinzufügen",
+      "search": "Programmblöcke durchsuchen",
+      "insertInto": "Einfügen in",
+      "suggested": "Passenden Abschnitt",
+      "allTeams": "Blöcke aller Riegen zeigen",
+      "add": "Hinzufügen",
+      "addNamed": "«{name}» hinzufügen",
+      "added": "«{name}» hinzugefügt.",
+      "dragHint": "In einen Abschnitt ziehen oder auf «Hinzufügen» tippen.",
+      "empty": "Keine passenden Programmblöcke.",
+      "loadMore": "Mehr anzeigen"
+    },
+    "dnd": {
+      "instructions": "Zum Aufnehmen Leertaste oder Enter drücken. Mit den Pfeiltasten verschieben, mit Leertaste oder Enter ablegen, mit Escape abbrechen.",
+      "picked": "«{name}» aufgenommen.",
+      "over": "«{name}» ist über «{target}».",
+      "overNothing": "«{name}» ist über keinem Ziel.",
+      "dropped": "«{name}» abgelegt.",
+      "cancelled": "Verschieben abgebrochen."
+    },
+    "view": {
+      "noItems": "In diesem Abschnitt ist nichts geplant."
+    }
   },
   "blocks": {
     "title": "Programmblöcke",
@@ -438,7 +565,9 @@
     "unreadable": "Das Bild konnte nicht gelesen werden.",
     "unknownTag": "Eine der gewählten Kategorien existiert nicht mehr.",
     "unknownSection": "Der gewählte Abschnitt existiert nicht mehr.",
-    "asset": "Ein Bild wurde nicht gefunden. Bitte lade es erneut hoch."
+    "asset": "Ein Bild wurde nicht gefunden. Bitte lade es erneut hoch.",
+    "lessonChanged": "Diese Lektion wurde inzwischen an einem anderen Ort geändert.",
+    "unknownLayout": "Das gewählte PDF-Layout existiert nicht mehr."
   },
   "sections": {
     "INTRO": "Einleitung",
