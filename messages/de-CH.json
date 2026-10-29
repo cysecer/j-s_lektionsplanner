@@ -25,7 +25,17 @@
     "copy": "Kopieren",
     "copied": "Kopiert",
     "none": "Keine",
-    "saved": "Gespeichert."
+    "saved": "Gespeichert.",
+    "search": "Suchen",
+    "reset": "Zurücksetzen",
+    "apply": "Anwenden",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "remove": "Entfernen",
+    "all": "Alle",
+    "from": "von",
+    "to": "bis",
+    "years": "Jahre"
   },
   "roles": {
     "ADMIN": "Administrator/-in",
@@ -126,7 +136,9 @@
     "durationRange": "Bitte eine ganze Zahl zwischen 1 und 1440 Minuten eingeben.",
     "imageTooLarge": "Die Datei ist zu gross (höchstens 15 MB).",
     "imageUnsupportedType": "Bitte PNG, JPG oder HEIC verwenden.",
-    "imageUnreadable": "Das Bild konnte nicht gelesen werden."
+    "imageUnreadable": "Das Bild konnte nicht gelesen werden.",
+    "numberRange": "Bitte eine gültige Zahl eingeben.",
+    "ageRange": "Das Mindestalter darf nicht höher sein als das Höchstalter."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -185,7 +197,75 @@
   "blocks": {
     "title": "Programmblöcke",
     "intro": "Die Bibliothek mit Spielen und Übungen deines Vereins.",
-    "comingSoon": "Die Bibliothek wird als Nächstes gebaut."
+    "new": "Neuer Programmblock",
+    "editTitle": "Programmblock bearbeiten",
+    "newTitle": "Neuer Programmblock",
+    "searchLabel": "Programmblöcke durchsuchen",
+    "searchPlaceholder": "z. B. Fangspiel, Ball, Matten …",
+    "filters": "Filter",
+    "showFilters": "Filter anzeigen",
+    "tags": "Kategorien",
+    "section": "Abschnitt",
+    "anySection": "Alle Abschnitte",
+    "team": "Riege",
+    "activeTeam": "Gewählte Riege ({name})",
+    "allTeams": "Alle Riegen",
+    "durationRange": "Dauer (Minuten)",
+    "difficultyLabel": "Schwierigkeit",
+    "anyDifficulty": "Alle",
+    "age": "Geeignet für Alter",
+    "coach": "Verantwortlich",
+    "anyCoach": "Alle",
+    "sort": "Sortierung",
+    "sorts": {
+      "relevance": "Beste Treffer",
+      "name": "Name",
+      "duration": "Dauer",
+      "lastUsed": "Zuletzt verwendet",
+      "mostUsed": "Am meisten verwendet"
+    },
+    "results": "{count, plural, =0 {Keine Programmblöcke} one {# Programmblock} other {# Programmblöcke}}",
+    "pageOf": "Seite {page} von {pages}",
+    "emptyTitle": "Noch keine Programmblöcke",
+    "emptyBody": "Lege Spiele und Übungen einmal an und verwende sie in beliebig vielen Lektionen wieder.",
+    "noResultsTitle": "Nichts gefunden",
+    "noResultsBody": "Versuche einen anderen Suchbegriff oder entferne Filter.",
+    "clubWide": "Alle Riegen",
+    "usage": "{count, plural, =0 {Noch nie verwendet} one {# × verwendet} other {# × verwendet}}",
+    "lastUsed": "zuletzt am {date}",
+    "ageRange": "{min}–{max} Jahre",
+    "ageFrom": "ab {min} Jahren",
+    "ageTo": "bis {max} Jahre",
+    "copySuffix": "(Kopie)",
+    "duplicate": "Duplizieren",
+    "duplicated": "Kopie erstellt.",
+    "deleteConfirm": "«{name}» löschen? Lektionen, die den Block bereits enthalten, behalten ihre Kopie.",
+    "deleted": "«{name}» wurde gelöscht.",
+    "usedIn": "Verwendet in",
+    "usedInEmpty": "Dieser Programmblock wurde noch in keiner Lektion verwendet.",
+    "modifiedLocally": "dort angepasst",
+    "sketchAlt": "Skizze {number} zu «{title}»",
+    "form": {
+      "basics": "Grunddaten",
+      "content": "Inhalt",
+      "assignment": "Zuordnung",
+      "customFields": "Zusatzfelder",
+      "durationHint": "In Minuten.",
+      "suggestedSection": "Passender Abschnitt",
+      "noSection": "Kein bestimmter",
+      "noDifficulty": "Nicht angegeben",
+      "ageMin": "Alter von",
+      "ageMax": "Alter bis",
+      "responsibleNone": "Niemand bestimmt",
+      "responsibleCoach": "Leiter/-in aus der Liste",
+      "responsibleText": "Freier Text",
+      "responsibleTextLabel": "Name oder Beschreibung",
+      "teamsHint": "Keine Auswahl = für alle Riegen sichtbar.",
+      "sketchesHint": "Bis zu 10 Bilder. Mit den Pfeilen sortieren.",
+      "imageField": "Bild",
+      "saved": "Programmblock gespeichert.",
+      "unsaved": "Ungespeicherte Änderungen gehen verloren. Trotzdem verlassen?"
+    }
   },
   "settings": {
     "title": "Einstellungen",
@@ -346,7 +426,10 @@
     "unknownCoach": "Die gewählte Leiterin bzw. der gewählte Leiter existiert nicht mehr.",
     "tooLarge": "Die Datei ist zu gross (höchstens 15 MB).",
     "unsupportedType": "Dieses Dateiformat wird nicht unterstützt. Bitte PNG, JPG oder HEIC verwenden.",
-    "unreadable": "Das Bild konnte nicht gelesen werden."
+    "unreadable": "Das Bild konnte nicht gelesen werden.",
+    "unknownTag": "Eine der gewählten Kategorien existiert nicht mehr.",
+    "unknownSection": "Der gewählte Abschnitt existiert nicht mehr.",
+    "asset": "Ein Bild wurde nicht gefunden. Bitte lade es erneut hoch."
   },
   "sections": {
     "INTRO": "Einleitung",
@@ -358,5 +441,32 @@
     "hint": "Bild hierher ziehen, einfügen (Ctrl+V) oder auswählen.",
     "formats": "PNG, JPG oder HEIC (iPhone), höchstens 15 MB.",
     "uploading": "Wird hochgeladen …"
+  },
+  "difficulty": {
+    "EASY": "einfach",
+    "MEDIUM": "mittel",
+    "DEMANDING": "anspruchsvoll"
+  },
+  "blockFields": {
+    "duration": "Dauer",
+    "title": "Name des Spiels / der Übung",
+    "description": "Erklärung",
+    "rules": "Regeln",
+    "variations": "Variationen",
+    "organization": "Organisation",
+    "sketches": "Skizzen",
+    "material": "Material",
+    "responsible": "Verantwortlich"
+  },
+  "richText": {
+    "toolbar": "Textformatierung",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "bulletList": "Aufzählung"
+  },
+  "listEditor": {
+    "add": "Eintrag hinzufügen",
+    "placeholder": "Neuer Eintrag",
+    "remove": "Eintrag entfernen: {item}"
   }
 }

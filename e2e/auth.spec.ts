@@ -22,7 +22,7 @@ test("an invitation creates the account and pushes for a passkey", async ({ page
   const link = invite(email, "COACH");
   await acceptInvitation(page, link, "Andrea Test");
 
-  await expect(page.getByText("Schneller anmelden mit Passkey")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Schneller anmelden mit Passkey" })).toBeVisible();
   await page.getByRole("button", { name: "Später" }).click();
   await expect(page.getByRole("button", { name: "Angemeldet als Andrea Test" })).toBeVisible();
   await page.goto("/account");

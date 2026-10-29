@@ -6,6 +6,7 @@ import { ImageUpload } from "@/components/image-upload";
 import { Button } from "@/components/ui/button";
 import { useAction } from "@/lib/use-action";
 import { setClubLogoAction } from "./actions";
+import { AssetImage } from "@/components/asset-image";
 
 export function LogoEditor({
   logoAssetId,
@@ -21,9 +22,8 @@ export function LogoEditor({
     <div className="grid gap-4 sm:grid-cols-[12rem_1fr] sm:items-start">
       <div className="bg-muted/40 flex aspect-square items-center justify-center rounded-lg border p-3">
         {logoAssetId ? (
-          // eslint-disable-next-line @next/next/no-img-element -- private, auth-checked asset route
-          <img
-            src={`/api/assets/${logoAssetId}`}
+          <AssetImage
+            assetId={logoAssetId}
             alt={t("settings.club.logoAlt", { name: clubName })}
             className="max-h-full max-w-full object-contain"
           />

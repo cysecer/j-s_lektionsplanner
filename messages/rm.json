@@ -25,7 +25,17 @@
     "copy": "Copiar",
     "copied": "Copià",
     "none": "Nagin",
-    "saved": "Memorisà."
+    "saved": "Memorisà.",
+    "search": "Tschertgar",
+    "reset": "Reinizialisar",
+    "apply": "Applitgar",
+    "previous": "Enavos",
+    "next": "Vinavant",
+    "remove": "Allontanar",
+    "all": "Tuts",
+    "from": "da",
+    "to": "fin",
+    "years": "onns"
   },
   "roles": {
     "ADMIN": "Administratur/-a",
@@ -126,7 +136,9 @@
     "durationRange": "Endatescha per plaschair in dumber entir tranter 1 e 1440 minutas.",
     "imageTooLarge": "La datoteca è memia gronda (maximalmain 15 MB).",
     "imageUnsupportedType": "Dovra per plaschair PNG, JPG u HEIC.",
-    "imageUnreadable": "Il maletg n'ha betg pudì vegnir legì."
+    "imageUnreadable": "Il maletg n'ha betg pudì vegnir legì.",
+    "numberRange": "Endatescha per plaschair in dumber valaivel.",
+    "ageRange": "La vegliadetgna minimala na dastga betg esser pli auta che la vegliadetgna maximala."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -185,7 +197,75 @@
   "blocks": {
     "title": "Blocs da program",
     "intro": "La biblioteca da gieus ed exercizis da tia uniun.",
-    "comingSoon": "La biblioteca vegn construida sco proxim."
+    "new": "Nov bloc da program",
+    "editTitle": "Elavurar il bloc da program",
+    "newTitle": "Nov bloc da program",
+    "searchLabel": "Tschertgar blocs da program",
+    "searchPlaceholder": "p.ex. gieu da tschiffar, balla, matratschas …",
+    "filters": "Filters",
+    "showFilters": "Mussar ils filters",
+    "tags": "Categorias",
+    "section": "Part",
+    "anySection": "Tut las parts",
+    "team": "Gruppa",
+    "activeTeam": "Gruppa tschernida ({name})",
+    "allTeams": "Tut las gruppas",
+    "durationRange": "Durada (minutas)",
+    "difficultyLabel": "Difficultad",
+    "anyDifficulty": "Tuttas",
+    "age": "Adattà per la vegliadetgna",
+    "coach": "Responsabel",
+    "anyCoach": "Tuts",
+    "sort": "Successiun",
+    "sorts": {
+      "relevance": "Ils meglers resultats",
+      "name": "Num",
+      "duration": "Durada",
+      "lastUsed": "Duvrà l'ultim",
+      "mostUsed": "Duvrà il pli savens"
+    },
+    "results": "{count, plural, =0 {Nagins blocs da program} one {# bloc da program} other {# blocs da program}}",
+    "pageOf": "Pagina {page} da {pages}",
+    "emptyTitle": "Anc nagins blocs da program",
+    "emptyBody": "Registrescha gieus ed exercizis ina giada e als dovra en tantas lecziuns sco ti vuls.",
+    "noResultsTitle": "Nagut chattà",
+    "noResultsBody": "Emprova in auter term da tschertga u allontanescha filters.",
+    "clubWide": "Tut las gruppas",
+    "usage": "{count, plural, =0 {Anc mai duvrà} one {# giada duvrà} other {# giadas duvrà}}",
+    "lastUsed": "l'ultima giada ils {date}",
+    "ageRange": "{min}–{max} onns",
+    "ageFrom": "a partir da {min} onns",
+    "ageTo": "fin {max} onns",
+    "copySuffix": "(copia)",
+    "duplicate": "Duplitgar",
+    "duplicated": "Copia creada.",
+    "deleteConfirm": "Stizzar «{name}»? Lecziuns che cuntegnan gia il bloc mantegnan lur copia.",
+    "deleted": "«{name}» è vegnì stizzà.",
+    "usedIn": "Duvrà en",
+    "usedInEmpty": "Quest bloc da program n'è anc vegnì duvrà en nagina lecziun.",
+    "modifiedLocally": "adattà là",
+    "sketchAlt": "Skizza {number} tar «{title}»",
+    "form": {
+      "basics": "Datas da basa",
+      "content": "Cuntegn",
+      "assignment": "Attribuziun",
+      "customFields": "Champs supplementars",
+      "durationHint": "En minutas.",
+      "suggestedSection": "Part adattada",
+      "noSection": "Nagina speziala",
+      "noDifficulty": "Betg indicà",
+      "ageMin": "Vegliadetgna da",
+      "ageMax": "Vegliadetgna fin",
+      "responsibleNone": "Nagin designà",
+      "responsibleCoach": "Manader/-a da la glista",
+      "responsibleText": "Text liber",
+      "responsibleTextLabel": "Num u descripziun",
+      "teamsHint": "Nagina tscherna = visibel per tut las gruppas.",
+      "sketchesHint": "Fin 10 maletgs. Zavrar cun las frizzas.",
+      "imageField": "Maletg",
+      "saved": "Bloc da program memorisà.",
+      "unsaved": "Midadas betg memorisadas van a perder. Tuttina bandunar?"
+    }
   },
   "settings": {
     "title": "Configuraziun",
@@ -346,7 +426,10 @@
     "unknownCoach": "Il manader u la manadra tschernì n'exista betg pli.",
     "tooLarge": "La datoteca è memia gronda (maximalmain 15 MB).",
     "unsupportedType": "Quest format na vegn betg sustegnì. Dovra per plaschair PNG, JPG u HEIC.",
-    "unreadable": "Il maletg n'ha betg pudì vegnir legì."
+    "unreadable": "Il maletg n'ha betg pudì vegnir legì.",
+    "unknownTag": "Ina da las categorias tschernidas n'exista betg pli.",
+    "unknownSection": "La part tschernida n'exista betg pli.",
+    "asset": "In maletg n'è betg vegnì chattà. Chargia per plaschair si el danovamain."
   },
   "sections": {
     "INTRO": "Introducziun",
@@ -358,5 +441,32 @@
     "hint": "Tira in maletg nà, l'encollescha (Ctrl+V) u al tscherna.",
     "formats": "PNG, JPG u HEIC (iPhone), maximalmain 15 MB.",
     "uploading": "Chargiar si …"
+  },
+  "difficulty": {
+    "EASY": "simpel",
+    "MEDIUM": "mesaun",
+    "DEMANDING": "pretensius"
+  },
+  "blockFields": {
+    "duration": "Durada",
+    "title": "Num dal gieu / da l'exercizi",
+    "description": "Explicaziun",
+    "rules": "Reglas",
+    "variations": "Variantas",
+    "organization": "Organisaziun",
+    "sketches": "Skizzas",
+    "material": "Material",
+    "responsible": "Responsabel"
+  },
+  "richText": {
+    "toolbar": "Formataziun dal text",
+    "bold": "Grass",
+    "italic": "Cursiv",
+    "bulletList": "Enumeraziun"
+  },
+  "listEditor": {
+    "add": "Agiuntar ina endataziun",
+    "placeholder": "Nova endataziun",
+    "remove": "Allontanar l'endataziun: {item}"
   }
 }

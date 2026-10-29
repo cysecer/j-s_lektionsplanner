@@ -8,7 +8,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, type Difficulty } from "../src/generated/prisma/client";
 import { COMPACT_LAYOUT, DEFAULT_LAYOUT, layoutConfigSchema } from "../src/lib/layout/schema";
-import { buildSearchText } from "../src/lib/program-blocks/search-text";
+import { buildSearchText } from "../src/lib/blocks/search-text";
 import { richTextSchema, type RichText } from "../src/lib/rich-text/schema";
 import { richTextFromBullets, richTextFromParagraphs } from "../src/lib/rich-text/utils";
 

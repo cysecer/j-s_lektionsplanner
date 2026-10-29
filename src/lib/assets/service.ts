@@ -56,7 +56,17 @@ export async function requireClubAsset(clubId: string, assetId: string) {
   return asset;
 }
 
-/** Removes an asset once nothing (logo, sketches) refers to it any more. */
+/** Ensures every asset id belongs to the club. */
+export async function requireClubAssets(clubId: string, assetIds: string[]) {
+  if (assetIds.length === 0) return;
+  const found = await db.asset.count({ where: { id: { in: assetIds }, clubId } });
+  if (found !== new Set(assetIds).size) throw new ActionFailure("notFound", "asset");
+}
+
+/**
+ * Removes an asset once nothing refers to it any more: logo, sketches, or
+ * an image custom field (stored as a value in the customValues JSON maps).
+ */
 export async function deleteAssetIfUnused(assetId: string) {
   const asset = await db.asset.findUnique({
     where: { id: assetId },
@@ -69,6 +79,13 @@ export async function deleteAssetIfUnused(assetId: string) {
   if (!asset || asset.logoOfClub || asset._count.blockSketches || asset._count.lessonItemSketches) {
     return;
   }
+  const [inFields] = await db.$queryRaw<{ used: boolean }[]>`
+    SELECT EXISTS (
+      SELECT 1 FROM "ProgramBlock" b, jsonb_each_text(b."customValues") v WHERE v.value = ${assetId}
+      UNION ALL
+      SELECT 1 FROM "LessonItem" i, jsonb_each_text(i."customValues") v WHERE v.value = ${assetId}
+    ) AS used`;
+  if (inFields?.used) return;
   await db.asset.delete({ where: { id: assetId } });
   await storage.delete(asset.storageKey);
 }

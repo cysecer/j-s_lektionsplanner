@@ -25,7 +25,17 @@
     "copy": "Copia",
     "copied": "Copiato",
     "none": "Nessuno",
-    "saved": "Salvato."
+    "saved": "Salvato.",
+    "search": "Cerca",
+    "reset": "Reimposta",
+    "apply": "Applica",
+    "previous": "Indietro",
+    "next": "Avanti",
+    "remove": "Rimuovi",
+    "all": "Tutti",
+    "from": "da",
+    "to": "a",
+    "years": "anni"
   },
   "roles": {
     "ADMIN": "Amministratore/-trice",
@@ -126,7 +136,9 @@
     "durationRange": "Inserisci un numero intero tra 1 e 1440 minuti.",
     "imageTooLarge": "Il file è troppo grande (al massimo 15 MB).",
     "imageUnsupportedType": "Usa PNG, JPG o HEIC.",
-    "imageUnreadable": "Non è stato possibile leggere l'immagine."
+    "imageUnreadable": "Non è stato possibile leggere l'immagine.",
+    "numberRange": "Inserisci un numero valido.",
+    "ageRange": "L'età minima non può superare l'età massima."
   },
   "errors": {
     "unauthorized": "Accedi, per favore.",
@@ -185,7 +197,75 @@
   "blocks": {
     "title": "Blocchi di programma",
     "intro": "La biblioteca di giochi ed esercizi della tua società.",
-    "comingSoon": "La biblioteca sarà realizzata prossimamente."
+    "new": "Nuovo blocco di programma",
+    "editTitle": "Modifica blocco di programma",
+    "newTitle": "Nuovo blocco di programma",
+    "searchLabel": "Cerca blocchi di programma",
+    "searchPlaceholder": "ad es. gioco di inseguimento, palla, materassi …",
+    "filters": "Filtri",
+    "showFilters": "Mostra filtri",
+    "tags": "Categorie",
+    "section": "Parte",
+    "anySection": "Tutte le parti",
+    "team": "Gruppo",
+    "activeTeam": "Gruppo scelto ({name})",
+    "allTeams": "Tutti i gruppi",
+    "durationRange": "Durata (minuti)",
+    "difficultyLabel": "Difficoltà",
+    "anyDifficulty": "Tutte",
+    "age": "Adatto all'età",
+    "coach": "Responsabile",
+    "anyCoach": "Tutti",
+    "sort": "Ordinamento",
+    "sorts": {
+      "relevance": "Migliori risultati",
+      "name": "Nome",
+      "duration": "Durata",
+      "lastUsed": "Usato di recente",
+      "mostUsed": "Più usato"
+    },
+    "results": "{count, plural, =0 {Nessun blocco di programma} one {# blocco di programma} other {# blocchi di programma}}",
+    "pageOf": "Pagina {page} di {pages}",
+    "emptyTitle": "Ancora nessun blocco di programma",
+    "emptyBody": "Registra una volta giochi ed esercizi e riutilizzali in tutte le lezioni che vuoi.",
+    "noResultsTitle": "Nessun risultato",
+    "noResultsBody": "Prova un altro termine o rimuovi dei filtri.",
+    "clubWide": "Tutti i gruppi",
+    "usage": "{count, plural, =0 {Mai usato} one {Usato # volta} other {Usato # volte}}",
+    "lastUsed": "l'ultima volta il {date}",
+    "ageRange": "{min}–{max} anni",
+    "ageFrom": "da {min} anni",
+    "ageTo": "fino a {max} anni",
+    "copySuffix": "(copia)",
+    "duplicate": "Duplica",
+    "duplicated": "Copia creata.",
+    "deleteConfirm": "Eliminare «{name}»? Le lezioni che contengono già il blocco mantengono la loro copia.",
+    "deleted": "«{name}» è stato eliminato.",
+    "usedIn": "Usato in",
+    "usedInEmpty": "Questo blocco di programma non è ancora stato usato in nessuna lezione.",
+    "modifiedLocally": "adattato lì",
+    "sketchAlt": "Schizzo {number} per «{title}»",
+    "form": {
+      "basics": "Dati di base",
+      "content": "Contenuto",
+      "assignment": "Assegnazione",
+      "customFields": "Campi aggiuntivi",
+      "durationHint": "In minuti.",
+      "suggestedSection": "Parte adatta",
+      "noSection": "Nessuna in particolare",
+      "noDifficulty": "Non indicato",
+      "ageMin": "Età da",
+      "ageMax": "Età fino a",
+      "responsibleNone": "Nessuno designato",
+      "responsibleCoach": "Monitore/-trice dall'elenco",
+      "responsibleText": "Testo libero",
+      "responsibleTextLabel": "Nome o descrizione",
+      "teamsHint": "Nessuna scelta = visibile per tutti i gruppi.",
+      "sketchesHint": "Fino a 10 immagini. Ordina con le frecce.",
+      "imageField": "Immagine",
+      "saved": "Blocco di programma salvato.",
+      "unsaved": "Le modifiche non salvate andranno perse. Uscire comunque?"
+    }
   },
   "settings": {
     "title": "Impostazioni",
@@ -346,7 +426,10 @@
     "unknownCoach": "Il monitore o la monitrice scelto/a non esiste più.",
     "tooLarge": "Il file è troppo grande (al massimo 15 MB).",
     "unsupportedType": "Questo formato non è supportato. Usa PNG, JPG o HEIC.",
-    "unreadable": "Non è stato possibile leggere l'immagine."
+    "unreadable": "Non è stato possibile leggere l'immagine.",
+    "unknownTag": "Una delle categorie scelte non esiste più.",
+    "unknownSection": "La parte scelta non esiste più.",
+    "asset": "Un'immagine non è stata trovata. Caricala di nuovo."
   },
   "sections": {
     "INTRO": "Introduzione",
@@ -358,5 +441,32 @@
     "hint": "Trascina qui un'immagine, incollala (Ctrl+V) o sceglila.",
     "formats": "PNG, JPG o HEIC (iPhone), al massimo 15 MB.",
     "uploading": "Caricamento …"
+  },
+  "difficulty": {
+    "EASY": "facile",
+    "MEDIUM": "medio",
+    "DEMANDING": "impegnativo"
+  },
+  "blockFields": {
+    "duration": "Durata",
+    "title": "Nome del gioco / dell'esercizio",
+    "description": "Spiegazione",
+    "rules": "Regole",
+    "variations": "Varianti",
+    "organization": "Organizzazione",
+    "sketches": "Schizzi",
+    "material": "Materiale",
+    "responsible": "Responsabile"
+  },
+  "richText": {
+    "toolbar": "Formattazione del testo",
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "bulletList": "Elenco puntato"
+  },
+  "listEditor": {
+    "add": "Aggiungi voce",
+    "placeholder": "Nuova voce",
+    "remove": "Rimuovi voce: {item}"
   }
 }

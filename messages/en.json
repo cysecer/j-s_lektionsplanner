@@ -25,7 +25,17 @@
     "copy": "Copy",
     "copied": "Copied",
     "none": "None",
-    "saved": "Saved."
+    "saved": "Saved.",
+    "search": "Search",
+    "reset": "Reset",
+    "apply": "Apply",
+    "previous": "Previous",
+    "next": "Next",
+    "remove": "Remove",
+    "all": "All",
+    "from": "from",
+    "to": "to",
+    "years": "years"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -126,7 +136,9 @@
     "durationRange": "Please enter a whole number between 1 and 1440 minutes.",
     "imageTooLarge": "The file is too large (15 MB at most).",
     "imageUnsupportedType": "Please use PNG, JPG or HEIC.",
-    "imageUnreadable": "The image could not be read."
+    "imageUnreadable": "The image could not be read.",
+    "numberRange": "Please enter a valid number.",
+    "ageRange": "The minimum age can't be higher than the maximum age."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -185,7 +197,75 @@
   "blocks": {
     "title": "Program blocks",
     "intro": "Your club's library of games and exercises.",
-    "comingSoon": "The library will be built next."
+    "new": "New program block",
+    "editTitle": "Edit program block",
+    "newTitle": "New program block",
+    "searchLabel": "Search program blocks",
+    "searchPlaceholder": "e.g. tag game, ball, mats …",
+    "filters": "Filters",
+    "showFilters": "Show filters",
+    "tags": "Categories",
+    "section": "Section",
+    "anySection": "All sections",
+    "team": "Group",
+    "activeTeam": "Selected group ({name})",
+    "allTeams": "All groups",
+    "durationRange": "Duration (minutes)",
+    "difficultyLabel": "Difficulty",
+    "anyDifficulty": "All",
+    "age": "Suitable for age",
+    "coach": "Responsible",
+    "anyCoach": "All",
+    "sort": "Sort by",
+    "sorts": {
+      "relevance": "Best match",
+      "name": "Name",
+      "duration": "Duration",
+      "lastUsed": "Recently used",
+      "mostUsed": "Most used"
+    },
+    "results": "{count, plural, =0 {No program blocks} one {# program block} other {# program blocks}}",
+    "pageOf": "Page {page} of {pages}",
+    "emptyTitle": "No program blocks yet",
+    "emptyBody": "Enter games and exercises once and reuse them in as many lessons as you like.",
+    "noResultsTitle": "Nothing found",
+    "noResultsBody": "Try another search term or remove some filters.",
+    "clubWide": "All groups",
+    "usage": "{count, plural, =0 {Never used} one {Used # time} other {Used # times}}",
+    "lastUsed": "last on {date}",
+    "ageRange": "{min}–{max} years",
+    "ageFrom": "from {min} years",
+    "ageTo": "up to {max} years",
+    "copySuffix": "(copy)",
+    "duplicate": "Duplicate",
+    "duplicated": "Copy created.",
+    "deleteConfirm": "Delete “{name}”? Lessons that already contain this block keep their copy.",
+    "deleted": "“{name}” was deleted.",
+    "usedIn": "Used in",
+    "usedInEmpty": "This program block hasn't been used in any lesson yet.",
+    "modifiedLocally": "adapted there",
+    "sketchAlt": "Sketch {number} for “{title}”",
+    "form": {
+      "basics": "Basics",
+      "content": "Content",
+      "assignment": "Assignment",
+      "customFields": "Custom fields",
+      "durationHint": "In minutes.",
+      "suggestedSection": "Suitable section",
+      "noSection": "None in particular",
+      "noDifficulty": "Not specified",
+      "ageMin": "Age from",
+      "ageMax": "Age to",
+      "responsibleNone": "Nobody assigned",
+      "responsibleCoach": "Coach from the list",
+      "responsibleText": "Free text",
+      "responsibleTextLabel": "Name or description",
+      "teamsHint": "No selection = visible to all groups.",
+      "sketchesHint": "Up to 10 images. Sort with the arrows.",
+      "imageField": "Image",
+      "saved": "Program block saved.",
+      "unsaved": "Unsaved changes will be lost. Leave anyway?"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -346,7 +426,10 @@
     "unknownCoach": "The selected coach no longer exists.",
     "tooLarge": "The file is too large (15 MB at most).",
     "unsupportedType": "This file format isn't supported. Please use PNG, JPG or HEIC.",
-    "unreadable": "The image could not be read."
+    "unreadable": "The image could not be read.",
+    "unknownTag": "One of the selected categories no longer exists.",
+    "unknownSection": "The selected section no longer exists.",
+    "asset": "An image could not be found. Please upload it again."
   },
   "sections": {
     "INTRO": "Warm-up",
@@ -358,5 +441,32 @@
     "hint": "Drag an image here, paste it (Ctrl+V) or choose one.",
     "formats": "PNG, JPG or HEIC (iPhone), 15 MB at most.",
     "uploading": "Uploading …"
+  },
+  "difficulty": {
+    "EASY": "easy",
+    "MEDIUM": "medium",
+    "DEMANDING": "demanding"
+  },
+  "blockFields": {
+    "duration": "Duration",
+    "title": "Name of the game / exercise",
+    "description": "Explanation",
+    "rules": "Rules",
+    "variations": "Variations",
+    "organization": "Organisation",
+    "sketches": "Sketches",
+    "material": "Equipment",
+    "responsible": "Responsible"
+  },
+  "richText": {
+    "toolbar": "Text formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "bulletList": "Bullet list"
+  },
+  "listEditor": {
+    "add": "Add entry",
+    "placeholder": "New entry",
+    "remove": "Remove entry: {item}"
   }
 }
