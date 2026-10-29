@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { formatDateInput, normalizeTime, parseDateInput, weekdayShort } from "./date-input";
+import {
+  addDays,
+  addMonths,
+  calendarWeeks,
+  formatDateInput,
+  normalizeTime,
+  parseDateInput,
+  weekdayShort,
+} from "./date-input";
 
 describe("normalizeTime", () => {
   it("accepts the usual ways of typing a time", () => {
@@ -49,5 +57,29 @@ describe("formatDateInput / weekdayShort", () => {
     expect(weekdayShort("2018-11-28", "fr-CH")).toBe("Mer");
     expect(weekdayShort("2018-11-28", "en-CH")).toBe("Wed");
     expect(weekdayShort("kein Datum", "de-CH")).toBe("");
+  });
+});
+
+describe("calendar helpers", () => {
+  it("lays out six weeks starting on Monday", () => {
+    const weeks = calendarWeeks("2026-11-15");
+    expect(weeks).toHaveLength(6);
+    // 1 November 2026 is a Sunday: the first row starts on Monday 26 October.
+    expect(weeks[0]![0]).toBe("2026-10-26");
+    expect(weeks[0]![6]).toBe("2026-11-01");
+    for (const week of weeks) expect(new Date(`${week[0]}T00:00:00Z`).getUTCDay()).toBe(1);
+    // A month starting on Monday begins in the first cell.
+    expect(calendarWeeks("2027-02-10")[0]![0]).toBe("2027-02-01");
+  });
+
+  it("moves by days and months across boundaries", () => {
+    expect(addDays("2026-12-31", 1)).toBe("2027-01-01");
+    expect(addDays("2026-03-01", -1)).toBe("2026-02-28");
+    expect(addMonths("2026-01-31", 1)).toBe("2026-02-28");
+    expect(addMonths("2028-01-31", 1)).toBe("2028-02-29");
+    expect(addMonths("2026-01-15", -1)).toBe("2025-12-15");
+    // Around the DST switch the date stays the same calendar day.
+    expect(addDays("2026-03-28", 1)).toBe("2026-03-29");
+    expect(addDays("2026-03-29", 1)).toBe("2026-03-30");
   });
 });

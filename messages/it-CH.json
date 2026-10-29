@@ -38,7 +38,11 @@
     "years": "anni",
     "datePlaceholder": "GG.MM.AAAA",
     "timePlaceholder": "HH:MM",
-    "openCalendar": "Apri il calendario"
+    "openCalendar": "Apri il calendario",
+    "calendar": "Calendario",
+    "previousMonth": "Mese precedente",
+    "nextMonth": "Mese successivo",
+    "today": "Oggi"
   },
   "roles": {
     "ADMIN": "Amministratore/-trice",

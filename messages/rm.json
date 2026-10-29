@@ -38,7 +38,11 @@
     "years": "onns",
     "datePlaceholder": "DD.MM.AAAA",
     "timePlaceholder": "HH:MM",
-    "openCalendar": "Avrir il chalender"
+    "openCalendar": "Avrir il chalender",
+    "calendar": "Chalender",
+    "previousMonth": "Mais precedent",
+    "nextMonth": "Proxim mais",
+    "today": "Oz"
   },
   "roles": {
     "ADMIN": "Administratur/-a",

@@ -34,6 +34,22 @@ test("date and time fields: dd.MM.yyyy with weekday, 24 h", async ({ page }) => 
   await expect(date).toHaveValue("04.12.2030");
   await expect(page.getByText("Mi", { exact: true })).toBeVisible();
 
+  // The calendar starts the week on Monday and works with mouse and keyboard.
+  await page.getByRole("button", { name: "Kalender öffnen" }).first().click();
+  const calendar = page.getByRole("dialog", { name: "Kalender" });
+  await expect(calendar.getByRole("columnheader").first()).toHaveText("Mo");
+  await expect(calendar.getByRole("columnheader").last()).toHaveText("So");
+  await expect(calendar.getByText("Dezember 2030")).toBeVisible();
+  await calendar.getByRole("button", { name: "Freitag, 6. Dezember 2030" }).click();
+  await expect(calendar).toBeHidden();
+  await expect(date).toHaveValue("06.12.2030");
+  await page.getByRole("button", { name: "Kalender öffnen" }).first().click();
+  await expect(calendar.getByRole("button", { name: "Freitag, 6. Dezember 2030" })).toBeFocused();
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("Enter");
+  await expect(date).toHaveValue("04.12.2030");
+
   const time = page.getByLabel("Startzeit");
   await time.fill("1730");
   await time.press("Tab");

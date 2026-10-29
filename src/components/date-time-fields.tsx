@@ -2,11 +2,13 @@
 
 import { CalendarDays } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { useId, useState, type KeyboardEvent } from "react";
+import { Calendar } from "@/components/calendar";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FORMAT_LOCALE, type Locale } from "@/i18n/config";
 import { formatDateInput, normalizeTime, parseDateInput, weekdayShort } from "@/lib/date-input";
 import { cn } from "@/lib/utils";
@@ -64,7 +66,7 @@ export function TimeField({
  * Calendar date as dd.MM.yyyy with the weekday in front ("Mi 28.11.2018").
  * `value` is ISO (yyyy-mm-dd); text that is no valid date is passed on
  * unchanged so the form's validation can report it. The calendar button
- * opens the browser's date picker. With `name`, a hidden input carries the
+ * opens a month calendar with weeks starting on Monday. With `name`, a hidden input carries the
  * ISO value for plain GET forms.
  */
 export function DateField({
@@ -76,7 +78,7 @@ export function DateField({
   const t = useTranslations("common");
   const locale = useLocale() as Locale;
   const id = useId();
-  const picker = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
   const [text, setText] = useState(formatDateInput(value));
   const [iso, setIso] = useState(value);
   const [source, setSource] = useState(value);
@@ -129,32 +131,29 @@ export function DateField({
           onKeyDown={commitOnEnter}
           onBlur={() => commit(text)}
         />
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="absolute top-0 right-0 size-11"
-          aria-label={t("openCalendar")}
-          onClick={() => {
-            try {
-              picker.current?.showPicker();
-            } catch {
-              picker.current?.focus();
-            }
-          }}
-        >
-          <CalendarDays aria-hidden />
-        </Button>
-        {/* Only the browser's calendar popup is used; its text is never shown. */}
-        <input
-          ref={picker}
-          type="date"
-          tabIndex={-1}
-          aria-hidden
-          className="pointer-events-none absolute right-0 bottom-0 size-px opacity-0"
-          value={parseDateInput(text, new Date().getFullYear()) ?? ""}
-          onChange={(e) => commit(e.target.value)}
-        />
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute top-0 right-0 size-11"
+              aria-label={t("openCalendar")}
+            >
+              <CalendarDays aria-hidden />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent aria-label={t("calendar")}>
+            <Calendar
+              value={valid}
+              formatLocale={FORMAT_LOCALE[locale]}
+              onSelect={(day) => {
+                commit(day);
+                setOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       {common.error ? (
         <p id={`${id}-error`} className="text-destructive text-sm" role="alert">

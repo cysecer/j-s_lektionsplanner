@@ -69,3 +69,37 @@ export function weekdayShort(iso: string, formatLocale: string): string {
     .replace(/\.$/, "");
   return name.charAt(0).toLocaleUpperCase(formatLocale) + name.slice(1);
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const toIso = (date: Date) => date.toISOString().slice(0, 10);
+const fromIso = (iso: string) => new Date(`${iso}T00:00:00Z`);
+
+/** ISO date `days` later (or earlier, when negative). */
+export function addDays(iso: string, days: number): string {
+  return toIso(new Date(fromIso(iso).getTime() + days * DAY_MS));
+}
+
+/** Same day `months` later, clamped to the month's end (31.1. + 1 → 28./29.2.). */
+export function addMonths(iso: string, months: number): string {
+  const date = fromIso(iso);
+  const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
+  const lastDay = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0),
+  ).getUTCDate();
+  target.setUTCDate(Math.min(date.getUTCDate(), lastDay));
+  return toIso(target);
+}
+
+/**
+ * The six weeks shown for the month of `iso`, Monday first (as usual in
+ * Switzerland), including the days of the neighbouring months.
+ */
+export function calendarWeeks(iso: string): string[][] {
+  const date = fromIso(iso);
+  const first = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+  const mondayOffset = (first.getUTCDay() + 6) % 7;
+  const start = toIso(new Date(first.getTime() - mondayOffset * DAY_MS));
+  return Array.from({ length: 6 }, (_, week) =>
+    Array.from({ length: 7 }, (_, day) => addDays(start, week * 7 + day)),
+  );
+}
