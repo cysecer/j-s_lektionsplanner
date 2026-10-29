@@ -1,12 +1,14 @@
 import { z } from "zod";
 
 /**
- * Layout of a program-block row (PDF export and on-screen read view):
- * an ordered list of columns, each holding an ordered list of fields.
- * A field that appears in no column is hidden.
+ * Layout of a lesson document (PDF export and on-screen read view): the
+ * program items are rows of an ordered list of columns, each holding an
+ * ordered list of fields. A field that appears in no column is hidden.
+ * `document` controls the part above the items (logo, conditions, boxes).
  */
 
 export const BUILTIN_FIELDS = [
+  "startTime",
   "duration",
   "title",
   "description",
@@ -24,6 +26,27 @@ export type BuiltinField = (typeof BUILTIN_FIELDS)[number];
 
 /** Column headings that ship with the app and are translated in the UI and PDF. */
 export const BUILTIN_COLUMN_LABELS = ["duration", "topic", "organization", "material"] as const;
+
+/** Lesson details shown in the "Rahmenbedingungen" table, in this order. */
+export const CONDITION_FIELDS = [
+  "totalDuration",
+  "startTime",
+  "difficulty",
+  "age",
+  "groupSize",
+  "location",
+  "team",
+  "presentCoaches",
+  "safety",
+] as const;
+export type ConditionField = (typeof CONDITION_FIELDS)[number];
+
+/** Free-text boxes below the conditions. */
+export const NOTE_BOXES = ["goals", "notes"] as const;
+export type NoteBox = (typeof NOTE_BOXES)[number];
+
+export const TEXT_SIZES = ["small", "medium", "large"] as const;
+export type TextSize = (typeof TEXT_SIZES)[number];
 
 export const LAYOUT_MAX_COLUMNS = 6;
 export const LAYOUT_MAX_WIDTH = 12;
@@ -55,10 +78,34 @@ export const layoutColumnSchema = z
     path: ["label"],
   });
 
+const uniqueList = <T extends string>(values: readonly [T, ...T[]]) =>
+  z
+    .array(z.enum(values))
+    .max(values.length)
+    .refine((list) => new Set(list).size === list.length, { message: "validation.invalid" });
+
+export const documentSettingsSchema = z.strictObject({
+  showLogo: z.boolean(),
+  textSize: z.enum(TEXT_SIZES),
+  conditions: uniqueList(CONDITION_FIELDS),
+  boxes: uniqueList(NOTE_BOXES),
+});
+export type DocumentSettings = z.infer<typeof documentSettingsSchema>;
+
+/** Matches the paper Lektionsvorbereitung. */
+export const DEFAULT_DOCUMENT: DocumentSettings = {
+  showLogo: true,
+  textSize: "small",
+  conditions: ["totalDuration", "difficulty", "age", "groupSize", "location", "safety"],
+  boxes: ["goals", "notes"],
+};
+
 export const layoutConfigSchema = z
   .strictObject({
     version: z.literal(1),
     columns: z.array(layoutColumnSchema).min(1).max(LAYOUT_MAX_COLUMNS),
+    /** Added after the first layouts were stored; those get the defaults. */
+    document: documentSettingsSchema.default(DEFAULT_DOCUMENT),
   })
   .superRefine((config, ctx) => {
     const columnIds = new Set<string>();
@@ -85,7 +132,13 @@ export const layoutConfigSchema = z
     });
   });
 
-export type LayoutConfig = z.infer<typeof layoutConfigSchema>;
+export type LayoutConfig = z.output<typeof layoutConfigSchema>;
+
+/** Stored configs are validated on write; this guards reads against anything else. */
+export function parseLayoutConfig(value: unknown): LayoutConfig {
+  const parsed = layoutConfigSchema.safeParse(value);
+  return parsed.success ? parsed.data : DEFAULT_LAYOUT;
+}
 export type LayoutColumn = z.infer<typeof layoutColumnSchema>;
 
 /** Reproduces the four columns of the paper Lektionsvorbereitung. */
@@ -97,7 +150,10 @@ export const DEFAULT_LAYOUT: LayoutConfig = {
       label: null,
       labelKey: "duration",
       width: 1,
-      fields: [{ field: "duration", showLabel: false }],
+      fields: [
+        { field: "startTime", showLabel: false },
+        { field: "duration", showLabel: false },
+      ],
     },
     {
       id: "topic",
@@ -117,6 +173,7 @@ export const DEFAULT_LAYOUT: LayoutConfig = {
       labelKey: "organization",
       width: 3,
       fields: [
+        { field: "responsible", showLabel: true },
         { field: "organization", showLabel: false },
         { field: "sketches", showLabel: false },
       ],
@@ -126,12 +183,10 @@ export const DEFAULT_LAYOUT: LayoutConfig = {
       label: null,
       labelKey: "material",
       width: 2,
-      fields: [
-        { field: "material", showLabel: false },
-        { field: "responsible", showLabel: true },
-      ],
+      fields: [{ field: "material", showLabel: false }],
     },
   ],
+  document: DEFAULT_DOCUMENT,
 };
 
 /** A shorter alternative without sketches and organisation. */
@@ -166,4 +221,5 @@ export const COMPACT_LAYOUT: LayoutConfig = {
       ],
     },
   ],
+  document: { ...DEFAULT_DOCUMENT, conditions: ["totalDuration", "groupSize", "location"] },
 };

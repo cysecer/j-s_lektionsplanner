@@ -137,3 +137,35 @@
 body:has([data-wide-page]) .app-container {
   max-width: 100rem;
 }
+
+/*
+ * Printing a lesson document (browser print and the PDF export): A4, no app
+ * chrome. A program item (table row) is never split across pages; it moves
+ * to the next page as a whole, where the column headings repeat. Only a row
+ * taller than a whole page has to break.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 10mm 12mm 16mm;
+  }
+  body {
+    background: white;
+  }
+  /* Notifications (e.g. "added") are screen-only. */
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+  .lesson-document thead {
+    display: table-header-group;
+  }
+  .lesson-document tr,
+  .lesson-document img {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lesson-document h2 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}

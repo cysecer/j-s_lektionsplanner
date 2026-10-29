@@ -145,7 +145,8 @@
     "tooLongMax": "Memia lung (maximalmain {max}).",
     "tooShortMin": "Memia curt (almain {min}).",
     "wholeNumber": "Endatescha per plaschair in dumber entir.",
-    "date": "Endatescha per plaschair ina data valaivla."
+    "date": "Endatescha per plaschair ina data valaivla.",
+    "nameTaken": "Quest num è gia occupà."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -322,14 +323,17 @@
       "dropped": "«{name}» deponì.",
       "cancelled": "Spustar interrut."
     },
-    "view": {
-      "noItems": "En questa part n'è nagut planisà."
-    },
     "finish": "Finir",
     "finished": "La lecziun è finida.",
     "reopen": "Enavos al sboz",
     "reopened": "La lecziun è puspè in sboz. Midadas vegnan memorisadas automaticamain.",
-    "statusNotChanged": "Status betg midà, la lecziun n'ha betg pudì vegnir memorisada."
+    "statusNotChanged": "Status betg midà, la lecziun n'ha betg pudì vegnir memorisada.",
+    "preview": {
+      "open": "Prevista",
+      "backToEditor": "Enavos a l'elavuraziun",
+      "layout": "Structura",
+      "saveFirst": "La lecziun n'ha betg pudì vegnir memorisada. Controllescha per plaschair las endataziuns."
+    }
   },
   "blocks": {
     "title": "Blocs da program",
@@ -546,7 +550,50 @@
     },
     "layout": {
       "title": "Structura PDF",
-      "comingSoon": "L'editur da la structura suonda en ina fasa posteriura. Fin lura vala la structura da standard."
+      "intro": "Uschia vesan las lecziuns ora en la vista da lectura ed en il PDF. La structura da standard vala per novas lecziuns; per mintga lecziun po vegnir tschernida in'autra.",
+      "default": "Standard",
+      "usedBy": "{count, plural, =0 {Tschernida da nagina lecziun} one {Tschernida da # lecziun} other {Tschernida da # lecziuns}}",
+      "makeDefault": "Sco standard",
+      "defaultSet": "«{name}» è ussa la structura da standard.",
+      "duplicate": "Duplitgar",
+      "copySuffix": "copia",
+      "deleteConfirm": "Stizzar «{name}»? {count, plural, =0 {} one {# lecziun la dovra e survegn lura la structura da standard.} other {# lecziuns la dovran e survegnan lura la structura da standard.}}",
+      "newName": "Num per la nova structura",
+      "add": "Crear ina structura",
+      "back": "Tut las structuras",
+      "unsaved": "Midadas betg memorisadas",
+      "saved": "Structura memorisada.",
+      "name": "Num da la structura",
+      "columnsTitle": "Colonnas dals puncts dal program",
+      "columnsIntro": "Tira ils champs en las colonnas u tscherna tar mintga champ, nua ch'el duai ir. La largezza è relativa: ina colonna cun 4 è dubel uschè lada sco ina cun 2.",
+      "columnLabel": "Colonna",
+      "columnLabelHint": "Laschar vid per il titel da standard translatà.",
+      "width": "Largezza",
+      "moveLeft": "A sanestra",
+      "moveRight": "A dretga",
+      "removeColumn": "Allontanar la colonna",
+      "emptyColumn": "Vid. Tira in champ nà qua.",
+      "addColumn": "Agiuntar ina colonna",
+      "newColumn": "Nova colonna",
+      "showLabel": "Mussar la designaziun",
+      "moveTo": "Spustar en",
+      "addTo": "Agiuntar a …",
+      "hidden": "Betg mussà",
+      "noneHidden": "Tut ils champs vegnan mussads.",
+      "documentTitle": "Chau da la lecziun",
+      "showLogo": "Mussar il logo da la societad",
+      "textSize": "Grondezza dal text",
+      "textSizes": {
+        "small": "Pitschna (sco il model)",
+        "medium": "Mesauna",
+        "large": "Gronda"
+      },
+      "conditionsHint": "Las indicaziuns marcadas cumparan en quest urden. Lingias vidas restan per emplenir a maun.",
+      "boxes": "Champs da text",
+      "preview": "Prevista",
+      "previewWith": "Cun l'ultima lecziun elavurada «{title}».",
+      "previewEmpty": "Anc nagina lecziun cun cuntegn. Mussads vegnan ils titels.",
+      "previewTitle": "Lecziun d'exempel"
     }
   },
   "dialog": {
@@ -574,7 +621,10 @@
     "unknownSection": "La part tschernida n'exista betg pli.",
     "asset": "In maletg n'è betg vegnì chattà. Chargia per plaschair si el danovamain.",
     "lessonChanged": "Questa lecziun è vegnida midada en il fratemp in auter lieu.",
-    "unknownLayout": "La structura PDF tschernida n'exista betg pli."
+    "unknownLayout": "La structura PDF tschernida n'exista betg pli.",
+    "nameTaken": "Quest num è gia occupà.",
+    "unknownField": "In champ supplementar da la structura n'exista betg pli u è archivà.",
+    "layoutIsDefault": "La structura da standard na po betg vegnir stizzada. Tscherna l'emprim in'autra sco standard."
   },
   "sections": {
     "INTRO": "Introducziun",
@@ -603,7 +653,8 @@
     "material": "Material",
     "responsible": "Responsabel",
     "teamCount": "Dumber da teams",
-    "participants": "Dumber d'uffants"
+    "participants": "Dumber d'uffants",
+    "startTime": "Ura"
   },
   "richText": {
     "toolbar": "Formataziun dal text",
@@ -615,5 +666,33 @@
     "add": "Agiuntar ina endataziun",
     "placeholder": "Nova endataziun",
     "remove": "Allontanar l'endataziun: {item}"
+  },
+  "document": {
+    "lessonTitle": "Titel da la lecziun",
+    "author": "Autur/-a",
+    "conditions": "Cundiziuns generalas",
+    "contents": "Cuntegns",
+    "noItems": "Nagut planisà",
+    "columns": {
+      "duration": "Durada",
+      "topic": "Tema/exercizi/furma da gieu",
+      "organization": "Organisaziun/skizza",
+      "material": "Material"
+    },
+    "conditionLabels": {
+      "totalDuration": "Durada da la lecziun",
+      "startTime": "Entschatta",
+      "difficulty": "Nivel",
+      "age": "Vegliadetgna",
+      "groupSize": "Grondezza da la gruppa",
+      "location": "Ambient",
+      "team": "Gruppa",
+      "presentCoaches": "Manaders",
+      "safety": "Aspects da segirezza"
+    },
+    "boxes": {
+      "goals": "Finamiras/finamiras d'emprender",
+      "notes": "Indicaziuns/remartgas"
+    }
   }
 }

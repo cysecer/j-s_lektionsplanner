@@ -145,7 +145,8 @@
     "tooLongMax": "Troppo lungo (al massimo {max}).",
     "tooShortMin": "Troppo corto (almeno {min}).",
     "wholeNumber": "Inserisci un numero intero.",
-    "date": "Inserisci una data valida."
+    "date": "Inserisci una data valida.",
+    "nameTaken": "Questo nome è già in uso."
   },
   "errors": {
     "unauthorized": "Accedi, per favore.",
@@ -322,14 +323,17 @@
       "dropped": "«{name}» rilasciato.",
       "cancelled": "Spostamento annullato."
     },
-    "view": {
-      "noItems": "In questa parte non è pianificato nulla."
-    },
     "finish": "Completa",
     "finished": "La lezione è pronta.",
     "reopen": "Torna a bozza",
     "reopened": "La lezione è di nuovo una bozza. Le modifiche vengono salvate automaticamente.",
-    "statusNotChanged": "Stato non modificato, non è stato possibile salvare la lezione."
+    "statusNotChanged": "Stato non modificato, non è stato possibile salvare la lezione.",
+    "preview": {
+      "open": "Anteprima",
+      "backToEditor": "Torna alla modifica",
+      "layout": "Impaginazione",
+      "saveFirst": "Non è stato possibile salvare la lezione. Controlla i dati inseriti."
+    }
   },
   "blocks": {
     "title": "Blocchi di programma",
@@ -546,7 +550,50 @@
     },
     "layout": {
       "title": "Impaginazione PDF",
-      "comingSoon": "L'editor dell'impaginazione seguirà in una fase successiva. Fino ad allora vale l'impaginazione standard."
+      "intro": "Così appaiono le lezioni nella vista di lettura e nel PDF. L'impaginazione standard vale per le nuove lezioni; per ogni lezione se ne può scegliere un'altra.",
+      "default": "Standard",
+      "usedBy": "{count, plural, =0 {Scelta da nessuna lezione} one {Scelta da # lezione} other {Scelta da # lezioni}}",
+      "makeDefault": "Imposta come standard",
+      "defaultSet": "«{name}» è ora l'impaginazione standard.",
+      "duplicate": "Duplica",
+      "copySuffix": "copia",
+      "deleteConfirm": "Eliminare «{name}»? {count, plural, =0 {} one {# lezione la usa e riceverà l'impaginazione standard.} other {# lezioni la usano e riceveranno l'impaginazione standard.}}",
+      "newName": "Nome della nuova impaginazione",
+      "add": "Crea impaginazione",
+      "back": "Tutte le impaginazioni",
+      "unsaved": "Modifiche non salvate",
+      "saved": "Impaginazione salvata.",
+      "name": "Nome dell'impaginazione",
+      "columnsTitle": "Colonne dei punti del programma",
+      "columnsIntro": "Trascina i campi nelle colonne o scegli per ogni campo dove deve andare. La larghezza è relativa: una colonna con 4 è larga il doppio di una con 2.",
+      "columnLabel": "Colonna",
+      "columnLabelHint": "Lascia vuoto per il titolo standard tradotto.",
+      "width": "Larghezza",
+      "moveLeft": "A sinistra",
+      "moveRight": "A destra",
+      "removeColumn": "Rimuovi colonna",
+      "emptyColumn": "Vuota. Trascina qui un campo.",
+      "addColumn": "Aggiungi colonna",
+      "newColumn": "Nuova colonna",
+      "showLabel": "Mostra etichetta",
+      "moveTo": "Sposta in",
+      "addTo": "Aggiungi a …",
+      "hidden": "Non mostrato",
+      "noneHidden": "Tutti i campi vengono mostrati.",
+      "documentTitle": "Intestazione della lezione",
+      "showLogo": "Mostra il logo della società",
+      "textSize": "Dimensione del testo",
+      "textSizes": {
+        "small": "Piccola (come il modello)",
+        "medium": "Media",
+        "large": "Grande"
+      },
+      "conditionsHint": "Le indicazioni selezionate appaiono in questo ordine. Le righe vuote restano da compilare a mano.",
+      "boxes": "Campi di testo",
+      "preview": "Anteprima",
+      "previewWith": "Con l'ultima lezione modificata «{title}».",
+      "previewEmpty": "Ancora nessuna lezione con contenuto. Vengono mostrati i titoli.",
+      "previewTitle": "Lezione d'esempio"
     }
   },
   "dialog": {
@@ -574,7 +621,10 @@
     "unknownSection": "La parte scelta non esiste più.",
     "asset": "Un'immagine non è stata trovata. Caricala di nuovo.",
     "lessonChanged": "Nel frattempo questa lezione è stata modificata altrove.",
-    "unknownLayout": "L'impaginazione PDF scelta non esiste più."
+    "unknownLayout": "L'impaginazione PDF scelta non esiste più.",
+    "nameTaken": "Questo nome è già in uso.",
+    "unknownField": "Un campo aggiuntivo dell'impaginazione non esiste più o è archiviato.",
+    "layoutIsDefault": "L'impaginazione standard non può essere eliminata. Scegli prima un'altra come standard."
   },
   "sections": {
     "INTRO": "Introduzione",
@@ -603,7 +653,8 @@
     "material": "Materiale",
     "responsible": "Responsabile",
     "teamCount": "Numero di squadre",
-    "participants": "Numero di bambini"
+    "participants": "Numero di bambini",
+    "startTime": "Ora"
   },
   "richText": {
     "toolbar": "Formattazione del testo",
@@ -615,5 +666,33 @@
     "add": "Aggiungi voce",
     "placeholder": "Nuova voce",
     "remove": "Rimuovi voce: {item}"
+  },
+  "document": {
+    "lessonTitle": "Titolo della lezione",
+    "author": "Autore/-trice",
+    "conditions": "Condizioni quadro",
+    "contents": "Contenuti",
+    "noItems": "Nulla di pianificato",
+    "columns": {
+      "duration": "Durata",
+      "topic": "Tema/esercizio/forma di gioco",
+      "organization": "Organizzazione/schizzo",
+      "material": "Materiale"
+    },
+    "conditionLabels": {
+      "totalDuration": "Durata della lezione",
+      "startTime": "Inizio",
+      "difficulty": "Livello",
+      "age": "Età",
+      "groupSize": "Dimensione del gruppo",
+      "location": "Ambiente",
+      "team": "Gruppo",
+      "presentCoaches": "Monitori",
+      "safety": "Aspetti di sicurezza"
+    },
+    "boxes": {
+      "goals": "Obiettivi/obiettivi di apprendimento",
+      "notes": "Indicazioni/osservazioni"
+    }
   }
 }

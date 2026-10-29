@@ -145,7 +145,8 @@
     "tooLongMax": "Trop long (au maximum {max}).",
     "tooShortMin": "Trop court (au moins {min}).",
     "wholeNumber": "Merci de saisir un nombre entier.",
-    "date": "Merci de saisir une date valable."
+    "date": "Merci de saisir une date valable.",
+    "nameTaken": "Ce nom est déjà utilisé."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -322,14 +323,17 @@
       "dropped": "« {name} » déposé.",
       "cancelled": "Déplacement annulé."
     },
-    "view": {
-      "noItems": "Rien n'est prévu dans cette partie."
-    },
     "finish": "Terminer",
     "finished": "La leçon est terminée.",
     "reopen": "Revenir au brouillon",
     "reopened": "La leçon est de nouveau un brouillon. Les modifications sont enregistrées automatiquement.",
-    "statusNotChanged": "Statut non modifié, la leçon n'a pas pu être enregistrée."
+    "statusNotChanged": "Statut non modifié, la leçon n'a pas pu être enregistrée.",
+    "preview": {
+      "open": "Aperçu",
+      "backToEditor": "Retour à l'édition",
+      "layout": "Mise en page",
+      "saveFirst": "La leçon n'a pas pu être enregistrée. Merci de vérifier les saisies."
+    }
   },
   "blocks": {
     "title": "Blocs de programme",
@@ -546,7 +550,50 @@
     },
     "layout": {
       "title": "Mise en page PDF",
-      "comingSoon": "L'éditeur de mise en page suivra dans une phase ultérieure. D'ici là, la mise en page standard s'applique."
+      "intro": "Ainsi apparaissent les leçons dans la vue de lecture et dans le PDF. La mise en page standard vaut pour les nouvelles leçons ; une autre peut être choisie par leçon.",
+      "default": "Standard",
+      "usedBy": "{count, plural, =0 {Choisie par aucune leçon} one {Choisie par # leçon} other {Choisie par # leçons}}",
+      "makeDefault": "Définir comme standard",
+      "defaultSet": "« {name} » est maintenant la mise en page standard.",
+      "duplicate": "Dupliquer",
+      "copySuffix": "copie",
+      "deleteConfirm": "Supprimer « {name} » ? {count, plural, =0 {} one {# leçon l'utilise et recevra la mise en page standard.} other {# leçons l'utilisent et recevront la mise en page standard.}}",
+      "newName": "Nom de la nouvelle mise en page",
+      "add": "Créer une mise en page",
+      "back": "Toutes les mises en page",
+      "unsaved": "Modifications non enregistrées",
+      "saved": "Mise en page enregistrée.",
+      "name": "Nom de la mise en page",
+      "columnsTitle": "Colonnes des points du programme",
+      "columnsIntro": "Glisse les champs dans les colonnes ou choisis pour chaque champ où il doit aller. La largeur est relative : une colonne de 4 est deux fois plus large qu'une colonne de 2.",
+      "columnLabel": "Colonne",
+      "columnLabelHint": "Laisser vide pour le titre standard traduit.",
+      "width": "Largeur",
+      "moveLeft": "Vers la gauche",
+      "moveRight": "Vers la droite",
+      "removeColumn": "Retirer la colonne",
+      "emptyColumn": "Vide. Glisse un champ ici.",
+      "addColumn": "Ajouter une colonne",
+      "newColumn": "Nouvelle colonne",
+      "showLabel": "Afficher le libellé",
+      "moveTo": "Déplacer vers",
+      "addTo": "Ajouter à …",
+      "hidden": "Non affiché",
+      "noneHidden": "Tous les champs sont affichés.",
+      "documentTitle": "En-tête de la leçon",
+      "showLogo": "Afficher le logo de la société",
+      "textSize": "Taille du texte",
+      "textSizes": {
+        "small": "Petite (comme le modèle)",
+        "medium": "Moyenne",
+        "large": "Grande"
+      },
+      "conditionsHint": "Les indications cochées apparaissent dans cet ordre. Les lignes vides restent à remplir à la main.",
+      "boxes": "Champs de texte",
+      "preview": "Aperçu",
+      "previewWith": "Avec la dernière leçon modifiée « {title} ».",
+      "previewEmpty": "Aucune leçon avec contenu pour l'instant. Les titres sont affichés.",
+      "previewTitle": "Leçon d'exemple"
     }
   },
   "dialog": {
@@ -574,7 +621,10 @@
     "unknownSection": "La partie choisie n'existe plus.",
     "asset": "Une image est introuvable. Merci de la téléverser à nouveau.",
     "lessonChanged": "Cette leçon a été modifiée entre-temps à un autre endroit.",
-    "unknownLayout": "La mise en page PDF choisie n'existe plus."
+    "unknownLayout": "La mise en page PDF choisie n'existe plus.",
+    "nameTaken": "Ce nom est déjà utilisé.",
+    "unknownField": "Un champ supplémentaire de la mise en page n'existe plus ou est archivé.",
+    "layoutIsDefault": "La mise en page standard ne peut pas être supprimée. Choisis d'abord une autre mise en page standard."
   },
   "sections": {
     "INTRO": "Mise en train",
@@ -603,7 +653,8 @@
     "material": "Matériel",
     "responsible": "Responsable",
     "teamCount": "Nombre d'équipes",
-    "participants": "Nombre d'enfants"
+    "participants": "Nombre d'enfants",
+    "startTime": "Heure"
   },
   "richText": {
     "toolbar": "Mise en forme du texte",
@@ -615,5 +666,33 @@
     "add": "Ajouter une entrée",
     "placeholder": "Nouvelle entrée",
     "remove": "Retirer l'entrée : {item}"
+  },
+  "document": {
+    "lessonTitle": "Titre de la leçon",
+    "author": "Auteur·e",
+    "conditions": "Conditions-cadres",
+    "contents": "Contenus",
+    "noItems": "Rien de prévu",
+    "columns": {
+      "duration": "Durée",
+      "topic": "Thème/exercice/forme de jeu",
+      "organization": "Organisation/croquis",
+      "material": "Matériel"
+    },
+    "conditionLabels": {
+      "totalDuration": "Durée de la leçon",
+      "startTime": "Début",
+      "difficulty": "Niveau",
+      "age": "Âge",
+      "groupSize": "Taille du groupe",
+      "location": "Cadre",
+      "team": "Groupe",
+      "presentCoaches": "Moniteurs",
+      "safety": "Aspects de sécurité"
+    },
+    "boxes": {
+      "goals": "Objectifs/objectifs d'apprentissage",
+      "notes": "Remarques"
+    }
   }
 }

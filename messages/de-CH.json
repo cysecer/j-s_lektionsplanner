@@ -145,7 +145,8 @@
     "tooLongMax": "Zu lang (höchstens {max}).",
     "tooShortMin": "Zu kurz (mindestens {min}).",
     "wholeNumber": "Bitte eine ganze Zahl eingeben.",
-    "date": "Bitte ein gültiges Datum eingeben."
+    "date": "Bitte ein gültiges Datum eingeben.",
+    "nameTaken": "Dieser Name ist schon vergeben."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -322,14 +323,17 @@
       "dropped": "«{name}» abgelegt.",
       "cancelled": "Verschieben abgebrochen."
     },
-    "view": {
-      "noItems": "In diesem Abschnitt ist nichts geplant."
-    },
     "finish": "Fertigstellen",
     "finished": "Lektion ist fertig.",
     "reopen": "Zurück zu Entwurf",
     "reopened": "Lektion ist wieder ein Entwurf. Änderungen werden automatisch gespeichert.",
-    "statusNotChanged": "Status nicht geändert, die Lektion konnte nicht gespeichert werden."
+    "statusNotChanged": "Status nicht geändert, die Lektion konnte nicht gespeichert werden.",
+    "preview": {
+      "open": "Vorschau",
+      "backToEditor": "Zurück zum Bearbeiten",
+      "layout": "Layout",
+      "saveFirst": "Die Lektion konnte nicht gespeichert werden. Bitte prüfe die Eingaben."
+    }
   },
   "blocks": {
     "title": "Programmblöcke",
@@ -546,7 +550,50 @@
     },
     "layout": {
       "title": "PDF-Layout",
-      "comingSoon": "Der Layout-Editor folgt in einer späteren Phase. Bis dahin gilt das Standardlayout."
+      "intro": "So sehen Lektionen in der Leseansicht und im PDF aus. Das Standard-Layout gilt für neue Lektionen; pro Lektion kann ein anderes gewählt werden.",
+      "default": "Standard",
+      "usedBy": "{count, plural, =0 {Von keiner Lektion gewählt} one {Von # Lektion gewählt} other {Von # Lektionen gewählt}}",
+      "makeDefault": "Als Standard",
+      "defaultSet": "«{name}» ist jetzt das Standard-Layout.",
+      "duplicate": "Duplizieren",
+      "copySuffix": "Kopie",
+      "deleteConfirm": "«{name}» löschen? {count, plural, =0 {} one {# Lektion verwendet es und erhält dann das Standard-Layout.} other {# Lektionen verwenden es und erhalten dann das Standard-Layout.}}",
+      "newName": "Name für neues Layout",
+      "add": "Layout erstellen",
+      "back": "Alle Layouts",
+      "unsaved": "Ungespeicherte Änderungen",
+      "saved": "Layout gespeichert.",
+      "name": "Name des Layouts",
+      "columnsTitle": "Spalten der Programmpunkte",
+      "columnsIntro": "Ziehe Felder in die Spalten oder wähle bei jedem Feld, wohin es soll. Die Breite ist relativ: Eine Spalte mit 4 ist doppelt so breit wie eine mit 2.",
+      "columnLabel": "Spalte",
+      "columnLabelHint": "Leer lassen für die übersetzte Standard-Überschrift.",
+      "width": "Breite",
+      "moveLeft": "Nach links",
+      "moveRight": "Nach rechts",
+      "removeColumn": "Spalte entfernen",
+      "emptyColumn": "Leer. Ziehe ein Feld hierher.",
+      "addColumn": "Spalte hinzufügen",
+      "newColumn": "Neue Spalte",
+      "showLabel": "Beschriftung zeigen",
+      "moveTo": "Verschieben nach",
+      "addTo": "Hinzufügen zu …",
+      "hidden": "Nicht angezeigt",
+      "noneHidden": "Alle Felder werden angezeigt.",
+      "documentTitle": "Kopf der Lektion",
+      "showLogo": "Vereinslogo zeigen",
+      "textSize": "Schriftgrösse",
+      "textSizes": {
+        "small": "Klein (wie Vorlage)",
+        "medium": "Mittel",
+        "large": "Gross"
+      },
+      "conditionsHint": "Angehakte Angaben erscheinen in dieser Reihenfolge. Leere Zeilen bleiben zum Ausfüllen von Hand.",
+      "boxes": "Textfelder",
+      "preview": "Vorschau",
+      "previewWith": "Mit der zuletzt bearbeiteten Lektion «{title}».",
+      "previewEmpty": "Noch keine Lektion mit Inhalt vorhanden. Gezeigt werden die Überschriften.",
+      "previewTitle": "Beispiel-Lektion"
     }
   },
   "dialog": {
@@ -574,7 +621,10 @@
     "unknownSection": "Der gewählte Abschnitt existiert nicht mehr.",
     "asset": "Ein Bild wurde nicht gefunden. Bitte lade es erneut hoch.",
     "lessonChanged": "Diese Lektion wurde inzwischen an einem anderen Ort geändert.",
-    "unknownLayout": "Das gewählte PDF-Layout existiert nicht mehr."
+    "unknownLayout": "Das gewählte PDF-Layout existiert nicht mehr.",
+    "nameTaken": "Dieser Name ist schon vergeben.",
+    "unknownField": "Ein Zusatzfeld im Layout gibt es nicht mehr oder es ist archiviert.",
+    "layoutIsDefault": "Das Standard-Layout kann nicht gelöscht werden. Wähle zuerst ein anderes als Standard."
   },
   "sections": {
     "INTRO": "Einleitung",
@@ -603,7 +653,8 @@
     "material": "Material",
     "responsible": "Verantwortlich",
     "teamCount": "Anzahl Teams",
-    "participants": "Anzahl Kinder"
+    "participants": "Anzahl Kinder",
+    "startTime": "Uhrzeit"
   },
   "richText": {
     "toolbar": "Textformatierung",
@@ -615,5 +666,33 @@
     "add": "Eintrag hinzufügen",
     "placeholder": "Neuer Eintrag",
     "remove": "Eintrag entfernen: {item}"
+  },
+  "document": {
+    "lessonTitle": "Lektionstitel",
+    "author": "Autor/-in",
+    "conditions": "Rahmenbedingungen",
+    "contents": "Inhalte",
+    "noItems": "Nichts geplant",
+    "columns": {
+      "duration": "Dauer",
+      "topic": "Thema/Übung/Spielform",
+      "organization": "Organisation/Skizze",
+      "material": "Material"
+    },
+    "conditionLabels": {
+      "totalDuration": "Lektionsdauer",
+      "startTime": "Beginn",
+      "difficulty": "Niveau",
+      "age": "Alter",
+      "groupSize": "Gruppengrösse",
+      "location": "Kursumgebung",
+      "team": "Riege",
+      "presentCoaches": "Leitende",
+      "safety": "Sicherheitsaspekte"
+    },
+    "boxes": {
+      "goals": "Zielsetzungen/Lernziele",
+      "notes": "Hinweise/Bemerkungen"
+    }
   }
 }

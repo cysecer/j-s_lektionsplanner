@@ -5,16 +5,20 @@ import { lessonToEditorValues } from "@/lib/lessons/editor-values";
 import { getLesson, getLessonOptions } from "@/lib/lessons/queries";
 import { parsePageInput } from "@/lib/server/params";
 import { LessonEditor } from "./lesson-editor";
-import { LessonView } from "./lesson-view";
+import { LessonDocumentPage } from "./lesson-document-page";
 
-export default async function LessonPage({ params }: PageProps<"/lessons/[id]">) {
+export default async function LessonPage({ params, searchParams }: PageProps<"/lessons/[id]">) {
   const viewer = await requireViewer();
   const { id } = await parsePageInput(z.object({ id: z.uuid() }), params);
   const lesson = await getLesson(viewer.clubId, id);
   if (!lesson) notFound();
 
   if (!viewer.permissions.editLessons) {
-    return <LessonView lesson={lesson} locale={viewer.locale} />;
+    const { layout } = await parsePageInput(
+      z.object({ layout: z.uuid().optional().catch(undefined) }),
+      searchParams,
+    );
+    return <LessonDocumentPage viewer={viewer} lessonId={lesson.id} layoutId={layout} />;
   }
 
   const usedCoachIds = [

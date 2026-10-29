@@ -145,7 +145,8 @@
     "tooLongMax": "Too long (at most {max}).",
     "tooShortMin": "Too short (at least {min}).",
     "wholeNumber": "Please enter a whole number.",
-    "date": "Please enter a valid date."
+    "date": "Please enter a valid date.",
+    "nameTaken": "This name is already taken."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -322,14 +323,17 @@
       "dropped": "Dropped “{name}”.",
       "cancelled": "Moving cancelled."
     },
-    "view": {
-      "noItems": "Nothing is planned in this section."
-    },
     "finish": "Mark as final",
     "finished": "The lesson is final.",
     "reopen": "Back to draft",
     "reopened": "The lesson is a draft again. Changes are saved automatically.",
-    "statusNotChanged": "Status not changed, the lesson could not be saved."
+    "statusNotChanged": "Status not changed, the lesson could not be saved.",
+    "preview": {
+      "open": "Preview",
+      "backToEditor": "Back to editing",
+      "layout": "Layout",
+      "saveFirst": "The lesson could not be saved. Please check your input."
+    }
   },
   "blocks": {
     "title": "Program blocks",
@@ -546,7 +550,50 @@
     },
     "layout": {
       "title": "PDF layout",
-      "comingSoon": "The layout editor follows in a later phase. Until then the standard layout applies."
+      "intro": "How lessons look in the read view and the PDF. The default layout applies to new lessons; each lesson can choose another one.",
+      "default": "Default",
+      "usedBy": "{count, plural, =0 {Chosen by no lesson} one {Chosen by # lesson} other {Chosen by # lessons}}",
+      "makeDefault": "Make default",
+      "defaultSet": "“{name}” is now the default layout.",
+      "duplicate": "Duplicate",
+      "copySuffix": "copy",
+      "deleteConfirm": "Delete “{name}”? {count, plural, =0 {} one {# lesson uses it and will get the default layout.} other {# lessons use it and will get the default layout.}}",
+      "newName": "Name for a new layout",
+      "add": "Create layout",
+      "back": "All layouts",
+      "unsaved": "Unsaved changes",
+      "saved": "Layout saved.",
+      "name": "Layout name",
+      "columnsTitle": "Columns of the program items",
+      "columnsIntro": "Drag fields into the columns or choose for each field where it goes. Widths are relative: a column of 4 is twice as wide as one of 2.",
+      "columnLabel": "Column",
+      "columnLabelHint": "Leave empty for the translated default heading.",
+      "width": "Width",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
+      "removeColumn": "Remove column",
+      "emptyColumn": "Empty. Drag a field here.",
+      "addColumn": "Add column",
+      "newColumn": "New column",
+      "showLabel": "Show label",
+      "moveTo": "Move to",
+      "addTo": "Add to …",
+      "hidden": "Not shown",
+      "noneHidden": "All fields are shown.",
+      "documentTitle": "Lesson header",
+      "showLogo": "Show club logo",
+      "textSize": "Text size",
+      "textSizes": {
+        "small": "Small (like the template)",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "conditionsHint": "Checked details appear in this order. Empty rows stay blank for filling in by hand.",
+      "boxes": "Text boxes",
+      "preview": "Preview",
+      "previewWith": "With the most recently edited lesson “{title}”.",
+      "previewEmpty": "No lesson with content yet. Only the headings are shown.",
+      "previewTitle": "Sample lesson"
     }
   },
   "dialog": {
@@ -574,7 +621,10 @@
     "unknownSection": "The selected section no longer exists.",
     "asset": "An image could not be found. Please upload it again.",
     "lessonChanged": "This lesson has been changed somewhere else in the meantime.",
-    "unknownLayout": "The selected PDF layout no longer exists."
+    "unknownLayout": "The selected PDF layout no longer exists.",
+    "nameTaken": "This name is already taken.",
+    "unknownField": "A custom field in the layout no longer exists or is archived.",
+    "layoutIsDefault": "The default layout cannot be deleted. Make another layout the default first."
   },
   "sections": {
     "INTRO": "Warm-up",
@@ -603,7 +653,8 @@
     "material": "Equipment",
     "responsible": "Responsible",
     "teamCount": "Number of teams",
-    "participants": "Number of kids"
+    "participants": "Number of kids",
+    "startTime": "Time"
   },
   "richText": {
     "toolbar": "Text formatting",
@@ -615,5 +666,33 @@
     "add": "Add entry",
     "placeholder": "New entry",
     "remove": "Remove entry: {item}"
+  },
+  "document": {
+    "lessonTitle": "Lesson title",
+    "author": "Author",
+    "conditions": "General conditions",
+    "contents": "Contents",
+    "noItems": "Nothing planned",
+    "columns": {
+      "duration": "Duration",
+      "topic": "Topic/exercise/game",
+      "organization": "Organisation/sketch",
+      "material": "Equipment"
+    },
+    "conditionLabels": {
+      "totalDuration": "Lesson length",
+      "startTime": "Start",
+      "difficulty": "Level",
+      "age": "Age",
+      "groupSize": "Group size",
+      "location": "Venue",
+      "team": "Group",
+      "presentCoaches": "Coaches",
+      "safety": "Safety aspects"
+    },
+    "boxes": {
+      "goals": "Goals/learning objectives",
+      "notes": "Notes/remarks"
+    }
   }
 }

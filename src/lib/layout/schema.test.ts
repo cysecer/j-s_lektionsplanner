@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { COMPACT_LAYOUT, DEFAULT_LAYOUT, layoutConfigSchema, type LayoutConfig } from "./schema";
+import {
+  COMPACT_LAYOUT,
+  DEFAULT_LAYOUT,
+  layoutConfigSchema,
+  parseLayoutConfig,
+  type LayoutConfig,
+} from "./schema";
 
 function clone(config: LayoutConfig): LayoutConfig {
   return structuredClone(config);
@@ -61,5 +67,36 @@ describe("layoutConfigSchema", () => {
     const wide = clone(DEFAULT_LAYOUT);
     wide.columns[0]!.width = 0;
     expect(layoutConfigSchema.safeParse(wide).success).toBe(false);
+  });
+});
+
+describe("document settings", () => {
+  it("fills in defaults for layouts stored before document settings existed", () => {
+    const { document: _document, ...stored } = clone(DEFAULT_LAYOUT);
+    const parsed = layoutConfigSchema.parse(stored);
+    expect(parsed.document).toEqual(DEFAULT_LAYOUT.document);
+  });
+
+  it("rejects duplicate or unknown conditions and boxes", () => {
+    const dup = clone(DEFAULT_LAYOUT);
+    dup.document.conditions = ["age", "age"];
+    expect(layoutConfigSchema.safeParse(dup).success).toBe(false);
+    const unknown = clone(DEFAULT_LAYOUT) as unknown as { document: { boxes: string[] } };
+    unknown.document.boxes = ["password"];
+    expect(layoutConfigSchema.safeParse(unknown).success).toBe(false);
+  });
+
+  it("rejects unknown document keys and text sizes", () => {
+    const extra = clone(DEFAULT_LAYOUT) as unknown as { document: Record<string, unknown> };
+    extra.document.html = "<script>";
+    expect(layoutConfigSchema.safeParse(extra).success).toBe(false);
+    const size = clone(DEFAULT_LAYOUT) as unknown as { document: Record<string, unknown> };
+    size.document.textSize = "huge";
+    expect(layoutConfigSchema.safeParse(size).success).toBe(false);
+  });
+
+  it("falls back to the default layout for unreadable stored configs", () => {
+    expect(parseLayoutConfig({ version: 2 })).toBe(DEFAULT_LAYOUT);
+    expect(parseLayoutConfig(COMPACT_LAYOUT)).toEqual(COMPACT_LAYOUT);
   });
 });

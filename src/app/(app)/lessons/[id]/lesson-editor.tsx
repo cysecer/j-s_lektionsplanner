@@ -5,11 +5,13 @@ import {
   ArrowLeft,
   Check,
   CircleCheckBig,
+  Eye,
   Loader2,
   Plus,
   Undo2,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -49,6 +51,7 @@ export function LessonEditor({
   options: LessonOptions;
 }) {
   const t = useTranslations();
+  const router = useRouter();
   const sectionOrder = useMemo(() => options.sections.map((s) => s.id), [options.sections]);
   const [general, setGeneral] = useState(initialGeneral);
   const [items, setItems] = useState(() => normalize(initialItems, sectionOrder));
@@ -136,6 +139,15 @@ export function LessonEditor({
     toast.error(t("lessons.statusNotChanged"));
   }
 
+  /** Pending changes are saved first, so the preview shows the current state. */
+  async function openPreview() {
+    if (saveState !== "saved" && !(await save())) {
+      toast.error(t("lessons.preview.saveFirst"));
+      return;
+    }
+    router.push(`/lessons/${lessonId}/preview`);
+  }
+
   // Autosave drafts shortly after the last change.
   useEffect(() => {
     if (saveState !== "dirty" || general.status !== "DRAFT") return;
@@ -220,6 +232,15 @@ export function LessonEditor({
               {t("lessons.reopen")}
             </Button>
           )}
+          <Button
+            variant="outline"
+            className="h-11"
+            disabled={saveState === "saving" || saveState === "conflict"}
+            onClick={() => void openPreview()}
+          >
+            <Eye aria-hidden />
+            {t("lessons.preview.open")}
+          </Button>
           <LessonActions lessonId={lessonId} title={general.title} />
         </div>
       </div>

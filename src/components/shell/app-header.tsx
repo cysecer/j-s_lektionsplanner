@@ -19,7 +19,7 @@ export async function AppHeader({ viewer }: { viewer: Viewer }) {
   const items = navItemsFor(viewer.permissions);
 
   return (
-    <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+    <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur print:hidden">
       <a
         href="#main"
         className="bg-primary text-primary-foreground sr-only rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50"
