@@ -98,6 +98,8 @@ model Team {
   programBlocks ProgramBlockTeam[]
   lessons       Lesson[]
   activeFor     Membership[]
+  memberRoles   MembershipTeam[]
+  inviteRoles   InvitationTeam[]
 
   @@unique([clubId, name])
   @@index([clubId, sortOrder])
@@ -518,49 +520,90 @@ model RateLimit {
   @@map("rateLimit")
 }
 
-/// A user's access to a club. One per club; the role decides permissions.
+/// Role within one team (Riege). Admins need none: they see and edit all.
+enum TeamRole {
+  /// Plans and edits lessons and blocks of the team, sends emails.
+  COACH
+  /// Sees the team's lessons and blocks, exports PDFs within the quota.
+  READER
+}
+
+/// A user's access to a club. ADMIN sees and edits everything. Everyone
+/// else gets a role either for all teams (`allTeamsRole`, includes teams
+/// created later) or per team (`teams`); other teams are invisible.
+/// `role` is the summary used for coarse checks: COACH as soon as the
+/// person coaches at least one team, otherwise READER.
 model Membership {
-  id           String   @id @default(uuid(7)) @db.Uuid
-  userId       String   @db.Uuid
-  clubId       String   @db.Uuid
+  id           String    @id @default(uuid(7)) @db.Uuid
+  userId       String    @db.Uuid
+  clubId       String    @db.Uuid
   role         Role
   /// Links the user to a coach entry (pre-fills author, "my blocks").
-  coachId      String?  @unique @db.Uuid
+  coachId      String?   @unique @db.Uuid
   /// Team selected in the header; lists are filtered by it. Null = all teams.
-  activeTeamId String?  @db.Uuid
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  activeTeamId String?   @db.Uuid
+  allTeamsRole TeamRole?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  club       Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  coach      Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
-  activeTeam Team?  @relation(fields: [activeTeamId], references: [id], onDelete: SetNull)
+  teams      MembershipTeam[]
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club       Club             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach      Coach?           @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  activeTeam Team?            @relation(fields: [activeTeamId], references: [id], onDelete: SetNull)
 
   @@unique([userId, clubId])
   @@index([clubId])
 }
 
-/// Invite-only access: an admin invites an email address with a role.
-/// Only a SHA-256 hash of the token is stored.
-model Invitation {
-  id          String    @id @default(uuid(7)) @db.Uuid
-  clubId      String    @db.Uuid
-  email       String
-  role        Role
-  coachId     String?   @db.Uuid
-  locale      String    @default("de-CH")
-  tokenHash   String    @unique
-  expiresAt   DateTime
-  acceptedAt  DateTime?
-  revokedAt   DateTime?
-  invitedById String?   @db.Uuid
-  createdAt   DateTime  @default(now())
+model MembershipTeam {
+  membershipId String   @db.Uuid
+  teamId       String   @db.Uuid
+  role         TeamRole
 
-  club      Club   @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  coach     Coach? @relation(fields: [coachId], references: [id], onDelete: SetNull)
-  invitedBy User?  @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([membershipId, teamId])
+  @@index([teamId])
+}
+
+/// Invite-only access: an admin invites an email address with a role
+/// (and team roles, as on Membership). Only a SHA-256 hash of the token
+/// is stored.
+model Invitation {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  clubId       String    @db.Uuid
+  email        String
+  role         Role
+  coachId      String?   @db.Uuid
+  locale       String    @default("de-CH")
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  revokedAt    DateTime?
+  invitedById  String?   @db.Uuid
+  allTeamsRole TeamRole?
+  createdAt    DateTime  @default(now())
+
+  teams     InvitationTeam[]
+  club      Club             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  coach     Coach?           @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  invitedBy User?            @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
 
   @@index([clubId, email])
+}
+
+model InvitationTeam {
+  invitationId String   @db.Uuid
+  teamId       String   @db.Uuid
+  role         TeamRole
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  team       Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([invitationId, teamId])
+  @@index([teamId])
 }
 
 /// One generated PDF. The file itself is never stored: it is streamed to

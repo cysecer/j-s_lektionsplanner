@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { auth } from "./auth";
 import { hasRole, permissionsFor, type Permissions } from "./roles";
+import { teamAccessOf, type TeamAccess } from "./team-access";
 
 /** The signed-in person as the app sees them: user + club membership. */
 export type Viewer = {
@@ -22,6 +23,8 @@ export type Viewer = {
   coachId: string | null;
   /** Team selected in the header; null = all teams. */
   activeTeamId: string | null;
+  /** Role per team (Riege); see team-access.ts. */
+  teams: TeamAccess;
   permissions: Permissions;
 };
 
@@ -45,7 +48,14 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const membership = await db.membership.findFirst({
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
-    select: { clubId: true, role: true, coachId: true, activeTeamId: true },
+    select: {
+      clubId: true,
+      role: true,
+      coachId: true,
+      activeTeamId: true,
+      allTeamsRole: true,
+      teams: { select: { teamId: true, role: true } },
+    },
   });
   if (!membership) return null;
 
@@ -59,6 +69,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     role: membership.role,
     coachId: membership.coachId,
     activeTeamId: membership.activeTeamId,
+    teams: teamAccessOf(membership),
     permissions: permissionsFor(membership.role),
   };
 });

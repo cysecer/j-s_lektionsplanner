@@ -159,7 +159,8 @@
     "smtpInsecure": "Les connexions non chiffrées ne sont pas autorisées sur ce serveur.",
     "smtpPasswordAgain": "Le serveur ou le nom d’utilisateur a changé : merci de saisir à nouveau le mot de passe.",
     "recipientsRequired": "Merci d’indiquer au moins une adresse e-mail.",
-    "tooManyRecipients": "20 destinataires au maximum."
+    "tooManyRecipients": "20 destinataires au maximum.",
+    "teamsRequired": "Merci d’attribuer un rôle à au moins un groupe."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -373,7 +374,10 @@
       "label": "Période",
       "upcoming": "À venir ({count})",
       "past": "Passées ({count})"
-    }
+    },
+    "saveDraft": "Enregistrer le brouillon",
+    "draftSaved": "Brouillon enregistré. Les modifications sont désormais enregistrées automatiquement.",
+    "notSavedYet": "Pas encore enregistré"
   },
   "blocks": {
     "title": "Blocs de programme",
@@ -549,9 +553,20 @@
       "removeConfirm": "Retirer {name} de la société ? La personne sera immédiatement déconnectée de tous ses appareils.",
       "roleHints": {
         "ADMIN": "Tout, y compris paramètres et personnes",
-        "COACH": "Modifier blocs de programme et leçons, envoyer des PDF",
-        "READER": "Consulter et créer des PDF (limité), pas d'envoi"
-      }
+        "COACH": "Planifier et modifier dans tous les groupes, envoyer PDF et e-mails",
+        "READER": "Voir tous les groupes et créer des PDF (limité), pas d’envoi",
+        "TEAMS": "P. ex. moniteur·trice des Kids et lecture seule pour la Jeunesse"
+      },
+      "allTeams": "{role} dans tous les groupes",
+      "perTeam": "Définir par groupe …",
+      "noTeams": "Aucun groupe attribué",
+      "noTeamsInClub": "Il n’y a pas encore de groupes.",
+      "noAccess": "Pas d’accès",
+      "teamRoles": "Groupes",
+      "teamRolesHint": "La personne ne voit pas les groupes sans accès : ni leurs leçons ni leurs blocs.",
+      "editTeams": "Modifier les groupes",
+      "teamsTitle": "Groupes de {name}",
+      "teamsIntro": "Par groupe : moniteur·trice (planifier et modifier) ou lecture seule."
     },
     "tags": {
       "title": "Catégories",
@@ -717,7 +732,8 @@
     "mailConnection": "Le serveur de messagerie est injoignable. Le serveur et le port sont-ils corrects ?",
     "mailFailed": "L’e-mail n’a pas pu être envoyé. Merci de réessayer plus tard.",
     "mailQuota": "Tu as atteint ta limite journalière d’e-mails. Ce sera de nouveau possible demain.",
-    "mailPasswordAgain": "Merci de saisir à nouveau le mot de passe du serveur de messagerie."
+    "mailPasswordAgain": "Merci de saisir à nouveau le mot de passe du serveur de messagerie.",
+    "teamForbidden": "Tu n’as pas ce droit dans ce groupe. Demande à un·e administrateur·trice."
   },
   "sections": {
     "INTRO": "Mise en train",

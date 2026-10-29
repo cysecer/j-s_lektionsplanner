@@ -3,6 +3,7 @@
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import type { Viewer } from "@/lib/auth/session";
+import { canCoach } from "@/lib/auth/team-access";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { formatDate } from "@/lib/format";
@@ -17,9 +18,10 @@ import { ActionFailure } from "@/lib/server/result";
 async function findLesson(viewer: Viewer, lessonId: string) {
   const lesson = await db.lesson.findFirst({
     where: { AND: [visibleLessonsWhere(viewer), { id: lessonId }] },
-    select: { id: true, title: true, date: true, team: { select: { name: true } } },
+    select: { id: true, title: true, date: true, teamId: true, team: { select: { name: true } } },
   });
   if (!lesson) throw new ActionFailure("notFound");
+  if (!canCoach(viewer.teams, lesson.teamId)) throw new ActionFailure("forbidden", "teamForbidden");
   return lesson;
 }
 

@@ -121,3 +121,16 @@ export function nextServerAction(page: Page) {
     (r) => r.request().method() === "POST" && r.request().headers()["next-action"] !== undefined,
   );
 }
+
+/**
+ * Opens a new lesson and stores it with "Entwurf speichern"; afterwards the
+ * editor saves automatically. Leaves the editor of the stored lesson open.
+ */
+export async function createLesson(page: Page, title: string) {
+  await page.goto("/lessons");
+  await page.getByRole("link", { name: "Neue Lektionsvorbereitung" }).first().click();
+  await page.waitForURL(/\/lessons\/new$/);
+  await page.getByLabel("Lektionstitel").fill(title);
+  await page.getByRole("button", { name: "Entwurf speichern" }).click();
+  await page.waitForURL(/\/lessons\/[0-9a-f-]{36}$/);
+}

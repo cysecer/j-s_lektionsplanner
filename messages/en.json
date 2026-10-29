@@ -159,7 +159,8 @@
     "smtpInsecure": "Unencrypted connections are not allowed on this server.",
     "smtpPasswordAgain": "Server or username changed: please enter the password again.",
     "recipientsRequired": "Please enter at least one email address.",
-    "tooManyRecipients": "At most 20 recipients."
+    "tooManyRecipients": "At most 20 recipients.",
+    "teamsRequired": "Please give at least one team a role."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -373,7 +374,10 @@
       "label": "Period",
       "upcoming": "Upcoming ({count})",
       "past": "Past ({count})"
-    }
+    },
+    "saveDraft": "Save draft",
+    "draftSaved": "Draft saved. Changes are now saved automatically.",
+    "notSavedYet": "Not saved yet"
   },
   "blocks": {
     "title": "Program blocks",
@@ -549,9 +553,20 @@
       "removeConfirm": "Remove {name} from the club? They will be signed out on all devices immediately.",
       "roleHints": {
         "ADMIN": "Everything, incl. settings and people",
-        "COACH": "Edit program blocks and lessons, send PDFs",
-        "READER": "View and create PDFs (limited), no sending"
-      }
+        "COACH": "Plan and edit in all teams, send PDFs and emails",
+        "READER": "View all teams and create PDFs (limited), no sending",
+        "TEAMS": "E.g. coach of the kids and read only for the youth"
+      },
+      "allTeams": "{role} in all teams",
+      "perTeam": "Set per team …",
+      "noTeams": "No team assigned",
+      "noTeamsInClub": "There are no teams yet.",
+      "noAccess": "No access",
+      "teamRoles": "Teams",
+      "teamRolesHint": "Teams without access are invisible to the person: neither their lessons nor their blocks.",
+      "editTeams": "Edit teams",
+      "teamsTitle": "Teams of {name}",
+      "teamsIntro": "Per team: Coach (plan and edit) or Read only."
     },
     "tags": {
       "title": "Categories",
@@ -717,7 +732,8 @@
     "mailConnection": "The mail server cannot be reached. Are server and port correct?",
     "mailFailed": "The email could not be sent. Please try again later.",
     "mailQuota": "You have reached your daily email limit. Try again tomorrow.",
-    "mailPasswordAgain": "Please enter the mail server password again."
+    "mailPasswordAgain": "Please enter the mail server password again.",
+    "teamForbidden": "You may not do this in this team. Ask an administrator."
   },
   "sections": {
     "INTRO": "Warm-up",

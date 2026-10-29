@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CustomFieldType, Role } from "@/generated/prisma/enums";
+import { CustomFieldType, TeamRole } from "@/generated/prisma/enums";
 import { localeSchema } from "@/i18n/config";
 import { clockTimeSchema } from "@/lib/lessons/timing";
 
@@ -85,19 +85,40 @@ export const customFieldUpdateSchema = customFieldSchema
   .omit({ type: true })
   .extend({ id: z.uuid() });
 
+/**
+ * What a person may do: everything (admin), one role for all teams
+ * (including teams created later), or a role per team. Teams left out
+ * of the list are invisible to the person.
+ */
+export const accessSchema = z.discriminatedUnion("kind", [
+  z.strictObject({ kind: z.literal("admin") }),
+  z.strictObject({ kind: z.literal("all"), role: z.enum(TeamRole) }),
+  z.strictObject({
+    kind: z.literal("teams"),
+    teams: z
+      .array(z.strictObject({ teamId: z.uuid(), role: z.enum(TeamRole) }))
+      .max(200)
+      .refine((list) => list.length > 0, { message: "validation.teamsRequired" })
+      .refine((list) => new Set(list.map((x) => x.teamId)).size === list.length, {
+        message: "validation.invalid",
+      }),
+  }),
+]);
+export type AccessInput = z.output<typeof accessSchema>;
+
 export const invitePersonSchema = z.strictObject({
   email: z
     .email({ message: "validation.email" })
     .max(254)
     .transform((e) => e.toLowerCase()),
-  role: z.enum(Role),
+  access: accessSchema,
   coachId: z.uuid().nullable(),
   locale: localeSchema,
 });
 
 export const memberUpdateSchema = z.strictObject({
   membershipId: z.uuid(),
-  role: z.enum(Role),
+  access: accessSchema,
   coachId: z.uuid().nullable(),
 });
 

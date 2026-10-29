@@ -159,7 +159,8 @@
     "smtpInsecure": "Le connessioni non crittografate non sono consentite su questo server.",
     "smtpPasswordAgain": "Server o nome utente modificati: inserisci di nuovo la password.",
     "recipientsRequired": "Indica almeno un indirizzo e-mail.",
-    "tooManyRecipients": "Al massimo 20 destinatari."
+    "tooManyRecipients": "Al massimo 20 destinatari.",
+    "teamsRequired": "Assegna un ruolo ad almeno un gruppo."
   },
   "errors": {
     "unauthorized": "Accedi, per favore.",
@@ -373,7 +374,10 @@
       "label": "Periodo",
       "upcoming": "In arrivo ({count})",
       "past": "Passate ({count})"
-    }
+    },
+    "saveDraft": "Salva bozza",
+    "draftSaved": "Bozza salvata. Da ora le modifiche vengono salvate automaticamente.",
+    "notSavedYet": "Non ancora salvata"
   },
   "blocks": {
     "title": "Blocchi di programma",
@@ -548,10 +552,21 @@
       "remove": "Rimuovi",
       "removeConfirm": "Rimuovere {name} dalla società? La persona verrà disconnessa subito da tutti i dispositivi.",
       "roleHints": {
-        "ADMIN": "Tutto, incluse impostazioni e persone",
-        "COACH": "Modificare blocchi di programma e lezioni, inviare PDF",
-        "READER": "Consultare e creare PDF (limitato), nessun invio"
-      }
+        "ADMIN": "Tutto, incl. impostazioni e persone",
+        "COACH": "Pianificare e modificare in tutti i gruppi, inviare PDF ed e-mail",
+        "READER": "Vedere tutti i gruppi e creare PDF (limitato), nessun invio",
+        "TEAMS": "P. es. monitore dei Kids e sola lettura per la Gioventù"
+      },
+      "allTeams": "{role} in tutti i gruppi",
+      "perTeam": "Definisci per gruppo …",
+      "noTeams": "Nessun gruppo assegnato",
+      "noTeamsInClub": "Non ci sono ancora gruppi.",
+      "noAccess": "Nessun accesso",
+      "teamRoles": "Gruppi",
+      "teamRolesHint": "La persona non vede i gruppi senza accesso: né le loro lezioni né i loro blocchi.",
+      "editTeams": "Modifica gruppi",
+      "teamsTitle": "Gruppi di {name}",
+      "teamsIntro": "Per gruppo: monitore/monitrice (pianificare e modificare) o sola lettura."
     },
     "tags": {
       "title": "Categorie",
@@ -717,7 +732,8 @@
     "mailConnection": "Il server di posta non è raggiungibile. Server e porta sono corretti?",
     "mailFailed": "Non è stato possibile inviare l’e-mail. Riprova più tardi.",
     "mailQuota": "Hai raggiunto il limite giornaliero di e-mail. Domani si potrà di nuovo.",
-    "mailPasswordAgain": "Inserisci di nuovo la password del server di posta."
+    "mailPasswordAgain": "Inserisci di nuovo la password del server di posta.",
+    "teamForbidden": "Non hai questo diritto in questo gruppo. Chiedi a un amministratore."
   },
   "sections": {
     "INTRO": "Introduzione",

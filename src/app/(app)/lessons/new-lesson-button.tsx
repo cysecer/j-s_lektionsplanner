@@ -1,28 +1,17 @@
-"use client";
-
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { useAction } from "@/lib/use-action";
-import { createLessonAction } from "./actions";
 
-/** Creates a draft right away (so autosave works from the first keystroke). */
+/** Opens an empty, not yet stored lesson; "Entwurf speichern" creates it. */
 export function NewLessonButton() {
   const t = useTranslations("lessons");
-  const router = useRouter();
-  const create = useAction(createLessonAction);
   return (
-    <Button
-      className="h-11"
-      disabled={create.pending}
-      onClick={async () => {
-        const lesson = await create.run({});
-        if (lesson) router.push(`/lessons/${lesson.id}`);
-      }}
-    >
-      <Plus aria-hidden />
-      {t("new")}
+    <Button asChild className="h-11">
+      <Link href="/lessons/new">
+        <Plus aria-hidden />
+        {t("new")}
+      </Link>
     </Button>
   );
 }

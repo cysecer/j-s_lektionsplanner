@@ -9,7 +9,8 @@ import { SectionCard } from "@/components/settings/section-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { requireViewer } from "@/lib/auth/session";
-import { visibleLessonsWhere } from "@/lib/lessons/visibility";
+import { canEditBlock } from "@/lib/auth/team-access";
+import { visibleBlocksWhere, visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { getBlock, getBlockUsage } from "@/lib/blocks/queries";
 import { db } from "@/lib/db";
 import { formatDate, formatNumber } from "@/lib/format";
@@ -23,7 +24,7 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
   const viewer = await requireViewer();
   const { id } = await parsePageInput(z.object({ id: z.uuid() }), params);
   const [block, usage, fields, t] = await Promise.all([
-    getBlock(viewer.clubId, id),
+    getBlock(visibleBlocksWhere(viewer), id),
     getBlockUsage(visibleLessonsWhere(viewer), id),
     // Archived fields too: their values stay visible.
     db.customField.findMany({
@@ -66,7 +67,10 @@ export default async function BlockPage({ params }: PageProps<"/blocks/[id]">) {
       <PageHeader
         title={block.title}
         actions={
-          viewer.permissions.editLibrary ? (
+          canEditBlock(
+            viewer.teams,
+            block.teams.map((x) => x.teamId),
+          ) ? (
             <>
               <Button asChild className="h-11">
                 <Link href={`/blocks/${block.id}/edit`}>

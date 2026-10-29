@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, newDevice, test } from "./fixtures";
-import { acceptInvitation, invite, uniqueEmail } from "./helpers";
+import { acceptInvitation, createLesson, invite, uniqueEmail } from "./helpers";
 
 async function signInAs(page: Page, role: "COACH" | "READER", name: string) {
   await acceptInvitation(page, invite(uniqueEmail(role.toLowerCase()), role), name);
@@ -16,10 +16,7 @@ const itemTitles = async (page: Page, name: string) =>
     .evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
 
 async function newLesson(page: Page, title: string) {
-  await page.goto("/lessons");
-  await page.getByRole("button", { name: "Neue Lektionsvorbereitung" }).first().click();
-  await expect(page).toHaveURL(/\/lessons\/[0-9a-f-]{36}$/);
-  await page.getByLabel("Lektionstitel").fill(title);
+  await createLesson(page, title);
   await saved(page);
 }
 
@@ -29,6 +26,39 @@ async function addFromLibrary(page: Page, search: string, title: string) {
   await panel.getByRole("button", { name: `«${title}» hinzufügen` }).click();
   await expect(page.getByText(`«${title}» hinzugefügt.`)).toBeVisible();
 }
+
+test("a new lesson is stored only with «Entwurf speichern», then autosaved", async ({ page }) => {
+  await signInAs(page, "COACH", "Nora Neu");
+  const title = `Nur probiert ${Date.now()}`;
+  await page.goto("/lessons");
+  await page.getByRole("link", { name: "Neue Lektionsvorbereitung" }).first().click();
+  await expect(page).toHaveURL(/\/lessons\/new$/);
+  await expect(page.getByText("Noch nicht gespeichert")).toBeVisible();
+  // Pre-filled like before: author, today, team times.
+  await expect(page.getByLabel("Autor/-in", { exact: true })).toHaveValue("Nora Neu");
+  await expect(page.getByRole("button", { name: "PDF herunterladen" })).toHaveCount(0);
+
+  // Without a title it is refused; nothing is stored.
+  await page.getByRole("button", { name: "Entwurf speichern" }).click();
+  await expect(page.getByLabel("Lektionstitel")).toHaveAttribute("aria-invalid", "true");
+  await expect(page).toHaveURL(/\/lessons\/new$/);
+
+  // Leaving without saving leaves no lesson behind.
+  await page.getByLabel("Lektionstitel").fill(title);
+  await page.goto(`/lessons?team=all&q=${encodeURIComponent(title)}`);
+  await expect(page.getByRole("status").filter({ hasText: "Keine Lektionen" })).toBeVisible();
+
+  // Saved once, then the button is gone and changes save themselves.
+  await createLesson(page, title);
+  await expect(page.getByText("Entwurf gespeichert.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Entwurf speichern" })).toHaveCount(0);
+  await page.getByLabel("Lektionsdauer (Minuten)").fill("75");
+  await saved(page);
+  await page.reload();
+  await expect(page.getByLabel("Lektionsdauer (Minuten)")).toHaveValue("75");
+  await page.goto(`/lessons?team=all&q=${encodeURIComponent(title)}`);
+  await expect(page.getByRole("status").filter({ hasText: "1 Lektion" })).toBeVisible();
+});
 
 test("plan a lesson: library, quick items, timing, autosave", async ({ page }) => {
   await signInAs(page, "COACH", "Lina Lektion");
@@ -224,7 +254,7 @@ test("duplicate a lesson; readers only see it", async ({ page, browser }) => {
   await expect(reader.getByRole("heading", { name: "Vorlage", level: 1 })).toBeVisible();
   await expect(reader.getByText("Keulenfussball")).toBeVisible();
   await expect(reader.getByLabel("Lektionstitel")).toHaveCount(0);
-  await expect(reader.getByRole("button", { name: "Neue Lektionsvorbereitung" })).toHaveCount(0);
+  await expect(reader.getByRole("link", { name: "Neue Lektionsvorbereitung" })).toHaveCount(0);
   await readerDevice.close();
 });
 

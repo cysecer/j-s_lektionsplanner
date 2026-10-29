@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { requireViewer } from "@/lib/auth/session";
+import { canCoach } from "@/lib/auth/team-access";
 import { lessonToEditorValues } from "@/lib/lessons/editor-values";
 import { getLesson, getLessonOptions } from "@/lib/lessons/queries";
 import { visibleLessonsWhere } from "@/lib/lessons/visibility";
@@ -14,7 +15,7 @@ export default async function LessonPage({ params, searchParams }: PageProps<"/l
   const lesson = await getLesson(visibleLessonsWhere(viewer), id);
   if (!lesson) notFound();
 
-  if (!viewer.permissions.editLessons) {
+  if (!canCoach(viewer.teams, lesson.teamId)) {
     const { layout } = await parsePageInput(
       z.object({ layout: z.uuid().optional().catch(undefined) }),
       searchParams,
@@ -26,7 +27,7 @@ export default async function LessonPage({ params, searchParams }: PageProps<"/l
     ...lesson.presentCoaches.map((c) => c.coachId),
     ...lesson.items.map((i) => i.responsibleCoachId).filter((x): x is string => Boolean(x)),
   ];
-  const options = await getLessonOptions(viewer.clubId, lesson.teamId, usedCoachIds);
+  const options = await getLessonOptions(viewer.clubId, viewer.teams, lesson.teamId, usedCoachIds);
   const values = lessonToEditorValues(lesson);
 
   return (

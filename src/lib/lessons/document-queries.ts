@@ -53,12 +53,13 @@ export async function getLessonDocument(
   scope: Prisma.LessonWhereInput & { clubId: string },
   lessonId: string,
   sectionTitle: SectionTitle,
-): Promise<{ document: LessonDocument; layoutId: string | null } | null> {
+): Promise<{ document: LessonDocument; layoutId: string | null; teamId: string | null } | null> {
   const lesson = await getLesson(scope, lessonId);
   if (!lesson) return null;
   return {
     document: await toDocument(scope.clubId, lesson, sectionTitle),
     layoutId: lesson.layoutId,
+    teamId: lesson.teamId,
   };
 }
 

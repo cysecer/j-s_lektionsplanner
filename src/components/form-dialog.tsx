@@ -53,7 +53,7 @@ export function FormDialog({
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[92vh] overflow-y-auto">
         <form onSubmit={submit} noValidate className="grid gap-5">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

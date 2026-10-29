@@ -1,6 +1,13 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { deleteAssetIfUnused, requireClubAssets } from "@/lib/assets/service";
+import {
+  canChangeBlockTeams,
+  canCoach,
+  canEditBlock,
+  canSeeBlock,
+  type TeamAccess,
+} from "@/lib/auth/team-access";
 import { db } from "@/lib/db";
 import type { RichText } from "@/lib/rich-text/schema";
 import { isRichTextEmpty } from "@/lib/rich-text/utils";
@@ -114,7 +121,19 @@ async function prepare(
   };
 }
 
-export async function createBlock(clubId: string, input: BlockInput) {
+/** Who acts: the club and their role per team. */
+export type BlockActor = { clubId: string; teams: TeamAccess };
+
+const forbidden = () => new ActionFailure("forbidden", "teamForbidden");
+
+export async function createBlock(actor: BlockActor, input: BlockInput) {
+  const clubId = actor.clubId;
+  if (
+    !canChangeBlockTeams(actor.teams, [], input.teamIds) ||
+    !canEditBlock(actor.teams, input.teamIds)
+  ) {
+    throw forbidden();
+  }
   const data = await prepare(clubId, input, {});
   return db.programBlock.create({
     data: { clubId, ...data.scalars, ...data.relations },
@@ -122,12 +141,27 @@ export async function createBlock(clubId: string, input: BlockInput) {
   });
 }
 
-export async function updateBlock(clubId: string, id: string, input: BlockInput) {
+/**
+ * Saves a block. The form only offers teams the person coaches, so the
+ * block's other team assignments are kept as they are.
+ */
+export async function updateBlock(actor: BlockActor, id: string, raw: BlockInput) {
+  const clubId = actor.clubId;
   const existing = await db.programBlock.findFirst({
     where: { id, clubId },
-    select: { customValues: true, sketches: { select: { assetId: true } } },
+    select: {
+      customValues: true,
+      sketches: { select: { assetId: true } },
+      teams: { select: { teamId: true } },
+    },
   });
   if (!existing) throw new ActionFailure("notFound");
+  const before = existing.teams.map((t) => t.teamId);
+  if (!canSeeBlock(actor.teams, before)) throw new ActionFailure("notFound");
+  if (!canEditBlock(actor.teams, before)) throw forbidden();
+  const kept = before.filter((teamId) => !canCoach(actor.teams, teamId));
+  const input = { ...raw, teamIds: [...new Set([...raw.teamIds, ...kept])] };
+  if (!canChangeBlockTeams(actor.teams, before, input.teamIds)) throw forbidden();
   const stored = (existing.customValues ?? {}) as Record<string, unknown>;
   const data = await prepare(clubId, input, stored);
 
@@ -146,13 +180,19 @@ export async function updateBlock(clubId: string, id: string, input: BlockInput)
   return { id };
 }
 
-/** Copies a block incl. relations; images are shared (they are immutable). */
-export async function duplicateBlock(clubId: string, id: string, titleSuffix: string) {
+/**
+ * Copies a block incl. relations; images are shared (they are immutable).
+ * The copy belongs only to the teams of the original the person coaches.
+ */
+export async function duplicateBlock(actor: BlockActor, id: string, titleSuffix: string) {
+  const clubId = actor.clubId;
   const source = await db.programBlock.findFirst({
     where: { id, clubId },
     include: { tags: true, teams: true, sketches: true },
   });
-  if (!source) throw new ActionFailure("notFound");
+  const sourceTeams = source?.teams.map((t) => t.teamId) ?? [];
+  if (!source || !canSeeBlock(actor.teams, sourceTeams)) throw new ActionFailure("notFound");
+  if (!canEditBlock(actor.teams, sourceTeams)) throw forbidden();
   const title = `${source.title} ${titleSuffix}`.slice(0, 150);
   return db.programBlock.create({
     data: {
@@ -174,7 +214,11 @@ export async function duplicateBlock(clubId: string, id: string, titleSuffix: st
       customValues: source.customValues ?? {},
       searchText: source.searchText.replace(source.title, title),
       tags: { create: source.tags.map((t) => ({ tagId: t.tagId })) },
-      teams: { create: source.teams.map((t) => ({ teamId: t.teamId })) },
+      teams: {
+        create: sourceTeams
+          .filter((teamId) => canCoach(actor.teams, teamId))
+          .map((teamId) => ({ teamId })),
+      },
       sketches: {
         create: source.sketches.map((s) => ({ assetId: s.assetId, sortOrder: s.sortOrder })),
       },
@@ -184,12 +228,18 @@ export async function duplicateBlock(clubId: string, id: string, titleSuffix: st
 }
 
 /** Lessons keep their copies; their link to the library block is cleared. */
-export async function deleteBlock(clubId: string, id: string) {
+export async function deleteBlock(actor: BlockActor, id: string) {
   const block = await db.programBlock.findFirst({
-    where: { id, clubId },
-    select: { customValues: true, sketches: { select: { assetId: true } } },
+    where: { id, clubId: actor.clubId },
+    select: {
+      customValues: true,
+      sketches: { select: { assetId: true } },
+      teams: { select: { teamId: true } },
+    },
   });
-  if (!block) throw new ActionFailure("notFound");
+  const teams = block?.teams.map((t) => t.teamId) ?? [];
+  if (!block || !canSeeBlock(actor.teams, teams)) throw new ActionFailure("notFound");
+  if (!canEditBlock(actor.teams, teams)) throw forbidden();
   await db.programBlock.delete({ where: { id } });
   const images = [
     ...block.sketches.map((s) => s.assetId),

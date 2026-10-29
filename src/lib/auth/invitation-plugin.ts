@@ -43,7 +43,10 @@ export const invitationPlugin = () =>
               message: "Invitation is invalid or expired",
             });
           }
-          const invitation = await db.invitation.findUniqueOrThrow({ where: { tokenHash } });
+          const invitation = await db.invitation.findUniqueOrThrow({
+            where: { tokenHash },
+            include: { teams: { select: { teamId: true, role: true } } },
+          });
 
           try {
             const existing = await ctx.context.internalAdapter.findUserByEmail(invitation.email);
@@ -59,15 +62,32 @@ export const invitationPlugin = () =>
                 { method: "invitation" },
               ));
 
-            await db.membership.upsert({
-              where: { userId_clubId: { userId: userRecord.id, clubId: invitation.clubId } },
-              create: {
-                userId: userRecord.id,
-                clubId: invitation.clubId,
-                role: invitation.role,
-                coachId: invitation.coachId,
-              },
-              update: { role: invitation.role, coachId: invitation.coachId ?? undefined },
+            // Role and team roles exactly as invited (replacing earlier ones).
+            const access = {
+              role: invitation.role,
+              allTeamsRole: invitation.allTeamsRole,
+              teams: { create: invitation.teams },
+            };
+            await db.$transaction(async (tx) => {
+              const existingMembership = await tx.membership.findUnique({
+                where: { userId_clubId: { userId: userRecord.id, clubId: invitation.clubId } },
+                select: { id: true },
+              });
+              if (existingMembership) {
+                await tx.membershipTeam.deleteMany({
+                  where: { membershipId: existingMembership.id },
+                });
+              }
+              await tx.membership.upsert({
+                where: { userId_clubId: { userId: userRecord.id, clubId: invitation.clubId } },
+                create: {
+                  userId: userRecord.id,
+                  clubId: invitation.clubId,
+                  coachId: invitation.coachId,
+                  ...access,
+                },
+                update: { coachId: invitation.coachId ?? undefined, ...access },
+              });
             });
 
             const session = await ctx.context.internalAdapter.createSession(userRecord.id);

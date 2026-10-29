@@ -10,7 +10,7 @@
 | Passwort (Ersatz)      | 15–128 Zeichen, Unicode erlaubt, keine Zusammensetzungsregeln, kein Ablaufzwang. Abgelehnt werden bekannte Passwörter aus Datenlecks ([data/](data/README.md)), Wiederholungen, Folgen und Passwörter aus Name/E-Mail/Verein. Gespeichert mit argon2id. |
 | Fehlversuche           | Nach `AUTH_MAX_FAILED_SIGNINS` (Standard 10) falschen Passwörtern wird die Passwort-Anmeldung für `AUTH_LOCKOUT_MINUTES` gesperrt. Passkey und Anmeldelink funktionieren weiter. Zusätzlich Rate-Limits pro IP.                                         |
 | Sitzungen              | Abmeldung nach `SESSION_IDLE_MINUTES` Inaktivität (Standard 60) und spätestens nach `SESSION_MAX_HOURS` (Standard 12). Cookies HttpOnly, SameSite=Lax, in Produktion Secure. Passwortänderung meldet alle anderen Geräte ab.                            |
-| Rollen                 | Administrator/-in, Leiter/-in, Nur lesen. Jede Server-Aktion prüft Sitzung und Rolle serverseitig.                                                                                                                                                      |
+| Rollen                 | Administrator/-in für alles; sonst Leiter/-in oder Nur lesen, für alle Riegen oder pro Riege (siehe unten). Jede Server-Aktion prüft Sitzung und Rolle serverseitig.                                                                                    |
 
 ### Bewusste Abweichung: Anmeldelink per E-Mail
 
@@ -19,6 +19,23 @@ aufgenommen, weil er für ehrenamtliche Leitende ohne Passkey die einfachste Anm
 Risiko entspricht dem einer Passwort-Zurücksetzung per E-Mail (wer das Postfach kontrolliert,
 kommt hinein). Massnahmen: kurze Gültigkeit, Einmalverwendung, Rate-Limit, kein Hinweis auf
 existierende Konten, und die App drängt aktiv zu Passkeys.
+
+## Rechte pro Riege
+
+- Admins sehen und bearbeiten alles. Alle anderen haben entweder eine Rolle für alle Riegen
+  (Leiter/-in oder Nur lesen, gilt auch für später angelegte Riegen) oder eine Rolle pro Riege.
+  Riegen ohne Rolle sind für die Person unsichtbar: Lektionen, Programmblöcke und die
+  Riegen-Auswahl.
+- Bearbeiten, Löschen, Duplizieren und E-Mail-Versand einer Lektion verlangen die Rolle
+  Leiter/-in in der Riege dieser Lektion; eine Lektion lässt sich nur in eigene Leiter-Riegen
+  verschieben. Lektionen ohne Riege und vereinsweite Programmblöcke sehen alle Mitglieder;
+  bearbeiten darf sie, wer mindestens eine Riege leitet.
+- Programmblöcke bearbeitet, wer eine ihrer Riegen leitet. Riegen-Zuordnungen kann man nur für
+  eigene Leiter-Riegen hinzufügen oder entfernen; die übrigen bleiben erhalten.
+- Die Regeln liegen an einer Stelle ([src/lib/auth/team-access.ts](src/lib/auth/team-access.ts),
+  [src/lib/lessons/visibility.ts](src/lib/lessons/visibility.ts)) und werden serverseitig bei
+  jeder Abfrage und Aktion angewendet; Änderungen durch Admins gelten ab der nächsten Anfrage.
+- Das PDF-Kontingent für Lesende gilt für Personen, die keine Riege leiten.
 
 ## Sichtbarkeit von Lektionen
 

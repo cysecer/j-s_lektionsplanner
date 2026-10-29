@@ -159,7 +159,8 @@
     "smtpInsecure": "Unverschlüsselte Verbindungen sind auf diesem Server nicht erlaubt.",
     "smtpPasswordAgain": "Server oder Benutzername wurden geändert: Bitte gib das Passwort nochmals ein.",
     "recipientsRequired": "Bitte mindestens eine E-Mail-Adresse angeben.",
-    "tooManyRecipients": "Höchstens 20 Empfängerinnen und Empfänger."
+    "tooManyRecipients": "Höchstens 20 Empfängerinnen und Empfänger.",
+    "teamsRequired": "Bitte mindestens einer Riege eine Rolle geben."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -373,7 +374,10 @@
       "label": "Zeitraum",
       "upcoming": "Kommende ({count})",
       "past": "Vergangene ({count})"
-    }
+    },
+    "saveDraft": "Entwurf speichern",
+    "draftSaved": "Entwurf gespeichert. Änderungen werden ab jetzt automatisch gespeichert.",
+    "notSavedYet": "Noch nicht gespeichert"
   },
   "blocks": {
     "title": "Programmblöcke",
@@ -549,9 +553,20 @@
       "removeConfirm": "{name} aus dem Verein entfernen? Die Person wird sofort auf allen Geräten abgemeldet.",
       "roleHints": {
         "ADMIN": "Alles, inkl. Einstellungen und Personen",
-        "COACH": "Programmblöcke und Lektionen bearbeiten, PDFs senden",
-        "READER": "Ansehen und PDFs erstellen (begrenzt), kein Versand"
-      }
+        "COACH": "In allen Riegen planen und bearbeiten, PDFs und E-Mails senden",
+        "READER": "Alle Riegen ansehen und PDFs erstellen (begrenzt), kein Versand",
+        "TEAMS": "Z. B. Leiter/-in bei den Kids und Nur lesen bei der Jugi"
+      },
+      "allTeams": "{role} in allen Riegen",
+      "perTeam": "Pro Riege festlegen …",
+      "noTeams": "Keine Riege zugeteilt",
+      "noTeamsInClub": "Es gibt noch keine Riegen.",
+      "noAccess": "Kein Zugang",
+      "teamRoles": "Riegen",
+      "teamRolesHint": "Riegen ohne Zugang sieht die Person nicht: weder Lektionen noch Programmblöcke dieser Riege.",
+      "editTeams": "Riegen bearbeiten",
+      "teamsTitle": "Riegen von {name}",
+      "teamsIntro": "Pro Riege: Leiter/-in (planen und bearbeiten) oder Nur lesen."
     },
     "tags": {
       "title": "Kategorien",
@@ -717,7 +732,8 @@
     "mailConnection": "Der Mailserver ist nicht erreichbar. Stimmen Server und Port?",
     "mailFailed": "Die E-Mail konnte nicht gesendet werden. Bitte versuche es später nochmals.",
     "mailQuota": "Du hast dein Tageslimit für E-Mails erreicht. Morgen geht es wieder.",
-    "mailPasswordAgain": "Bitte gib das Passwort des Mailservers nochmals ein."
+    "mailPasswordAgain": "Bitte gib das Passwort des Mailservers nochmals ein.",
+    "teamForbidden": "Das darfst du in dieser Riege nicht. Frag eine Administratorin oder einen Administrator."
   },
   "sections": {
     "INTRO": "Einleitung",

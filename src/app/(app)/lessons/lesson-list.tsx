@@ -22,21 +22,15 @@ export type LessonRow = {
   meta: string;
   createdByName: string | null;
   status: "DRAFT" | "FINAL";
+  /** The person coaches the lesson's team. */
+  canDelete: boolean;
 };
 
 /**
- * The lesson list. Coaches delete single lessons; admins can also select
+ * The lesson list. Coaches delete single lessons of their teams; admins can also select
  * several (or all on the page) and delete them together.
  */
-export function LessonList({
-  lessons,
-  canDelete,
-  canSelect,
-}: {
-  lessons: LessonRow[];
-  canDelete: boolean;
-  canSelect: boolean;
-}) {
+export function LessonList({ lessons, canSelect }: { lessons: LessonRow[]; canSelect: boolean }) {
   const t = useTranslations("lessons");
   const [rows, setRows] = useSyncedState(lessons);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -130,7 +124,7 @@ export function LessonList({
                 {t(`status.${lesson.status}`)}
               </Badge>
             </Link>
-            {canDelete ? (
+            {lesson.canDelete ? (
               <ConfirmDialog
                 trigger={
                   <Button

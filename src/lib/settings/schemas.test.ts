@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { toFieldErrors } from "@/lib/server/result";
 import {
   clubSettingsSchema,
   coachSchema,
   customFieldUpdateSchema,
   displayName,
+  accessSchema,
   invitePersonSchema,
   reorderSchema,
   sectionUpdateSchema,
@@ -138,14 +140,49 @@ describe("other schemas", () => {
     expect(
       invitePersonSchema.parse({
         email: "Jan@Example.CH",
-        role: "COACH",
+        access: { kind: "all", role: "COACH" },
         coachId: null,
         locale: "de-CH",
       }).email,
     ).toBe("jan@example.ch");
     expect(
-      invitePersonSchema.safeParse({ email: "x", role: "OWNER", coachId: null, locale: "de-CH" })
-        .success,
+      invitePersonSchema.safeParse({
+        email: "x",
+        access: { kind: "all", role: "OWNER" },
+        coachId: null,
+        locale: "de-CH",
+      }).success,
     ).toBe(false);
+  });
+
+  it("validates access per team", () => {
+    const parse = (access: unknown) => accessSchema.safeParse(access);
+    expect(parse({ kind: "admin" }).success).toBe(true);
+    expect(parse({ kind: "admin", role: "COACH" }).success).toBe(false);
+    expect(parse({ kind: "all", role: "READER" }).success).toBe(true);
+    expect(parse({ kind: "all", role: "ADMIN" }).success).toBe(false);
+    expect(
+      parse({
+        kind: "teams",
+        teams: [
+          { teamId: uuid(1), role: "COACH" },
+          { teamId: uuid(2), role: "READER" },
+        ],
+      }).success,
+    ).toBe(true);
+    const empty = parse({ kind: "teams", teams: [] });
+    expect(empty.success || toFieldErrors(empty.error).teams).toEqual(["validation.teamsRequired"]);
+    expect(
+      parse({
+        kind: "teams",
+        teams: [
+          { teamId: uuid(1), role: "COACH" },
+          { teamId: uuid(1), role: "READER" },
+        ],
+      }).success,
+    ).toBe(false);
+    expect(parse({ kind: "teams", teams: [{ teamId: "kids", role: "COACH" }] }).success).toBe(
+      false,
+    );
   });
 });

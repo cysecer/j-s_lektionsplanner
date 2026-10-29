@@ -10,10 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FORMAT_LOCALE } from "@/i18n/config";
 import { requireViewer } from "@/lib/auth/session";
+import { canCoach } from "@/lib/auth/team-access";
 import { formatDateInput, weekdayShort } from "@/lib/date-input";
 import { db } from "@/lib/db";
 import { formatTimeOfDay, toIsoDate } from "@/lib/format";
 import { listLessons } from "@/lib/lessons/queries";
+import { visibleTeamsWhere } from "@/lib/lessons/visibility";
 import { parsePageInput } from "@/lib/server/params";
 import { cn } from "@/lib/utils";
 import { LessonList } from "./lesson-list";
@@ -39,7 +41,7 @@ export default async function LessonsPage({ searchParams }: PageProps<"/lessons"
   const t = await getTranslations();
   const search = await parsePageInput(searchSchema, searchParams, {});
   const teams = await db.team.findMany({
-    where: { clubId: viewer.clubId, archivedAt: null },
+    where: visibleTeamsWhere(viewer),
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     select: { id: true, name: true },
   });
@@ -87,6 +89,7 @@ export default async function LessonsPage({ searchParams }: PageProps<"/lessons"
         .join(" · "),
       createdByName: lesson.createdByName,
       status: lesson.status,
+      canDelete: canCoach(viewer.teams, lesson.teamId),
     };
   });
 
@@ -210,11 +213,7 @@ export default async function LessonsPage({ searchParams }: PageProps<"/lessons"
           }
         />
       ) : (
-        <LessonList
-          lessons={rows}
-          canDelete={viewer.permissions.editLessons}
-          canSelect={viewer.role === "ADMIN"}
-        />
+        <LessonList lessons={rows} canSelect={viewer.role === "ADMIN"} />
       )}
 
       {pageCount > 1 ? (

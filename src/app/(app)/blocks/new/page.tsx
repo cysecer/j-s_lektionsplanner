@@ -8,7 +8,7 @@ import { BlockForm } from "../block-form";
 export default async function NewBlockPage() {
   const viewer = await requireViewer("COACH");
   const t = await getTranslations("blocks");
-  const options = await getBlockOptions(viewer.clubId);
+  const options = await getBlockOptions(viewer.clubId, viewer.teams, "edit");
   // New blocks belong to the team chosen in the header, if any.
   const initial = {
     ...EMPTY_BLOCK,

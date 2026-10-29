@@ -1,31 +1,29 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { Difficulty } from "@/generated/prisma/enums";
 import { searchBlocks } from "@/lib/blocks/queries";
-import { lessonItemSchema, lessonSaveSchema } from "@/lib/lessons/schema";
+import { lessonDraftSchema, lessonItemSchema, lessonSaveSchema } from "@/lib/lessons/schema";
 import {
   createBlockFromItem,
-  createLesson,
+  createLessonFromDraft,
   deleteLesson,
   duplicateLesson,
   overwriteBlockFromItem,
   saveLesson,
   snapshotFromBlock,
 } from "@/lib/lessons/service";
-import { visibleLessonsWhere } from "@/lib/lessons/visibility";
 import { action } from "@/lib/server/action";
 
 const idInput = z.strictObject({ id: z.uuid() });
 
+/** "Entwurf speichern": stores a new lesson for the first time. */
 export const createLessonAction = action({
   role: "COACH",
-  input: z.strictObject({}),
-  handler: async (_input, { viewer }) => {
-    const t = await getTranslations("lessons");
-    const lesson = await createLesson(viewer, t("untitled"));
+  input: lessonDraftSchema,
+  handler: async (input, { viewer }) => {
+    const lesson = await createLessonFromDraft(viewer, input);
     revalidatePath("/lessons");
     return lesson;
   },
@@ -55,7 +53,7 @@ export const deleteLessonAction = action({
   role: "COACH",
   input: idInput,
   handler: async ({ id }, { viewer }) => {
-    await deleteLesson(visibleLessonsWhere(viewer), id);
+    await deleteLesson(viewer, id);
     revalidatePath("/lessons");
     return null;
   },
@@ -72,9 +70,8 @@ export const deleteLessonsAction = action({
       .refine((ids) => new Set(ids).size === ids.length, { message: "validation.invalid" }),
   }),
   handler: async ({ ids }, { viewer }) => {
-    const scope = visibleLessonsWhere(viewer);
     // One by one: each deletion also removes images no longer used anywhere.
-    for (const id of ids) await deleteLesson(scope, id);
+    for (const id of ids) await deleteLesson(viewer, id);
     revalidatePath("/lessons");
     return { count: ids.length };
   },
@@ -96,7 +93,7 @@ export const searchLibraryAction = action({
     page: z.int().min(1).max(10_000).optional(),
   }),
   handler: async ({ teamId, q, material, ...search }, { viewer }) => {
-    const result = await searchBlocks(viewer.clubId, {
+    const result = await searchBlocks(viewer.clubId, viewer.teams, {
       ...search,
       q: q || undefined,
       material: material || undefined,
@@ -121,14 +118,14 @@ export const searchLibraryAction = action({
 export const blockSnapshotAction = action({
   role: "COACH",
   input: z.strictObject({ blockId: z.uuid() }),
-  handler: async ({ blockId }, { viewer }) => snapshotFromBlock(viewer.clubId, blockId),
+  handler: async ({ blockId }, { viewer }) => snapshotFromBlock(viewer, blockId),
 });
 
 export const overwriteBlockFromItemAction = action({
   role: "COACH",
   input: z.strictObject({ blockId: z.uuid(), item: lessonItemSchema }),
   handler: async ({ blockId, item }, { viewer }) => {
-    await overwriteBlockFromItem(viewer.clubId, blockId, item);
+    await overwriteBlockFromItem(viewer, blockId, item);
     revalidatePath("/blocks");
     return null;
   },
@@ -138,7 +135,7 @@ export const createBlockFromItemAction = action({
   role: "COACH",
   input: z.strictObject({ item: lessonItemSchema, sectionId: z.uuid() }),
   handler: async ({ item, sectionId }, { viewer }) => {
-    const block = await createBlockFromItem(viewer.clubId, item, sectionId);
+    const block = await createBlockFromItem(viewer, item, sectionId);
     revalidatePath("/blocks");
     return block;
   },

@@ -1,6 +1,8 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
+import { coachedTeamIds, visibleTeamIds, type TeamAccess } from "@/lib/auth/team-access";
 import { db } from "@/lib/db";
+import { visibleBlocksSql } from "@/lib/lessons/visibility";
 import {
   BLOCKS_PAGE_SIZE,
   escapeLike,
@@ -17,9 +19,13 @@ export type BlockListItem = Awaited<ReturnType<typeof searchBlocks>>["items"][nu
  */
 export async function searchBlocks(
   clubId: string,
+  teams: TeamAccess,
   search: BlockSearch & { teamId: string | null },
 ) {
   const conditions: Prisma.Sql[] = [Prisma.sql`b."clubId" = ${clubId}::uuid`];
+  // Only blocks of the person's teams (and club-wide ones).
+  const visible = visibleBlocksSql(teams);
+  if (visible) conditions.push(visible);
 
   if (search.q) {
     const like = `%${escapeLike(search.q.toLowerCase())}%`;
@@ -144,10 +150,16 @@ export async function searchBlocks(
   };
 }
 
-/** Everything the block detail and editor pages need, scoped to the club. */
-export async function getBlock(clubId: string, id: string) {
+/**
+ * Everything the block detail and editor pages need. `scope` is the club
+ * or what a person may see (visibleBlocksWhere).
+ */
+export async function getBlock(
+  scope: Prisma.ProgramBlockWhereInput & { clubId: string },
+  id: string,
+) {
   return db.programBlock.findFirst({
-    where: { id, clubId },
+    where: { AND: [scope, { id }] },
     include: {
       tags: { select: { tagId: true, tag: { select: { name: true } } } },
       teams: { select: { teamId: true, team: { select: { name: true } } } },
@@ -183,7 +195,16 @@ export async function listMaterials(clubId: string) {
   return materialSuggestions(rows.map((r) => r.m));
 }
 
-export async function getBlockOptions(clubId: string) {
+/**
+ * Choices for block filters and the block form. `purpose: "edit"` offers
+ * only the teams the person coaches (blocks can be assigned to those).
+ */
+export async function getBlockOptions(
+  clubId: string,
+  access: TeamAccess,
+  purpose: "filter" | "edit" = "filter",
+) {
+  const teamIds = purpose === "edit" ? coachedTeamIds(access) : visibleTeamIds(access);
   const [tags, teams, sections, fields, materials] = await Promise.all([
     db.tag.findMany({
       where: { clubId },
@@ -191,7 +212,7 @@ export async function getBlockOptions(clubId: string) {
       select: { id: true, name: true },
     }),
     db.team.findMany({
-      where: { clubId, archivedAt: null },
+      where: { clubId, archivedAt: null, ...(teamIds ? { id: { in: teamIds } } : {}) },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       select: { id: true, name: true },
     }),

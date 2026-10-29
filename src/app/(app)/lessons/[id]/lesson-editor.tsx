@@ -8,6 +8,7 @@ import {
   Eye,
   Loader2,
   Plus,
+  Save,
   Undo2,
 } from "lucide-react";
 import Link from "next/link";
@@ -28,7 +29,7 @@ import type { LessonOptions } from "@/lib/lessons/queries";
 import type { LessonGeneralValues } from "@/lib/lessons/schema";
 import type { LessonStatus } from "@/generated/prisma/enums";
 import type { FieldErrors } from "@/lib/server/result";
-import { saveLessonAction } from "../actions";
+import { createLessonAction, saveLessonAction } from "../actions";
 import { GeneralForm } from "./general-form";
 import { LessonActions } from "./lesson-actions";
 import { LessonDnd } from "./lesson-dnd";
@@ -47,7 +48,8 @@ export function LessonEditor({
   options,
   creator,
 }: {
-  lessonId: string;
+  /** null: a new lesson, stored only once "Entwurf speichern" is clicked. */
+  lessonId: string | null;
   initialVersion: string;
   initialGeneral: LessonGeneralValues;
   initialItems: EditorItem[];
@@ -98,6 +100,22 @@ export function LessonEditor({
       const startedAt = changes.current;
       setSaveState("saving");
       const { general: lesson, items: currentItems } = latest.current;
+      if (lessonId === null) {
+        // First save of a new lesson: create it, then continue at its own address.
+        const created = await createLessonAction({ lesson, items: currentItems });
+        inFlight.current = false;
+        if (created.ok) {
+          setFieldErrors(undefined);
+          setSaveState("saved");
+          toast.success(t("lessons.draftSaved"));
+          router.replace(`/lessons/${created.data.id}`);
+          return true;
+        }
+        setFieldErrors(created.fieldErrors);
+        setSaveState(created.error === "validation" ? "invalid" : "error");
+        toast.error(actionErrorMessage(t, created));
+        return false;
+      }
       const result = await saveLessonAction({
         id: lessonId,
         baseVersion: version.current,
@@ -123,7 +141,7 @@ export function LessonEditor({
       if (manual) toast.error(actionErrorMessage(t, result));
       return false;
     },
-    [lessonId, t],
+    [lessonId, router, t],
   );
 
   /** Finish or reopen the lesson; saved right away together with any pending changes. */
@@ -160,15 +178,15 @@ export function LessonEditor({
   }
 
   async function openPreview() {
-    if (await savedFirst()) router.push(`/lessons/${lessonId}/preview`);
+    if (lessonId && (await savedFirst())) router.push(`/lessons/${lessonId}/preview`);
   }
 
-  // Autosave drafts shortly after the last change.
+  // Autosave drafts shortly after the last change – once the lesson is stored.
   useEffect(() => {
-    if (saveState !== "dirty" || general.status !== "DRAFT") return;
+    if (lessonId === null || saveState !== "dirty" || general.status !== "DRAFT") return;
     const timer = setTimeout(() => void save(), AUTOSAVE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [general, items, saveState, save]);
+  }, [lessonId, general, items, saveState, save]);
 
   // Warn before leaving with unsaved changes.
   useEffect(() => {
@@ -216,50 +234,72 @@ export function LessonEditor({
             {t("lessons.back")}
           </Link>
         </Button>
-        <div className="flex flex-wrap items-center gap-2">
-          <SaveIndicator state={saveState} isDraft={general.status === "DRAFT"} />
-          {general.status === "FINAL" || saveState === "invalid" || saveState === "error" ? (
+        {lessonId === null ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-muted-foreground text-sm" role="status">
+              {t("lessons.notSavedYet")}
+            </p>
             <Button
               className="h-11"
-              disabled={saveState === "saving" || saveState === "saved" || saveState === "conflict"}
+              disabled={saveState === "saving"}
               onClick={() => void save(true)}
             >
-              {t("lessons.save.saveNow")}
+              {saveState === "saving" ? (
+                <Loader2 aria-hidden className="animate-spin" />
+              ) : (
+                <Save aria-hidden />
+              )}
+              {t("lessons.saveDraft")}
             </Button>
-          ) : null}
-          {general.status === "DRAFT" ? (
-            <Button
-              className="h-11"
-              disabled={saveState === "saving" || saveState === "conflict"}
-              onClick={() => void changeStatus("FINAL")}
-            >
-              <CircleCheckBig aria-hidden />
-              {privateDrafts ? t("lessons.publish") : t("lessons.finish")}
-            </Button>
-          ) : (
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            <SaveIndicator state={saveState} isDraft={general.status === "DRAFT"} />
+            {general.status === "FINAL" || saveState === "invalid" || saveState === "error" ? (
+              <Button
+                className="h-11"
+                disabled={
+                  saveState === "saving" || saveState === "saved" || saveState === "conflict"
+                }
+                onClick={() => void save(true)}
+              >
+                {t("lessons.save.saveNow")}
+              </Button>
+            ) : null}
+            {general.status === "DRAFT" ? (
+              <Button
+                className="h-11"
+                disabled={saveState === "saving" || saveState === "conflict"}
+                onClick={() => void changeStatus("FINAL")}
+              >
+                <CircleCheckBig aria-hidden />
+                {privateDrafts ? t("lessons.publish") : t("lessons.finish")}
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="h-11"
+                disabled={saveState === "saving" || saveState === "conflict"}
+                onClick={() => void changeStatus("DRAFT")}
+              >
+                <Undo2 aria-hidden />
+                {t("lessons.reopen")}
+              </Button>
+            )}
             <Button
               variant="outline"
               className="h-11"
               disabled={saveState === "saving" || saveState === "conflict"}
-              onClick={() => void changeStatus("DRAFT")}
+              onClick={() => void openPreview()}
             >
-              <Undo2 aria-hidden />
-              {t("lessons.reopen")}
+              <Eye aria-hidden />
+              {t("lessons.preview.open")}
             </Button>
-          )}
-          <Button
-            variant="outline"
-            className="h-11"
-            disabled={saveState === "saving" || saveState === "conflict"}
-            onClick={() => void openPreview()}
-          >
-            <Eye aria-hidden />
-            {t("lessons.preview.open")}
-          </Button>
-          <PdfDownloadButton lessonId={lessonId} remaining={null} beforeDownload={savedFirst} />
-          <LessonMailDialog lessonId={lessonId} beforeOpen={savedFirst} />
-          <LessonActions lessonId={lessonId} title={general.title} />
-        </div>
+            <PdfDownloadButton lessonId={lessonId} remaining={null} beforeDownload={savedFirst} />
+            <LessonMailDialog lessonId={lessonId} beforeOpen={savedFirst} />
+            <LessonActions lessonId={lessonId} title={general.title} />
+          </div>
+        )}
       </div>
 
       {saveState === "conflict" ? (

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { actionErrorMessage, describeFieldErrors } from "@/lib/i18n-keys";
 import type { ActionResult, FieldErrors } from "@/lib/server/result";
@@ -29,6 +29,12 @@ export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>();
+  // Focus moves only after the errors are rendered: inside a transition the
+  // aria-invalid markers can reach the DOM later than the next frame.
+  const [focusRequest, setFocusRequest] = useState(0);
+  useEffect(() => {
+    if (focusRequest > 0) focusFirstInvalid();
+  }, [focusRequest]);
 
   const run = useCallback(
     (input: I, options?: { success?: string; labels?: Record<string, string> }) =>
@@ -48,7 +54,7 @@ export function useAction<I, O>(fn: (input: I) => Promise<ActionResult<O>>) {
             description: details.length ? details.join("\n") : undefined,
             classNames: { description: "whitespace-pre-line" },
           });
-          if (result.fieldErrors) focusFirstInvalid();
+          if (result.fieldErrors) setFocusRequest((n) => n + 1);
           resolve(undefined);
         });
       }),

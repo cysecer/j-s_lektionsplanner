@@ -84,3 +84,14 @@ export const lessonSaveSchema = z
   });
 
 export type LessonSaveInput = z.output<typeof lessonSaveSchema>;
+
+/** The first save of a new lesson: its content, no id or version yet. */
+export const lessonDraftSchema = z
+  .strictObject({
+    lesson: lessonGeneralSchema,
+    items: z.array(lessonItemSchema).max(LESSON_LIMITS.items),
+  })
+  .refine((s) => new Set(s.items.map((i) => i.id)).size === s.items.length, {
+    message: "validation.invalid",
+    path: ["items"],
+  });

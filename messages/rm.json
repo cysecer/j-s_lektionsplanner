@@ -159,7 +159,8 @@
     "smtpInsecure": "Colliaziuns betg criptadas n’èn betg permessas sin quest server.",
     "smtpPasswordAgain": "Il server u il num d’utilisader è vegnì midà: endatescha per plaschair danovamain il pled-clav.",
     "recipientsRequired": "Inditgescha per plaschair almain in’adressa dad e-mail.",
-    "tooManyRecipients": "Maximalmain 20 destinataris."
+    "tooManyRecipients": "Maximalmain 20 destinataris.",
+    "teamsRequired": "Dà per plaschair ina rolla ad almain ina gruppa."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -373,7 +374,10 @@
       "label": "Perioda",
       "upcoming": "Futuras ({count})",
       "past": "Passadas ({count})"
-    }
+    },
+    "saveDraft": "Memorisar il sboz",
+    "draftSaved": "Sboz memorisà. Midadas vegnan da qua davent memorisadas automaticamain.",
+    "notSavedYet": "Anc betg memorisà"
   },
   "blocks": {
     "title": "Blocs da program",
@@ -548,10 +552,21 @@
       "remove": "Allontanar",
       "removeConfirm": "Allontanar {name} da l'uniun? La persuna vegn absentada immediatamain sin tut ils apparats.",
       "roleHints": {
-        "ADMIN": "Tut, er la configuraziun e las persunas",
-        "COACH": "Elavurar blocs da program e lecziuns, trametter PDFs",
-        "READER": "Guardar e crear PDFs (limità), nagin trametter"
-      }
+        "ADMIN": "Tut, inclus parameters e persunas",
+        "COACH": "Planisar e modifitgar en tut las gruppas, trametter PDFs ed e-mails",
+        "READER": "Vesair tut las gruppas e crear PDFs (limità), nagina spediziun",
+        "TEAMS": "P. ex. manadra dals Kids e mo leger per la Giuventetgna"
+      },
+      "allTeams": "{role} en tut las gruppas",
+      "perTeam": "Fixar per gruppa …",
+      "noTeams": "Nagina gruppa attribuida",
+      "noTeamsInClub": "I na dat anc naginas gruppas.",
+      "noAccess": "Nagin access",
+      "teamRoles": "Gruppas",
+      "teamRolesHint": "La persuna na vesa betg las gruppas senza access: ni lur lecziuns ni lur blocs.",
+      "editTeams": "Modifitgar las gruppas",
+      "teamsTitle": "Gruppas da {name}",
+      "teamsIntro": "Per gruppa: manadra/manader (planisar e modifitgar) u mo leger."
     },
     "tags": {
       "title": "Categorias",
@@ -717,7 +732,8 @@
     "mailConnection": "Il server dad e-mail n’è betg cuntanschibel. Èn server e port corrects?",
     "mailFailed": "L’e-mail n’ha betg pudì vegnir tramess. Emprova per plaschair pli tard anc ina giada.",
     "mailQuota": "Ti has cuntanschì tes limit dad e-mails per oz. Damaun vai puspè.",
-    "mailPasswordAgain": "Endatescha per plaschair danovamain il pled-clav dal server dad e-mail."
+    "mailPasswordAgain": "Endatescha per plaschair danovamain il pled-clav dal server dad e-mail.",
+    "teamForbidden": "Quai na dastgas ti betg en questa gruppa. Dumonda in administratur."
   },
   "sections": {
     "INTRO": "Introducziun",

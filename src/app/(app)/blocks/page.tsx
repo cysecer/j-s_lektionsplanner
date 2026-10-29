@@ -13,6 +13,7 @@ import {
   type BlockSearch,
 } from "@/lib/blocks/search-params";
 import { db } from "@/lib/db";
+import { visibleBlocksWhere } from "@/lib/lessons/visibility";
 import { parsePageInput } from "@/lib/server/params";
 import { BlockCard } from "./block-card";
 import { BlockFilters } from "./block-filters";
@@ -22,12 +23,12 @@ export default async function BlocksPage({ searchParams }: PageProps<"/blocks">)
   const t = await getTranslations();
   const search = await parsePageInput(blockSearchSchema, normalizeSearchParams(searchParams), {});
 
-  const options = await getBlockOptions(viewer.clubId);
+  const options = await getBlockOptions(viewer.clubId, viewer.teams);
   const activeTeam = options.teams.find((x) => x.id === viewer.activeTeamId) ?? null;
   const teamId = search.team === "all" ? null : (search.team ?? activeTeam?.id ?? null);
   const [result, totalInClub] = await Promise.all([
-    searchBlocks(viewer.clubId, { ...search, teamId }),
-    db.programBlock.count({ where: { clubId: viewer.clubId } }),
+    searchBlocks(viewer.clubId, viewer.teams, { ...search, teamId }),
+    db.programBlock.count({ where: visibleBlocksWhere(viewer) }),
   ]);
 
   const pageHref = (page: number) =>

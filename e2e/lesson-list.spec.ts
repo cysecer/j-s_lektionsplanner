@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, newDevice, test } from "./fixtures";
-import { acceptInvitation, invite, uniqueEmail } from "./helpers";
+import { acceptInvitation, createLesson, invite, uniqueEmail } from "./helpers";
 
 async function signIn(page: Page, role: "ADMIN" | "COACH", name: string) {
   await acceptInvitation(page, invite(uniqueEmail(role.toLowerCase()), role), name);
@@ -12,10 +12,7 @@ const saved = (page: Page) =>
 
 /** Creates a lesson (optionally dated) and leaves its editor open. */
 async function newLesson(page: Page, title: string, date?: string) {
-  await page.goto("/lessons");
-  await page.getByRole("button", { name: "Neue Lektionsvorbereitung" }).first().click();
-  await expect(page).toHaveURL(/\/lessons\/[0-9a-f-]{36}$/);
-  await page.getByLabel("Lektionstitel").fill(title);
+  await createLesson(page, title);
   if (date) {
     await page.getByLabel("Datum", { exact: true }).fill(date);
     await page.getByLabel("Datum", { exact: true }).press("Enter");

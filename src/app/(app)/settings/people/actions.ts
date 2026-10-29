@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import type { Role } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
-import { createInvitation } from "@/lib/invitations/create";
+import { accessRecords } from "@/lib/auth/team-access";
+import { assertActiveTeams, createInvitation } from "@/lib/invitations/create";
 import { action } from "@/lib/server/action";
 import { ActionFailure } from "@/lib/server/result";
 import { assertFound } from "@/lib/settings/helpers";
@@ -56,7 +57,7 @@ export const invitePersonAction = action({
     const { url } = await createInvitation({
       clubId: viewer.clubId,
       email: input.email,
-      role: input.role,
+      access: input.access,
       coachId: input.coachId,
       locale: input.locale,
       invitedById: viewer.userId,
@@ -83,15 +84,24 @@ export const revokeInvitationAction = action({
 export const updateMemberAction = action({
   role: "ADMIN",
   input: memberUpdateSchema,
-  handler: async ({ membershipId, role, coachId }, { viewer }) => {
-    await assertKeepsAnAdmin(viewer.clubId, membershipId, role);
+  handler: async ({ membershipId, access, coachId }, { viewer }) => {
+    const records = accessRecords(access);
+    await assertKeepsAnAdmin(viewer.clubId, membershipId, records.role);
     if (coachId) await assertCoachAvailable(viewer.clubId, coachId, membershipId);
-    assertFound(
-      await db.membership.updateMany({
-        where: { id: membershipId, clubId: viewer.clubId },
-        data: { role, coachId },
-      }),
-    );
+    await db.$transaction(async (tx) => {
+      await assertActiveTeams(tx, viewer.clubId, records.teams);
+      assertFound(
+        await tx.membership.updateMany({
+          where: { id: membershipId, clubId: viewer.clubId },
+          data: { role: records.role, allTeamsRole: records.allTeamsRole, coachId },
+        }),
+      );
+      // Team roles are replaced as a whole; they take effect on the next request.
+      await tx.membershipTeam.deleteMany({ where: { membershipId } });
+      await tx.membershipTeam.createMany({
+        data: records.teams.map((t) => ({ membershipId, ...t })),
+      });
+    });
     return done();
   },
 });

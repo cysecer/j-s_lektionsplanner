@@ -7,12 +7,13 @@ import { MobileNav } from "./mobile-nav";
 import { navItemsFor } from "./nav-items";
 import { NavLinks } from "./nav-links";
 import { TeamSwitcher } from "./team-switcher";
+import { visibleTeamsWhere } from "@/lib/lessons/visibility";
 import { UserMenu } from "./user-menu";
 
 export async function AppHeader({ viewer }: { viewer: Viewer }) {
   const t = await getTranslations();
   const teams = await db.team.findMany({
-    where: { clubId: viewer.clubId, archivedAt: null },
+    where: visibleTeamsWhere(viewer),
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     select: { id: true, name: true },
   });

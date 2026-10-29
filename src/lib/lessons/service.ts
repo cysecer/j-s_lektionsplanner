@@ -1,6 +1,7 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import type { Viewer } from "@/lib/auth/session";
+import { canCoach, coachedTeamIds } from "@/lib/auth/team-access";
 import { requireClubAssets } from "@/lib/assets/service";
 import { blockToFormValues } from "@/lib/blocks/form-values";
 import { getBlock } from "@/lib/blocks/queries";
@@ -15,9 +16,11 @@ import { db } from "@/lib/db";
 import type { RichText } from "@/lib/rich-text/schema";
 import { isRichTextEmpty } from "@/lib/rich-text/utils";
 import { ActionFailure, toFieldErrors } from "@/lib/server/result";
-import type { LessonItemInput, LessonSaveInput } from "./schema";
-import { resolveLessonDefaults } from "./timing";
-import { visibleLessonsWhere } from "./visibility";
+import type { LessonGeneralValues, LessonItemInput, LessonSaveInput } from "./schema";
+import { formatClockTime, resolveLessonDefaults } from "./timing";
+import { visibleBlocksWhere, visibleLessonsWhere } from "./visibility";
+
+const teamForbidden = () => new ActionFailure("forbidden", "teamForbidden");
 
 const richOrNull = (doc: RichText | null) => (doc && !isRichTextEmpty(doc) ? doc : null);
 const json = (doc: RichText | null) => richOrNull(doc) ?? Prisma.DbNull;
@@ -32,8 +35,33 @@ export function todayInZurich() {
 // Create, duplicate, delete
 // ---------------------------------------------------------------------------
 
-/** A new draft with sensible defaults: today, the header team, its times. */
-export async function createLesson(viewer: Viewer, title: string) {
+/**
+ * Team of a new lesson: the one chosen in the header if the person coaches
+ * it. Someone who coaches only some teams gets their first team rather
+ * than no team, which everyone in the club could see.
+ */
+function defaultTeam(viewer: Viewer) {
+  const select = { id: true, defaultStartTimeMinutes: true, defaultDurationMinutes: true };
+  if (viewer.activeTeamId && canCoach(viewer.teams, viewer.activeTeamId)) {
+    return db.team.findFirst({
+      where: { id: viewer.activeTeamId, clubId: viewer.clubId, archivedAt: null },
+      select,
+    });
+  }
+  const coached = coachedTeamIds(viewer.teams);
+  if (!coached) return null;
+  return db.team.findFirst({
+    where: { clubId: viewer.clubId, archivedAt: null, id: { in: coached } },
+    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    select,
+  });
+}
+
+/**
+ * Values for a new, not yet stored lesson: today, the header team (or the
+ * person's first team), its times, the person as author and present coach.
+ */
+export async function newLessonValues(viewer: Viewer): Promise<LessonGeneralValues> {
   const [club, team, coach, user] = await Promise.all([
     db.club.findUniqueOrThrow({
       where: { id: viewer.clubId },
@@ -43,34 +71,66 @@ export async function createLesson(viewer: Viewer, title: string) {
         defaultLayoutId: true,
       },
     }),
-    viewer.activeTeamId
-      ? db.team.findFirst({
-          where: { id: viewer.activeTeamId, clubId: viewer.clubId, archivedAt: null },
-          select: { id: true, defaultStartTimeMinutes: true, defaultDurationMinutes: true },
-        })
-      : null,
+    defaultTeam(viewer),
     viewer.coachId
       ? db.coach.findUnique({ where: { id: viewer.coachId }, select: { id: true, name: true } })
       : null,
     db.user.findUniqueOrThrow({ where: { id: viewer.userId }, select: { name: true } }),
   ]);
   const defaults = resolveLessonDefaults(club, team);
-  return db.lesson.create({
+  return {
+    title: "",
+    authorName: coach?.name ?? user.name,
+    date: todayInZurich().toISOString().slice(0, 10),
+    teamId: team?.id ?? null,
+    layoutId: club.defaultLayoutId,
+    startTime: defaults.startTimeMinutes === null ? "" : formatClockTime(defaults.startTimeMinutes),
+    totalDurationMinutes: defaults.durationMinutes === null ? "" : String(defaults.durationMinutes),
+    location: "",
+    ageMin: "",
+    ageMax: "",
+    groupSize: "",
+    difficulty: null,
+    safety: null,
+    goals: null,
+    notes: null,
+    presentCoachIds: coach ? [coach.id] : [],
+    status: "DRAFT",
+  };
+}
+
+/**
+ * Stores a new lesson the first time ("Entwurf speichern"): the record is
+ * created and the content saved in one go. If the content is refused, no
+ * empty lesson is left behind.
+ */
+export async function createLessonFromDraft(
+  viewer: Viewer,
+  input: Pick<LessonSaveInput, "lesson" | "items">,
+) {
+  const created = await db.lesson.create({
     data: {
       clubId: viewer.clubId,
-      teamId: team?.id ?? null,
-      layoutId: club.defaultLayoutId,
-      title,
-      authorName: coach?.name ?? user.name,
-      createdById: viewer.userId,
-      date: todayInZurich(),
-      startTimeMinutes: defaults.startTimeMinutes,
-      totalDurationMinutes: defaults.durationMinutes,
+      title: input.lesson.title,
+      authorName: input.lesson.authorName,
+      date: new Date(`${input.lesson.date}T00:00:00Z`),
       status: "DRAFT",
-      presentCoaches: coach ? { create: [{ coachId: coach.id }] } : undefined,
+      createdById: viewer.userId,
     },
-    select: { id: true },
+    select: { id: true, updatedAt: true },
   });
+  try {
+    const saved = await saveLesson(viewer, {
+      id: created.id,
+      baseVersion: created.updatedAt.toISOString(),
+      lesson: { ...input.lesson, status: "DRAFT" },
+      items: input.items,
+    });
+    return { id: created.id, version: saved.version };
+  } catch (error) {
+    await db.lesson.delete({ where: { id: created.id } });
+    throw error;
+  }
 }
 
 /**
@@ -83,6 +143,7 @@ export async function duplicateLesson(viewer: Viewer, id: string) {
     include: { presentCoaches: true, items: { include: { sketches: true } } },
   });
   if (!source) throw new ActionFailure("notFound");
+  if (!canCoach(viewer.teams, source.teamId)) throw teamForbidden();
   const { id: _id, createdAt: _c, updatedAt: _u, presentCoaches, items, ...scalars } = source;
   return db.lesson.create({
     data: {
@@ -113,12 +174,13 @@ export async function duplicateLesson(viewer: Viewer, id: string) {
   });
 }
 
-export async function deleteLesson(scope: Prisma.LessonWhereInput, id: string) {
+export async function deleteLesson(viewer: Viewer, id: string) {
   const lesson = await db.lesson.findFirst({
-    where: { AND: [scope, { id }] },
-    select: { items: { select: { sketches: { select: { assetId: true } } } } },
+    where: { AND: [visibleLessonsWhere(viewer), { id }] },
+    select: { teamId: true, items: { select: { sketches: { select: { assetId: true } } } } },
   });
   if (!lesson) throw new ActionFailure("notFound");
+  if (!canCoach(viewer.teams, lesson.teamId)) throw teamForbidden();
   await db.lesson.delete({ where: { id } });
   await cleanupImages(lesson.items.flatMap((i) => i.sketches.map((s) => s.assetId)));
 }
@@ -155,6 +217,10 @@ export async function saveLesson(viewer: Viewer, input: LessonSaveInput) {
     },
   });
   if (!current) throw new ActionFailure("notFound");
+  // Only coaches of the lesson's team edit it, and only move it to teams they coach.
+  if (!canCoach(viewer.teams, current.teamId) || !canCoach(viewer.teams, input.lesson.teamId)) {
+    throw teamForbidden();
+  }
   if (current.updatedAt.toISOString() !== input.baseVersion) {
     throw new ActionFailure("conflict", "lessonChanged");
   }
@@ -346,8 +412,8 @@ function responsibleData(responsible: Responsible) {
 // ---------------------------------------------------------------------------
 
 /** The content of a library block, ready to become a lesson item. */
-export async function snapshotFromBlock(clubId: string, blockId: string) {
-  const block = await getBlock(clubId, blockId);
+export async function snapshotFromBlock(viewer: Viewer, blockId: string) {
+  const block = await getBlock(visibleBlocksWhere(viewer), blockId);
   if (!block) throw new ActionFailure("notFound");
   return {
     sourceBlockId: block.id,
@@ -406,18 +472,19 @@ function parseBlockInput(values: unknown) {
  * item's content; its categories, teams, section, age and difficulty stay.
  */
 export async function overwriteBlockFromItem(
-  clubId: string,
+  viewer: Viewer,
   blockId: string,
   item: LessonItemInput,
 ) {
-  const block = await getBlock(clubId, blockId);
+  const clubId = viewer.clubId;
+  const block = await getBlock(visibleBlocksWhere(viewer), blockId);
   if (!block) throw new ActionFailure("notFound");
   const ids = await activeFieldIds(clubId);
   const input = parseBlockInput({
     ...blockToFormValues(block, ids),
     ...contentAsBlockValues(item, ids),
   });
-  return updateBlock(clubId, blockId, input);
+  return updateBlock(viewer, blockId, input);
 }
 
 /**
@@ -425,12 +492,14 @@ export async function overwriteBlockFromItem(
  * content; categories, teams etc. are taken over from the source block.
  */
 export async function createBlockFromItem(
-  clubId: string,
+  viewer: Viewer,
   item: LessonItemInput,
   sectionId: string,
 ) {
-  const ids = await activeFieldIds(clubId);
-  const source = item.sourceBlockId ? await getBlock(clubId, item.sourceBlockId) : null;
+  const ids = await activeFieldIds(viewer.clubId);
+  const source = item.sourceBlockId
+    ? await getBlock(visibleBlocksWhere(viewer), item.sourceBlockId)
+    : null;
   const meta = source
     ? blockToFormValues(source, ids)
     : {
@@ -441,6 +510,11 @@ export async function createBlockFromItem(
         ageMax: "",
         difficulty: null,
       };
-  const input = parseBlockInput({ ...meta, ...contentAsBlockValues(item, ids) });
-  return createBlock(clubId, input);
+  const input = parseBlockInput({
+    ...meta,
+    // Only teams the person coaches carry over to the new block.
+    teamIds: meta.teamIds.filter((teamId) => canCoach(viewer.teams, teamId)),
+    ...contentAsBlockValues(item, ids),
+  });
+  return createBlock(viewer, input);
 }

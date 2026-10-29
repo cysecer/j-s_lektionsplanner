@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
-import { acceptInvitation, invite, uniqueEmail } from "./helpers";
+import { acceptInvitation, createLesson, invite, uniqueEmail } from "./helpers";
 import { overlappingText, readPdf } from "./pdf-helpers";
 
 async function pdfPages(pdf: Uint8Array): Promise<string[]> {
@@ -16,10 +16,7 @@ const count = (text: string, needle: string) => text.split(needle).length - 1;
 async function longLesson(page: Page, copies: number) {
   await acceptInvitation(page, invite(uniqueEmail("print")), "Paula Print");
   await page.getByRole("button", { name: "Später" }).click();
-  await page.goto("/lessons");
-  await page.getByRole("button", { name: "Neue Lektionsvorbereitung" }).first().click();
-  await expect(page).toHaveURL(/\/lessons\/[0-9a-f-]{36}$/);
-  await page.getByLabel("Lektionstitel").fill("Viele Seiten");
+  await createLesson(page, "Viele Seiten");
   const panel = page.getByRole("complementary");
   await panel.getByRole("searchbox", { name: "Programmblöcke durchsuchen" }).fill("Dschungel");
   const add = panel.getByRole("button", { name: /«Dschungelspiel.*» hinzufügen/ });

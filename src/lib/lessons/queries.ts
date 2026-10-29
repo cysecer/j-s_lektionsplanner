@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import type { Viewer } from "@/lib/auth/session";
+import { coachedTeamIds, type TeamAccess } from "@/lib/auth/team-access";
 import { listMaterials } from "@/lib/blocks/queries";
 import { escapeLike } from "@/lib/blocks/search-params";
 import { todayInZurich } from "./service";
@@ -72,6 +73,7 @@ export async function listLessons(viewer: Viewer, filter: LessonListFilter) {
         date: true,
         status: true,
         startTimeMinutes: true,
+        teamId: true,
         team: { select: { name: true } },
         createdBy: { select: { name: true } },
         items: { select: { durationMinutes: true } },
@@ -119,12 +121,21 @@ export async function getLesson(scope: Prisma.LessonWhereInput & { clubId: strin
 /** Choices for the lesson editor. Archived entries only if the lesson uses them. */
 export async function getLessonOptions(
   clubId: string,
+  access: TeamAccess,
   usedTeamId: string | null,
   usedCoachIds: string[],
 ) {
+  // A lesson can only be assigned to teams the person coaches.
+  const coached = coachedTeamIds(access);
   const [teams, coaches, sections, layouts, fields, tags, materials] = await Promise.all([
     db.team.findMany({
-      where: { clubId, OR: [{ archivedAt: null }, ...(usedTeamId ? [{ id: usedTeamId }] : [])] },
+      where: {
+        clubId,
+        OR: [
+          { archivedAt: null, ...(coached ? { id: { in: coached } } : {}) },
+          ...(usedTeamId ? [{ id: usedTeamId }] : []),
+        ],
+      },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       select: { id: true, name: true, privateDrafts: true },
     }),

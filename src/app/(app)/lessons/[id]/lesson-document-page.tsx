@@ -7,6 +7,7 @@ import { LessonMailDialog } from "@/components/lesson-mail-dialog";
 import { PdfDownloadButton } from "@/components/pdf-download-button";
 import { Button } from "@/components/ui/button";
 import type { Viewer } from "@/lib/auth/session";
+import { canCoach } from "@/lib/auth/team-access";
 import { db } from "@/lib/db";
 import { getDocumentClub, getLessonDocument, resolveLayout } from "@/lib/lessons/document-queries";
 import { visibleLessonsWhere } from "@/lib/lessons/visibility";
@@ -42,7 +43,7 @@ export async function LessonDocumentPage({
     }),
     remainingPdfs(viewer),
   ]);
-  const canEdit = viewer.permissions.editLessons;
+  const canEdit = canCoach(viewer.teams, result.teamId);
 
   return (
     <div data-wide-page className="mx-auto grid w-full max-w-5xl gap-4">
@@ -58,9 +59,7 @@ export async function LessonDocumentPage({
             <LayoutSwitcher layouts={layouts} current={layout.id} />
           ) : null}
           <PdfDownloadButton lessonId={lessonId} layoutId={layoutId} remaining={remaining} />
-          {viewer.permissions.sendEmail ? (
-            <LessonMailDialog lessonId={lessonId} layoutId={layoutId ?? null} />
-          ) : null}
+          {canEdit ? <LessonMailDialog lessonId={lessonId} layoutId={layoutId ?? null} /> : null}
         </div>
       </div>
       <h1 className="sr-only">{result.document.title}</h1>

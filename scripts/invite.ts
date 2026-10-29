@@ -47,7 +47,11 @@ async function main() {
   const { url } = await createInvitation({
     clubId: clubs[0]!.id,
     email: args.data.email,
-    role: args.data.role,
+    // From the command line: one role for all teams (or admin).
+    access:
+      args.data.role === "ADMIN"
+        ? { kind: "admin" }
+        : { kind: "all", role: args.data.role },
     coachId: null,
     locale: args.data.locale,
     invitedById: null,

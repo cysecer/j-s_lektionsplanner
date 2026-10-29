@@ -5,6 +5,7 @@ import { z } from "zod";
 import { LOCALE_COOKIE, localeSchema } from "@/i18n/config";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import { visibleTeamsWhere } from "@/lib/lessons/visibility";
 import { action } from "@/lib/server/action";
 import { ActionFailure } from "@/lib/server/result";
 
@@ -32,7 +33,7 @@ export const setActiveTeamAction = action({
   handler: async ({ teamId }, { viewer }) => {
     if (teamId) {
       const team = await db.team.findFirst({
-        where: { id: teamId, clubId: viewer.clubId },
+        where: { AND: [visibleTeamsWhere(viewer), { id: teamId }] },
         select: { id: true },
       });
       if (!team) throw new ActionFailure("notFound");
