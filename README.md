@@ -3,7 +3,7 @@
 Planungswerkzeug für J+S-Lektionsvorbereitungen: Programmblöcke als Bibliothek pflegen, zu
 Lektionen zusammenstellen, als PDF exportieren und per E-Mail versenden.
 
-> Status: im Aufbau (Phase 9 – PDF-Export).
+> Status: im Aufbau (Phase 10 – E-Mail-Versand).
 
 ## Voraussetzungen
 
@@ -71,6 +71,20 @@ sich, jede Seite trägt Fusszeile und Seitenzahl.
 Lesende haben ein Tageskontingent (Standard 10, einstellbar unter Einstellungen → Verein).
 Gezählt wird pro Kalendertag in Zürcher Zeit; das Protokoll (wer, wann, welche Lektion) wird
 nach 90 Tagen gelöscht.
+
+## E-Mail
+
+Admins richten den Mailserver des Vereins unter **Einstellungen → E-Mail** ein (Server, Port,
+Verschlüsselung, Benutzername, Passwort, Absender) und können eine Testmail an sich selbst
+senden. Das Passwort wird verschlüsselt gespeichert und nie mehr angezeigt. Solange kein
+Vereins-Mailserver eingerichtet ist, gelten die `SMTP_*`-Variablen des Servers (in der
+Entwicklung: Mailpit).
+
+Leitende und Admins verschicken eine Lektion im Editor oder in der Vorschau mit **Per E-Mail
+senden**: Empfänger (mit Vorschlägen aus den Vereinsmitgliedern und früheren Empfängern),
+Betreff und Nachricht, das PDF ist angehängt. Antworten gehen direkt an die Person, die
+verschickt hat. Lesende können keine E-Mails senden. Pro Person sind 30 E-Mails pro Tag möglich;
+das Versandprotokoll wird nach 180 Tagen gelöscht.
 
 ## Konfiguration
 

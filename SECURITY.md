@@ -59,6 +59,29 @@ Keine Schnittstelle ohne Validierung:
 - Lesende haben ein serverseitig erzwungenes Tageskontingent (Sperre pro Person gegen parallele
   Anfragen); Leitende und Admins sind auf 200 pro Tag begrenzt.
 
+## E-Mail
+
+- Das SMTP-Passwort muss für den Versand wieder lesbar sein und kann deshalb nicht gehasht
+  werden. Es wird mit AES-256-GCM verschlüsselt gespeichert; der Schlüssel wird per HKDF aus
+  `AUTH_SECRET` abgeleitet und liegt nie in der Datenbank. Die Vereins-ID ist als zusätzliche
+  authentisierte Angabe eingebunden, ein kopierter Wert lässt sich anderswo nicht entschlüsseln.
+- Das Passwort ist nur schreibbar: Keine Seite und keine Aktion gibt es zurück, auch nicht an
+  Admins. Die Oberfläche zeigt nur «gespeichert».
+- Wer Server, Port, Verschlüsselung oder Benutzername ändert, muss das Passwort neu eingeben.
+  Ein übernommenes Admin-Konto kann das gespeicherte Passwort so nicht an einen eigenen Server
+  umleiten.
+- Wird `AUTH_SECRET` gewechselt, lässt sich das Passwort nicht mehr entschlüsseln; die
+  Einstellungsseite weist darauf hin, und es muss neu eingegeben werden.
+- Erlaubt sind nur Mail-Ports (25, 465, 587, 2525, 1025) und reine Hostnamen bzw. IP-Adressen,
+  damit die Einstellung nicht zum Abtasten anderer interner Dienste dient. Unverschlüsselte
+  Verbindungen werden abgelehnt, solange `SMTP_REQUIRE_TLS` aktiv ist (Standard). Zertifikate
+  werden geprüft.
+- Betreff, Empfänger und Absender dürfen keine Zeilenumbrüche enthalten (kein Header-Injection).
+  Die Nachricht wird als Text übernommen und im HTML-Teil vollständig escaped.
+- Lektionen versenden nur Leitende und Admins (serverseitig geprüft), höchstens 20 Empfänger pro
+  E-Mail und 30 E-Mails pro Person und Tag; auch fehlgeschlagene Versuche zählen. Das
+  Versandprotokoll (wer, wann, an wen, Betreff) wird nach 180 Tagen gelöscht.
+
 ## Löschen und Archivieren
 
 Riegen, Leitende und Zusatzfelder, die in Lektionen oder Programmblöcken vorkommen, werden beim

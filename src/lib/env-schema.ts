@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 const intFromString = (min: number, max: number) => z.coerce.number().int().min(min).max(max);
+/** `NAME=` in an env file means "not set". */
+const optionalString = (min: number) =>
+  z.preprocess((v) => (v === "" ? undefined : v), z.string().min(min).optional());
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
@@ -31,22 +34,29 @@ export const envSchema = z.object({
     )
     .pipe(z.array(z.union([z.cidrv4(), z.cidrv6(), z.ipv4(), z.ipv6()])).max(20)),
 
-  SMTP_HOST: z.string().min(1),
-  SMTP_PORT: intFromString(1, 65535),
+  /**
+   * Fallback mail server. Admins normally set the club's mail server under
+   * Einstellungen → E-Mail; these are used until then (and for local dev).
+   */
+  SMTP_HOST: optionalString(1),
+  SMTP_PORT: intFromString(1, 65535).default(587),
   /** true = implicit TLS (port 465). STARTTLS is used automatically otherwise. */
   SMTP_SECURE: z
     .enum(["true", "false"])
     .default("false")
     .transform((v) => v === "true"),
-  /** Refuse to send unless the connection is encrypted. Only disable for a local test server. */
+  /**
+   * Refuse to send unless the connection is encrypted – here and for the
+   * club's mail server. Only disable for a local test server.
+   */
   SMTP_REQUIRE_TLS: z
     .enum(["true", "false"])
     .default("true")
     .transform((v) => v === "true"),
   SMTP_USER: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
-  /** e.g. "Lektionsplaner <noreply@example.ch>" */
-  MAIL_FROM: z.string().min(3),
+  /** e.g. "Lektionsplaner <noreply@example.ch>"; required with SMTP_HOST. */
+  MAIL_FROM: optionalString(3),
 
   /**
    * How the server reaches itself to render PDFs: a headless browser opens an
@@ -76,6 +86,9 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
       .map((issue) => `  - ${issue.path.join(".")}: ${issue.message}`)
       .join("\n");
     throw new Error(`Invalid environment configuration:\n${details}`);
+  }
+  if (parsed.data.SMTP_HOST && !parsed.data.MAIL_FROM) {
+    throw new Error("Invalid environment configuration:\n  - MAIL_FROM: required with SMTP_HOST");
   }
   if (parsed.data.NODE_ENV === "production") {
     if (!parsed.data.APP_URL.startsWith("https://") && !parsed.data.ALLOW_INSECURE_APP_URL) {

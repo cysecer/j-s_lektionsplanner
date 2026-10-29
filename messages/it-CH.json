@@ -146,7 +146,13 @@
     "tooShortMin": "Troppo corto (almeno {min}).",
     "wholeNumber": "Inserisci un numero intero.",
     "date": "Inserisci una data valida.",
-    "nameTaken": "Questo nome è già in uso."
+    "nameTaken": "Questo nome è già in uso.",
+    "hostname": "Inserisci solo il nome del server, p. es. mail.example.ch.",
+    "smtpPort": "Scegli una porta di posta: 465, 587, 25, 2525 o 1025.",
+    "smtpInsecure": "Le connessioni non crittografate non sono consentite su questo server.",
+    "smtpPasswordAgain": "Server o nome utente modificati: inserisci di nuovo la password.",
+    "recipientsRequired": "Indica almeno un indirizzo e-mail.",
+    "tooManyRecipients": "Al massimo 20 destinatari."
   },
   "errors": {
     "unauthorized": "Accedi, per favore.",
@@ -426,7 +432,8 @@
       "tags": "Categorie",
       "sections": "Parti",
       "fields": "Campi aggiuntivi",
-      "layout": "Impaginazione PDF"
+      "layout": "Impaginazione PDF",
+      "mail": "E-mail"
     },
     "club": {
       "title": "Società",
@@ -596,6 +603,42 @@
       "previewWith": "Con l'ultima lezione modificata «{title}».",
       "previewEmpty": "Ancora nessuna lezione con contenuto. Vengono mostrati i titoli.",
       "previewTitle": "Lezione d'esempio"
+    },
+    "mail": {
+      "title": "Server di posta",
+      "intro": "Il pianificatore di lezioni invia lezioni, inviti e link di accesso tramite questo server. I dati te li fornisce il tuo provider di hosting.",
+      "statusClub": "Il server di posta della società è configurato.",
+      "statusFallback": "Nessun server proprio: viene usato quello predefinito del server ({host}).",
+      "statusNone": "Non è ancora configurato nessun server di posta. Fino ad allora non si possono inviare e-mail.",
+      "host": "Server (SMTP)",
+      "port": "Porta",
+      "security": "Crittografia",
+      "securities": {
+        "TLS": "SSL/TLS (di solito porta 465)",
+        "STARTTLS": "STARTTLS (di solito porta 587)",
+        "NONE": "Nessuna – solo per un server di test locale"
+      },
+      "username": "Nome utente",
+      "password": "Password",
+      "passwordStored": "Salvata",
+      "passwordKeepHint": "È salvata una password. Viene conservata crittografata e non viene mai più mostrata. Lascia vuoto per mantenerla.",
+      "passwordHint": "Salvata in modo crittografato e mai più mostrata.",
+      "passwordLost": "La password salvata non può più essere decifrata (la chiave del server è cambiata). Inseriscila di nuovo.",
+      "clearPassword": "Rimuovi la password salvata",
+      "fromEmail": "Indirizzo mittente",
+      "fromEmailHint": "Deve corrispondere al server, p. es. noreply@vostro-dominio.ch. Le risposte alle lezioni vanno a chi le ha inviate.",
+      "fromName": "Nome mittente",
+      "remove": "Rimuovi il server proprio",
+      "removeConfirm": "Le impostazioni e la password salvata vengono eliminate. In seguito viene usato il server predefinito, se presente.",
+      "removed": "Server di posta rimosso.",
+      "test": {
+        "button": "Inviami un’e-mail di prova",
+        "sending": "Invio in corso …",
+        "sent": "E-mail di prova inviata a {email}.",
+        "hint": "L’e-mail di prova usa le impostazioni salvate e va a {email}.",
+        "subject": "E-mail di prova dal pianificatore di lezioni",
+        "body": "Ciao {name}\n\nIl server di posta è configurato correttamente: questa e-mail di prova è arrivata.\n\nIl tuo pianificatore di lezioni"
+      }
     }
   },
   "dialog": {
@@ -628,7 +671,16 @@
     "unknownField": "Un campo aggiuntivo dell'impaginazione non esiste più o è archiviato.",
     "layoutIsDefault": "L'impaginazione standard non può essere eliminata. Scegli prima un'altra come standard.",
     "pdfQuota": "Hai raggiunto il limite giornaliero di PDF. Domani sarà di nuovo possibile.",
-    "pdfFailed": "Non è stato possibile creare il PDF. Riprova."
+    "pdfFailed": "Non è stato possibile creare il PDF. Riprova.",
+    "mailNotConfigured": "Non è ancora configurato nessun server di posta.",
+    "mailPasswordLost": "La password del server di posta va inserita di nuovo (Impostazioni → E-mail).",
+    "mailInsecure": "Il server di posta è impostato senza crittografia, cosa non consentita su questo server.",
+    "mailAuth": "Il server di posta ha rifiutato nome utente o password.",
+    "mailTls": "La connessione crittografata al server di posta non è riuscita. Crittografia e porta sono corrette?",
+    "mailConnection": "Il server di posta non è raggiungibile. Server e porta sono corretti?",
+    "mailFailed": "Non è stato possibile inviare l’e-mail. Riprova più tardi.",
+    "mailQuota": "Hai raggiunto il limite giornaliero di e-mail. Domani si potrà di nuovo.",
+    "mailPasswordAgain": "Inserisci di nuovo la password del server di posta."
   },
   "sections": {
     "INTRO": "Introduzione",
@@ -705,5 +757,37 @@
     "remaining": "{count, plural, =0 {Oggi nessun altro PDF} one {Oggi ancora # PDF} other {Oggi ancora # PDF}}",
     "pageOf": "Pagina {page} di {pages}",
     "fileWord": "Preparazione-lezione"
+  },
+  "mail": {
+    "lesson": {
+      "subject": "Preparazione della lezione del {date}: {title}",
+      "message": "Ciao a tutte e a tutti\n\nIn allegato trovate la preparazione della lezione «{title}» per l’allenamento del {date}.\n\nSaluti sportivi\n{name}",
+      "footer": "Inviato da {name} con il pianificatore di lezioni di {club}. Le risposte vanno direttamente a {email}."
+    },
+    "dialog": {
+      "open": "Invia per e-mail",
+      "title": "Invia la lezione per e-mail",
+      "description": "La lezione viene allegata come PDF.",
+      "notConfigured": "Non è ancora configurato nessun server di posta. Un admin può farlo in Impostazioni → E-mail.",
+      "to": "A",
+      "toPlaceholder": "Nome o indirizzo e-mail",
+      "toHint": "Separa più indirizzi con Invio o una virgola (al massimo {max}).",
+      "recipientList": "Destinatari",
+      "removeRecipient": "Rimuovi {email}",
+      "invalidAddress": "«{address}» non è un indirizzo e-mail valido.",
+      "subject": "Oggetto",
+      "message": "Messaggio",
+      "showPreview": "Mostra anteprima",
+      "hidePreview": "Nascondi anteprima",
+      "preview": "Anteprima",
+      "from": "Da",
+      "replyTo": "Rispondi a",
+      "history": "Già inviato",
+      "historyEntry": "{at} da {by} a {recipients}",
+      "historyFailed": "{at} da {by} a {recipients} – non riuscito",
+      "send": "Invia",
+      "sending": "Invio in corso …",
+      "sent": "{count, plural, one {E-mail inviata a # persona.} other {E-mail inviata a # persone.}}"
+    }
   }
 }

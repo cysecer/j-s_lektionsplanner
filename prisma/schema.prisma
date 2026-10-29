@@ -73,6 +73,8 @@ model Club {
   memberships   Membership[]
   invitations   Invitation[]
   pdfExports    PdfExport[]
+  mailSettings  MailSettings?
+  mailLogs      MailLog[]
 }
 
 /// Riege / Abteilung, e.g. "Kids", "TuVo", "Jugi".
@@ -326,6 +328,7 @@ model Lesson {
   presentCoaches LessonCoach[]
   items          LessonItem[]
   pdfExports     PdfExport[]
+  mailLogs       MailLog[]
 
   @@index([clubId, date])
   @@index([clubId, teamId, date])
@@ -426,6 +429,7 @@ model User {
   memberships        Membership[]
   invitationsCreated Invitation[] @relation("InvitedBy")
   pdfExports         PdfExport[]
+  mailLogs           MailLog[]
 
   @@map("user")
 }
@@ -567,4 +571,62 @@ model PdfExport {
 
   @@index([userId, createdAt])
   @@index([createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Email
+// ---------------------------------------------------------------------------
+
+enum SmtpSecurity {
+  /// Implicit TLS from the first byte (usually port 465).
+  TLS
+  /// Plain connection upgraded with STARTTLS, which is then required (usually 587).
+  STARTTLS
+  /// Unencrypted. Only accepted when SMTP_REQUIRE_TLS=false (local test server).
+  NONE
+}
+
+/// The club's outgoing mail server, set by admins. Without it, the server
+/// environment (SMTP_*) is used. The password is encrypted (AES-256-GCM,
+/// src/lib/crypto/secret-box.ts) and never leaves the server again.
+model MailSettings {
+  clubId            String       @id @db.Uuid
+  host              String
+  port              Int
+  security          SmtpSecurity
+  username          String?
+  passwordEncrypted String?
+  fromEmail         String
+  fromName          String?
+  updatedById       String?      @db.Uuid
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+}
+
+enum MailStatus {
+  SENT
+  FAILED
+}
+
+/// One lesson sent by email: who, to whom, when. Kept 180 days; also the
+/// daily sending limit and the source of recipient suggestions.
+model MailLog {
+  id         String     @id @default(uuid(7)) @db.Uuid
+  clubId     String     @db.Uuid
+  userId     String     @db.Uuid
+  lessonId   String?    @db.Uuid
+  recipients String[]
+  subject    String
+  status     MailStatus
+  createdAt  DateTime   @default(now())
+
+  club   Club    @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson? @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+
+  @@index([clubId, createdAt])
+  @@index([userId, createdAt])
+  @@index([lessonId, createdAt])
 }

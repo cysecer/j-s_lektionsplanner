@@ -79,7 +79,11 @@ export const auth = betterAuth({
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
       const locale = toLocale((user as { locale?: string }).locale);
-      await sendResetPasswordEmail(user.email, url, locale, user.name);
+      const membership = await db.membership.findFirst({
+        where: { userId: user.id },
+        select: { clubId: true },
+      });
+      await sendResetPasswordEmail(membership?.clubId ?? null, user.email, url, locale, user.name);
     },
   },
 
@@ -187,10 +191,11 @@ export const auth = betterAuth({
         // Unknown addresses get no email; the response is identical either way.
         const user = await db.user.findUnique({
           where: { email: email.toLowerCase() },
-          select: { name: true, locale: true, memberships: { select: { id: true }, take: 1 } },
+          select: { name: true, locale: true, memberships: { select: { clubId: true }, take: 1 } },
         });
-        if (!user || user.memberships.length === 0) return;
-        await sendMagicLinkEmail(email, url, toLocale(user.locale), user.name);
+        const membership = user?.memberships[0];
+        if (!user || !membership) return;
+        await sendMagicLinkEmail(membership.clubId, email, url, toLocale(user.locale), user.name);
       },
     }),
     passkey({

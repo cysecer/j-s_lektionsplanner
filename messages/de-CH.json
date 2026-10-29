@@ -146,7 +146,13 @@
     "tooShortMin": "Zu kurz (mindestens {min}).",
     "wholeNumber": "Bitte eine ganze Zahl eingeben.",
     "date": "Bitte ein gültiges Datum eingeben.",
-    "nameTaken": "Dieser Name ist schon vergeben."
+    "nameTaken": "Dieser Name ist schon vergeben.",
+    "hostname": "Bitte nur den Servernamen eingeben, z. B. mail.example.ch.",
+    "smtpPort": "Bitte einen Mail-Port wählen: 465, 587, 25, 2525 oder 1025.",
+    "smtpInsecure": "Unverschlüsselte Verbindungen sind auf diesem Server nicht erlaubt.",
+    "smtpPasswordAgain": "Server oder Benutzername wurden geändert: Bitte gib das Passwort nochmals ein.",
+    "recipientsRequired": "Bitte mindestens eine E-Mail-Adresse angeben.",
+    "tooManyRecipients": "Höchstens 20 Empfängerinnen und Empfänger."
   },
   "errors": {
     "unauthorized": "Bitte melde dich an.",
@@ -426,7 +432,8 @@
       "tags": "Kategorien",
       "sections": "Abschnitte",
       "fields": "Zusatzfelder",
-      "layout": "PDF-Layout"
+      "layout": "PDF-Layout",
+      "mail": "E-Mail"
     },
     "club": {
       "title": "Verein",
@@ -596,6 +603,42 @@
       "previewWith": "Mit der zuletzt bearbeiteten Lektion «{title}».",
       "previewEmpty": "Noch keine Lektion mit Inhalt vorhanden. Gezeigt werden die Überschriften.",
       "previewTitle": "Beispiel-Lektion"
+    },
+    "mail": {
+      "title": "Mailserver",
+      "intro": "Über diesen Server verschickt der Lektionsplaner Lektionen, Einladungen und Anmeldelinks. Die Angaben erhältst du von eurem Hosting-Anbieter.",
+      "statusClub": "Der Mailserver des Vereins ist eingerichtet.",
+      "statusFallback": "Noch kein eigener Mailserver: Es wird der Standard des Servers verwendet ({host}).",
+      "statusNone": "Es ist noch kein Mailserver eingerichtet. Bis dahin können keine E-Mails verschickt werden.",
+      "host": "Server (SMTP)",
+      "port": "Port",
+      "security": "Verschlüsselung",
+      "securities": {
+        "TLS": "SSL/TLS (meist Port 465)",
+        "STARTTLS": "STARTTLS (meist Port 587)",
+        "NONE": "Keine – nur für einen lokalen Testserver"
+      },
+      "username": "Benutzername",
+      "password": "Passwort",
+      "passwordStored": "Gespeichert",
+      "passwordKeepHint": "Ein Passwort ist gespeichert. Es wird verschlüsselt aufbewahrt und nie mehr angezeigt. Leer lassen, um es zu behalten.",
+      "passwordHint": "Wird verschlüsselt gespeichert und nie mehr angezeigt.",
+      "passwordLost": "Das gespeicherte Passwort kann nicht mehr entschlüsselt werden (der Server-Schlüssel wurde geändert). Bitte gib es neu ein.",
+      "clearPassword": "Gespeichertes Passwort entfernen",
+      "fromEmail": "Absender-Adresse",
+      "fromEmailHint": "Muss zum Mailserver passen, z. B. noreply@eure-domain.ch. Antworten auf Lektionen gehen an die Person, die sie verschickt hat.",
+      "fromName": "Absender-Name",
+      "remove": "Eigenen Mailserver entfernen",
+      "removeConfirm": "Die Einstellungen und das gespeicherte Passwort werden gelöscht. Danach wird der Standard des Servers verwendet, falls vorhanden.",
+      "removed": "Mailserver entfernt.",
+      "test": {
+        "button": "Testmail an mich senden",
+        "sending": "Wird gesendet …",
+        "sent": "Testmail an {email} gesendet.",
+        "hint": "Die Testmail verwendet die gespeicherten Einstellungen und geht an {email}.",
+        "subject": "Testmail vom Lektionsplaner",
+        "body": "Hallo {name}\n\nDer Mailserver ist richtig eingerichtet: Diese Testmail ist angekommen.\n\nDein Lektionsplaner"
+      }
     }
   },
   "dialog": {
@@ -628,7 +671,16 @@
     "unknownField": "Ein Zusatzfeld im Layout gibt es nicht mehr oder es ist archiviert.",
     "layoutIsDefault": "Das Standard-Layout kann nicht gelöscht werden. Wähle zuerst ein anderes als Standard.",
     "pdfQuota": "Du hast dein Tageslimit für PDFs erreicht. Morgen geht es wieder.",
-    "pdfFailed": "Das PDF konnte nicht erstellt werden. Bitte versuche es nochmals."
+    "pdfFailed": "Das PDF konnte nicht erstellt werden. Bitte versuche es nochmals.",
+    "mailNotConfigured": "Es ist noch kein Mailserver eingerichtet.",
+    "mailPasswordLost": "Das Passwort des Mailservers muss neu eingegeben werden (Einstellungen → E-Mail).",
+    "mailInsecure": "Der Mailserver ist unverschlüsselt eingestellt, das ist auf diesem Server nicht erlaubt.",
+    "mailAuth": "Der Mailserver hat Benutzername oder Passwort abgelehnt.",
+    "mailTls": "Die verschlüsselte Verbindung zum Mailserver ist fehlgeschlagen. Stimmen Verschlüsselung und Port?",
+    "mailConnection": "Der Mailserver ist nicht erreichbar. Stimmen Server und Port?",
+    "mailFailed": "Die E-Mail konnte nicht gesendet werden. Bitte versuche es später nochmals.",
+    "mailQuota": "Du hast dein Tageslimit für E-Mails erreicht. Morgen geht es wieder.",
+    "mailPasswordAgain": "Bitte gib das Passwort des Mailservers nochmals ein."
   },
   "sections": {
     "INTRO": "Einleitung",
@@ -705,5 +757,37 @@
     "remaining": "{count, plural, =0 {Heute keine PDFs mehr} one {Heute noch # PDF} other {Heute noch # PDFs}}",
     "pageOf": "Seite {page} von {pages}",
     "fileWord": "Lektionsvorbereitung"
+  },
+  "mail": {
+    "lesson": {
+      "subject": "Lektionsvorbereitung vom {date}: {title}",
+      "message": "Hallo zusammen\n\nIm Anhang findet ihr die Lektionsvorbereitung «{title}» für das Training vom {date}.\n\nSportliche Grüsse\n{name}",
+      "footer": "Gesendet von {name} mit dem Lektionsplaner von {club}. Antworten gehen direkt an {email}."
+    },
+    "dialog": {
+      "open": "Per E-Mail senden",
+      "title": "Lektion per E-Mail senden",
+      "description": "Die Lektion wird als PDF angehängt.",
+      "notConfigured": "Es ist noch kein Mailserver eingerichtet. Ein Admin kann ihn unter Einstellungen → E-Mail einrichten.",
+      "to": "An",
+      "toPlaceholder": "Name oder E-Mail-Adresse",
+      "toHint": "Mehrere Adressen mit Enter oder Komma trennen (höchstens {max}).",
+      "recipientList": "Empfängerinnen und Empfänger",
+      "removeRecipient": "{email} entfernen",
+      "invalidAddress": "«{address}» ist keine gültige E-Mail-Adresse.",
+      "subject": "Betreff",
+      "message": "Nachricht",
+      "showPreview": "Vorschau anzeigen",
+      "hidePreview": "Vorschau ausblenden",
+      "preview": "Vorschau",
+      "from": "Von",
+      "replyTo": "Antwort an",
+      "history": "Bisher gesendet",
+      "historyEntry": "{at} von {by} an {recipients}",
+      "historyFailed": "{at} von {by} an {recipients} – fehlgeschlagen",
+      "send": "Senden",
+      "sending": "Wird gesendet …",
+      "sent": "{count, plural, one {E-Mail an # Person gesendet.} other {E-Mail an # Personen gesendet.}}"
+    }
   }
 }

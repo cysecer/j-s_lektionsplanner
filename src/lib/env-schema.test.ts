@@ -23,6 +23,15 @@ describe("parseEnv", () => {
     });
   });
 
+  it("treats the fallback mail server as optional, but complete", () => {
+    const { SMTP_HOST, SMTP_PORT, MAIL_FROM, ...rest } = valid;
+    expect([SMTP_HOST, SMTP_PORT, MAIL_FROM]).toHaveLength(3);
+    expect(parseEnv(rest)).toMatchObject({ SMTP_PORT: 587 });
+    expect(parseEnv(rest).SMTP_HOST).toBeUndefined();
+    expect(parseEnv({ ...rest, SMTP_HOST: "", MAIL_FROM: "" }).SMTP_HOST).toBeUndefined();
+    expect(() => parseEnv({ ...rest, SMTP_HOST: "localhost" })).toThrow(/MAIL_FROM/);
+  });
+
   it("rejects a missing variable and names it", () => {
     const rest: Partial<typeof valid> = { ...valid };
     delete rest.DATABASE_URL;

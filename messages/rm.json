@@ -146,7 +146,13 @@
     "tooShortMin": "Memia curt (almain {min}).",
     "wholeNumber": "Endatescha per plaschair in dumber entir.",
     "date": "Endatescha per plaschair ina data valaivla.",
-    "nameTaken": "Quest num è gia occupà."
+    "nameTaken": "Quest num è gia occupà.",
+    "hostname": "Endatescha per plaschair mo il num dal server, p. ex. mail.example.ch.",
+    "smtpPort": "Tscherna per plaschair in port dad e-mail: 465, 587, 25, 2525 u 1025.",
+    "smtpInsecure": "Colliaziuns betg criptadas n’èn betg permessas sin quest server.",
+    "smtpPasswordAgain": "Il server u il num d’utilisader è vegnì midà: endatescha per plaschair danovamain il pled-clav.",
+    "recipientsRequired": "Inditgescha per plaschair almain in’adressa dad e-mail.",
+    "tooManyRecipients": "Maximalmain 20 destinataris."
   },
   "errors": {
     "unauthorized": "S'annunzia per plaschair.",
@@ -426,7 +432,8 @@
       "tags": "Categorias",
       "sections": "Parts",
       "fields": "Champs supplementars",
-      "layout": "Structura PDF"
+      "layout": "Structura PDF",
+      "mail": "E-mail"
     },
     "club": {
       "title": "Uniun",
@@ -596,6 +603,42 @@
       "previewWith": "Cun l'ultima lecziun elavurada «{title}».",
       "previewEmpty": "Anc nagina lecziun cun cuntegn. Mussads vegnan ils titels.",
       "previewTitle": "Lecziun d'exempel"
+    },
+    "mail": {
+      "title": "Server dad e-mail",
+      "intro": "Il planisader da lecziuns trametta lecziuns, invitaziuns e links d’annunzia sur quest server. Las indicaziuns survegns ti da voss purschider d’hosting.",
+      "statusClub": "Il server dad e-mail da la societad è endrizzà.",
+      "statusFallback": "Anc nagin agen server: i vegn duvrà il standard dal server ({host}).",
+      "statusNone": "I n’è anc nagin server dad e-mail endrizzà. Fin lura na pon vegnir tramess nagins e-mails.",
+      "host": "Server (SMTP)",
+      "port": "Port",
+      "security": "Criptadi",
+      "securities": {
+        "TLS": "SSL/TLS (per il solit port 465)",
+        "STARTTLS": "STARTTLS (per il solit port 587)",
+        "NONE": "Nagin – mo per in server da test local"
+      },
+      "username": "Num d’utilisader",
+      "password": "Pled-clav",
+      "passwordStored": "Memorisà",
+      "passwordKeepHint": "In pled-clav è memorisà. El vegn tegnì criptà e na vegn mai pli mussà. Laschar vid per al mantegnair.",
+      "passwordHint": "Vegn memorisà criptà e mai pli mussà.",
+      "passwordLost": "Il pled-clav memorisà na po betg pli vegnir decriptà (la clav dal server è vegnida midada). Endatescha el per plaschair danovamain.",
+      "clearPassword": "Allontanar il pled-clav memorisà",
+      "fromEmail": "Adressa dal speditur",
+      "fromEmailHint": "Sto correspunder al server, p. ex. noreply@vossa-domena.ch. Respostas a lecziuns van a la persuna che las ha tramess.",
+      "fromName": "Num dal speditur",
+      "remove": "Allontanar l’agen server",
+      "removeConfirm": "Ils parameters ed il pled-clav memorisà vegnan stizzads. Silsuenter vegn duvrà il standard dal server, sch’el exista.",
+      "removed": "Server dad e-mail allontanà.",
+      "test": {
+        "button": "Ma trametter in e-mail da test",
+        "sending": "Vegn tramess …",
+        "sent": "E-mail da test tramess a {email}.",
+        "hint": "L’e-mail da test dovra ils parameters memorisads e va a {email}.",
+        "subject": "E-mail da test dal planisader da lecziuns",
+        "body": "Allegra {name}\n\nIl server dad e-mail è endrizzà endretg: quest e-mail da test è arrivà.\n\nTes planisader da lecziuns"
+      }
     }
   },
   "dialog": {
@@ -628,7 +671,16 @@
     "unknownField": "In champ supplementar da la structura n'exista betg pli u è archivà.",
     "layoutIsDefault": "La structura da standard na po betg vegnir stizzada. Tscherna l'emprim in'autra sco standard.",
     "pdfQuota": "Ti has cuntanschì tia limita dal di per PDFs. Damaun vai puspè.",
-    "pdfFailed": "Il PDF n'ha betg pudì vegnir creà. Emprova per plaschair anc ina giada."
+    "pdfFailed": "Il PDF n'ha betg pudì vegnir creà. Emprova per plaschair anc ina giada.",
+    "mailNotConfigured": "I n’è anc nagin server dad e-mail endrizzà.",
+    "mailPasswordLost": "Il pled-clav dal server dad e-mail sto vegnir endatà danovamain (Parameters → E-mail).",
+    "mailInsecure": "Il server dad e-mail è endrizzà senza criptadi, quai n’è betg permess sin quest server.",
+    "mailAuth": "Il server dad e-mail ha refusà il num d’utilisader u il pled-clav.",
+    "mailTls": "La colliaziun criptada cun il server dad e-mail n’è betg reussida. Èn criptadi e port corrects?",
+    "mailConnection": "Il server dad e-mail n’è betg cuntanschibel. Èn server e port corrects?",
+    "mailFailed": "L’e-mail n’ha betg pudì vegnir tramess. Emprova per plaschair pli tard anc ina giada.",
+    "mailQuota": "Ti has cuntanschì tes limit dad e-mails per oz. Damaun vai puspè.",
+    "mailPasswordAgain": "Endatescha per plaschair danovamain il pled-clav dal server dad e-mail."
   },
   "sections": {
     "INTRO": "Introducziun",
@@ -705,5 +757,37 @@
     "remaining": "{count, plural, =0 {Oz nagins PDFs pli} one {Oz anc # PDF} other {Oz anc # PDFs}}",
     "pageOf": "Pagina {page} da {pages}",
     "fileWord": "Preparaziun-da-lecziun"
+  },
+  "mail": {
+    "lesson": {
+      "subject": "Preparaziun da la lecziun dals {date}: {title}",
+      "message": "Allegra tuttas e tuts\n\nEn l’agiunta chattais vus la preparaziun da la lecziun «{title}» per il trenament dals {date}.\n\nSalids sportivs\n{name}",
+      "footer": "Tramess da {name} cun il planisader da lecziuns da {club}. Respostas van directamain a {email}."
+    },
+    "dialog": {
+      "open": "Trametter per e-mail",
+      "title": "Trametter la lecziun per e-mail",
+      "description": "La lecziun vegn agiuntada sco PDF.",
+      "notConfigured": "I n’è anc nagin server dad e-mail endrizzà. In admin al po endrizzar sut Parameters → E-mail.",
+      "to": "A",
+      "toPlaceholder": "Num u adressa dad e-mail",
+      "toHint": "Separar pliras adressas cun Enter u ina comma (maximalmain {max}).",
+      "recipientList": "Destinataris",
+      "removeRecipient": "Allontanar {email}",
+      "invalidAddress": "«{address}» n’è nagina adressa dad e-mail valida.",
+      "subject": "Object",
+      "message": "Messadi",
+      "showPreview": "Mussar la prevista",
+      "hidePreview": "Zuppentar la prevista",
+      "preview": "Prevista",
+      "from": "Da",
+      "replyTo": "Resposta a",
+      "history": "Tramess fin ussa",
+      "historyEntry": "{at} da {by} a {recipients}",
+      "historyFailed": "{at} da {by} a {recipients} – betg reussì",
+      "send": "Trametter",
+      "sending": "Vegn tramess …",
+      "sent": "{count, plural, one {E-mail tramess a # persuna.} other {E-mail tramess a # persunas.}}"
+    }
   }
 }

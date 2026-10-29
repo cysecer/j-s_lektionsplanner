@@ -14,6 +14,7 @@ const ITEMS = [
   "sections",
   "fields",
   "layout",
+  "mail",
 ] as const;
 
 export function SettingsNav() {

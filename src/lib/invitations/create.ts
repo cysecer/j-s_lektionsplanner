@@ -58,6 +58,7 @@ export async function createInvitation(raw: z.input<typeof createInvitationSchem
 
   const url = new URL(`/invite/${token}`, env.APP_URL).toString();
   await sendInvitationEmail({
+    clubId: input.clubId,
     to: input.email,
     url,
     locale: input.locale,

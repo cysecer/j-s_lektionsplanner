@@ -146,7 +146,13 @@
     "tooShortMin": "Trop court (au moins {min}).",
     "wholeNumber": "Merci de saisir un nombre entier.",
     "date": "Merci de saisir une date valable.",
-    "nameTaken": "Ce nom est déjà utilisé."
+    "nameTaken": "Ce nom est déjà utilisé.",
+    "hostname": "Merci de saisir seulement le nom du serveur, p. ex. mail.example.ch.",
+    "smtpPort": "Merci de choisir un port de messagerie : 465, 587, 25, 2525 ou 1025.",
+    "smtpInsecure": "Les connexions non chiffrées ne sont pas autorisées sur ce serveur.",
+    "smtpPasswordAgain": "Le serveur ou le nom d’utilisateur a changé : merci de saisir à nouveau le mot de passe.",
+    "recipientsRequired": "Merci d’indiquer au moins une adresse e-mail.",
+    "tooManyRecipients": "20 destinataires au maximum."
   },
   "errors": {
     "unauthorized": "Merci de te connecter.",
@@ -426,7 +432,8 @@
       "tags": "Catégories",
       "sections": "Parties",
       "fields": "Champs supplémentaires",
-      "layout": "Mise en page PDF"
+      "layout": "Mise en page PDF",
+      "mail": "E-mail"
     },
     "club": {
       "title": "Société",
@@ -596,6 +603,42 @@
       "previewWith": "Avec la dernière leçon modifiée « {title} ».",
       "previewEmpty": "Aucune leçon avec contenu pour l'instant. Les titres sont affichés.",
       "previewTitle": "Leçon d'exemple"
+    },
+    "mail": {
+      "title": "Serveur de messagerie",
+      "intro": "Le planificateur de leçons envoie les leçons, les invitations et les liens de connexion par ce serveur. Ton hébergeur te fournit ces informations.",
+      "statusClub": "Le serveur de messagerie de la société est configuré.",
+      "statusFallback": "Pas encore de serveur propre : le serveur par défaut est utilisé ({host}).",
+      "statusNone": "Aucun serveur de messagerie n’est encore configuré. D’ici là, aucun e-mail ne peut être envoyé.",
+      "host": "Serveur (SMTP)",
+      "port": "Port",
+      "security": "Chiffrement",
+      "securities": {
+        "TLS": "SSL/TLS (généralement port 465)",
+        "STARTTLS": "STARTTLS (généralement port 587)",
+        "NONE": "Aucun – seulement pour un serveur de test local"
+      },
+      "username": "Nom d’utilisateur",
+      "password": "Mot de passe",
+      "passwordStored": "Enregistré",
+      "passwordKeepHint": "Un mot de passe est enregistré. Il est conservé chiffré et n’est plus jamais affiché. Laisser vide pour le conserver.",
+      "passwordHint": "Enregistré chiffré et plus jamais affiché.",
+      "passwordLost": "Le mot de passe enregistré ne peut plus être déchiffré (la clé du serveur a changé). Merci de le saisir à nouveau.",
+      "clearPassword": "Supprimer le mot de passe enregistré",
+      "fromEmail": "Adresse d’expédition",
+      "fromEmailHint": "Doit correspondre au serveur, p. ex. noreply@votre-domaine.ch. Les réponses aux leçons vont à la personne qui les a envoyées.",
+      "fromName": "Nom d’expéditeur",
+      "remove": "Supprimer le serveur propre",
+      "removeConfirm": "Les paramètres et le mot de passe enregistré sont supprimés. Ensuite, le serveur par défaut est utilisé s’il existe.",
+      "removed": "Serveur de messagerie supprimé.",
+      "test": {
+        "button": "M’envoyer un e-mail de test",
+        "sending": "Envoi en cours …",
+        "sent": "E-mail de test envoyé à {email}.",
+        "hint": "L’e-mail de test utilise les paramètres enregistrés et est envoyé à {email}.",
+        "subject": "E-mail de test du planificateur de leçons",
+        "body": "Bonjour {name}\n\nLe serveur de messagerie est bien configuré : cet e-mail de test est arrivé.\n\nTon planificateur de leçons"
+      }
     }
   },
   "dialog": {
@@ -628,7 +671,16 @@
     "unknownField": "Un champ supplémentaire de la mise en page n'existe plus ou est archivé.",
     "layoutIsDefault": "La mise en page standard ne peut pas être supprimée. Choisis d'abord une autre mise en page standard.",
     "pdfQuota": "Tu as atteint ta limite quotidienne de PDF. Ce sera à nouveau possible demain.",
-    "pdfFailed": "Le PDF n'a pas pu être créé. Merci de réessayer."
+    "pdfFailed": "Le PDF n'a pas pu être créé. Merci de réessayer.",
+    "mailNotConfigured": "Aucun serveur de messagerie n’est encore configuré.",
+    "mailPasswordLost": "Le mot de passe du serveur de messagerie doit être saisi à nouveau (Paramètres → E-mail).",
+    "mailInsecure": "Le serveur de messagerie est réglé sans chiffrement, ce qui n’est pas autorisé sur ce serveur.",
+    "mailAuth": "Le serveur de messagerie a refusé le nom d’utilisateur ou le mot de passe.",
+    "mailTls": "La connexion chiffrée au serveur de messagerie a échoué. Le chiffrement et le port sont-ils corrects ?",
+    "mailConnection": "Le serveur de messagerie est injoignable. Le serveur et le port sont-ils corrects ?",
+    "mailFailed": "L’e-mail n’a pas pu être envoyé. Merci de réessayer plus tard.",
+    "mailQuota": "Tu as atteint ta limite journalière d’e-mails. Ce sera de nouveau possible demain.",
+    "mailPasswordAgain": "Merci de saisir à nouveau le mot de passe du serveur de messagerie."
   },
   "sections": {
     "INTRO": "Mise en train",
@@ -705,5 +757,37 @@
     "remaining": "{count, plural, =0 {Plus de PDF aujourd'hui} one {Encore # PDF aujourd'hui} other {Encore # PDF aujourd'hui}}",
     "pageOf": "Page {page} sur {pages}",
     "fileWord": "Preparation-lecon"
+  },
+  "mail": {
+    "lesson": {
+      "subject": "Préparation de leçon du {date} : {title}",
+      "message": "Bonjour à toutes et à tous\n\nVous trouverez en annexe la préparation de leçon « {title} » pour l’entraînement du {date}.\n\nSportives salutations\n{name}",
+      "footer": "Envoyé par {name} avec le planificateur de leçons de {club}. Les réponses vont directement à {email}."
+    },
+    "dialog": {
+      "open": "Envoyer par e-mail",
+      "title": "Envoyer la leçon par e-mail",
+      "description": "La leçon est jointe en PDF.",
+      "notConfigured": "Aucun serveur de messagerie n’est encore configuré. Un admin peut le faire sous Paramètres → E-mail.",
+      "to": "À",
+      "toPlaceholder": "Nom ou adresse e-mail",
+      "toHint": "Séparer plusieurs adresses par Entrée ou une virgule ({max} au maximum).",
+      "recipientList": "Destinataires",
+      "removeRecipient": "Retirer {email}",
+      "invalidAddress": "« {address} » n’est pas une adresse e-mail valide.",
+      "subject": "Objet",
+      "message": "Message",
+      "showPreview": "Afficher l’aperçu",
+      "hidePreview": "Masquer l’aperçu",
+      "preview": "Aperçu",
+      "from": "De",
+      "replyTo": "Réponse à",
+      "history": "Déjà envoyé",
+      "historyEntry": "{at} par {by} à {recipients}",
+      "historyFailed": "{at} par {by} à {recipients} – échec",
+      "send": "Envoyer",
+      "sending": "Envoi en cours …",
+      "sent": "{count, plural, one {E-mail envoyé à # personne.} other {E-mail envoyé à # personnes.}}"
+    }
   }
 }

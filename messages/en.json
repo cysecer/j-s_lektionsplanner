@@ -146,7 +146,13 @@
     "tooShortMin": "Too short (at least {min}).",
     "wholeNumber": "Please enter a whole number.",
     "date": "Please enter a valid date.",
-    "nameTaken": "This name is already taken."
+    "nameTaken": "This name is already taken.",
+    "hostname": "Please enter only the server name, e.g. mail.example.ch.",
+    "smtpPort": "Please choose a mail port: 465, 587, 25, 2525 or 1025.",
+    "smtpInsecure": "Unencrypted connections are not allowed on this server.",
+    "smtpPasswordAgain": "Server or username changed: please enter the password again.",
+    "recipientsRequired": "Please enter at least one email address.",
+    "tooManyRecipients": "At most 20 recipients."
   },
   "errors": {
     "unauthorized": "Please sign in.",
@@ -426,7 +432,8 @@
       "tags": "Categories",
       "sections": "Sections",
       "fields": "Custom fields",
-      "layout": "PDF layout"
+      "layout": "PDF layout",
+      "mail": "Email"
     },
     "club": {
       "title": "Club",
@@ -596,6 +603,42 @@
       "previewWith": "With the most recently edited lesson “{title}”.",
       "previewEmpty": "No lesson with content yet. Only the headings are shown.",
       "previewTitle": "Sample lesson"
+    },
+    "mail": {
+      "title": "Mail server",
+      "intro": "The lesson planner sends lessons, invitations and sign-in links through this server. Your hosting provider gives you these details.",
+      "statusClub": "The club's mail server is set up.",
+      "statusFallback": "No club mail server yet: the server default is used ({host}).",
+      "statusNone": "No mail server is set up yet. Until then, no emails can be sent.",
+      "host": "Server (SMTP)",
+      "port": "Port",
+      "security": "Encryption",
+      "securities": {
+        "TLS": "SSL/TLS (usually port 465)",
+        "STARTTLS": "STARTTLS (usually port 587)",
+        "NONE": "None – only for a local test server"
+      },
+      "username": "Username",
+      "password": "Password",
+      "passwordStored": "Stored",
+      "passwordKeepHint": "A password is stored. It is kept encrypted and never shown again. Leave empty to keep it.",
+      "passwordHint": "Stored encrypted and never shown again.",
+      "passwordLost": "The stored password can no longer be decrypted (the server key was changed). Please enter it again.",
+      "clearPassword": "Remove stored password",
+      "fromEmail": "Sender address",
+      "fromEmailHint": "Must match the mail server, e.g. noreply@your-domain.ch. Replies to lessons go to the person who sent them.",
+      "fromName": "Sender name",
+      "remove": "Remove club mail server",
+      "removeConfirm": "The settings and the stored password are deleted. The server default is used afterwards, if there is one.",
+      "removed": "Mail server removed.",
+      "test": {
+        "button": "Send test email to me",
+        "sending": "Sending …",
+        "sent": "Test email sent to {email}.",
+        "hint": "The test email uses the saved settings and goes to {email}.",
+        "subject": "Test email from the lesson planner",
+        "body": "Hello {name}\n\nThe mail server is set up correctly: this test email arrived.\n\nYour lesson planner"
+      }
     }
   },
   "dialog": {
@@ -628,7 +671,16 @@
     "unknownField": "A custom field in the layout no longer exists or is archived.",
     "layoutIsDefault": "The default layout cannot be deleted. Make another layout the default first.",
     "pdfQuota": "You have reached your daily PDF limit. You can create more tomorrow.",
-    "pdfFailed": "The PDF could not be created. Please try again."
+    "pdfFailed": "The PDF could not be created. Please try again.",
+    "mailNotConfigured": "No mail server is set up yet.",
+    "mailPasswordLost": "The mail server password must be entered again (Settings → Email).",
+    "mailInsecure": "The mail server is set to unencrypted, which this server does not allow.",
+    "mailAuth": "The mail server rejected the username or password.",
+    "mailTls": "The encrypted connection to the mail server failed. Are encryption and port correct?",
+    "mailConnection": "The mail server cannot be reached. Are server and port correct?",
+    "mailFailed": "The email could not be sent. Please try again later.",
+    "mailQuota": "You have reached your daily email limit. Try again tomorrow.",
+    "mailPasswordAgain": "Please enter the mail server password again."
   },
   "sections": {
     "INTRO": "Warm-up",
@@ -705,5 +757,37 @@
     "remaining": "{count, plural, =0 {No more PDFs today} one {# PDF left today} other {# PDFs left today}}",
     "pageOf": "Page {page} of {pages}",
     "fileWord": "Lesson-plan"
+  },
+  "mail": {
+    "lesson": {
+      "subject": "Lesson plan for {date}: {title}",
+      "message": "Hello everyone\n\nAttached is the lesson plan “{title}” for the training on {date}.\n\nBest regards\n{name}",
+      "footer": "Sent by {name} with the lesson planner of {club}. Replies go directly to {email}."
+    },
+    "dialog": {
+      "open": "Send by email",
+      "title": "Send lesson by email",
+      "description": "The lesson is attached as PDF.",
+      "notConfigured": "No mail server is set up yet. An admin can set it up under Settings → Email.",
+      "to": "To",
+      "toPlaceholder": "Name or email address",
+      "toHint": "Separate several addresses with Enter or a comma (at most {max}).",
+      "recipientList": "Recipients",
+      "removeRecipient": "Remove {email}",
+      "invalidAddress": "“{address}” is not a valid email address.",
+      "subject": "Subject",
+      "message": "Message",
+      "showPreview": "Show preview",
+      "hidePreview": "Hide preview",
+      "preview": "Preview",
+      "from": "From",
+      "replyTo": "Reply to",
+      "history": "Sent so far",
+      "historyEntry": "{at} by {by} to {recipients}",
+      "historyFailed": "{at} by {by} to {recipients} – failed",
+      "send": "Send",
+      "sending": "Sending …",
+      "sent": "{count, plural, one {Email sent to # person.} other {Email sent to # people.}}"
+    }
   }
 }

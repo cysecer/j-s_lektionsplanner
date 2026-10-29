@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { withoutPrefix } from "@/components/blocks/content-fields";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { LessonMailDialog } from "@/components/lesson-mail-dialog";
 import { PdfDownloadButton } from "@/components/pdf-download-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -247,6 +248,7 @@ export function LessonEditor({
             {t("lessons.preview.open")}
           </Button>
           <PdfDownloadButton lessonId={lessonId} remaining={null} beforeDownload={savedFirst} />
+          <LessonMailDialog lessonId={lessonId} beforeOpen={savedFirst} />
           <LessonActions lessonId={lessonId} title={general.title} />
         </div>
       </div>

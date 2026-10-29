@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { LessonDocumentView } from "@/components/lesson-document/lesson-document";
+import { LessonMailDialog } from "@/components/lesson-mail-dialog";
 import { PdfDownloadButton } from "@/components/pdf-download-button";
 import { Button } from "@/components/ui/button";
 import type { Viewer } from "@/lib/auth/session";
@@ -56,6 +57,9 @@ export async function LessonDocumentPage({
             <LayoutSwitcher layouts={layouts} current={layout.id} />
           ) : null}
           <PdfDownloadButton lessonId={lessonId} layoutId={layoutId} remaining={remaining} />
+          {viewer.permissions.sendEmail ? (
+            <LessonMailDialog lessonId={lessonId} layoutId={layoutId ?? null} />
+          ) : null}
         </div>
       </div>
       <h1 className="sr-only">{result.document.title}</h1>

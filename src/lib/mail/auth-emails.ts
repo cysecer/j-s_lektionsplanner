@@ -6,6 +6,7 @@ import { sendMail } from "./send";
 import { renderActionEmail } from "./templates";
 
 async function sendActionEmail(input: {
+  clubId: string | null;
   to: string;
   locale: Locale;
   name: string | null;
@@ -23,12 +24,19 @@ async function sendActionEmail(input: {
     footer: t("email.ignore"),
     signature: t("email.signature"),
   });
-  await sendMail({ to: [input.to], subject: input.subject, text, html });
+  await sendMail(input.clubId, { to: [input.to], subject: input.subject, text, html });
 }
 
-export async function sendMagicLinkEmail(to: string, url: string, locale: Locale, name: string) {
+export async function sendMagicLinkEmail(
+  clubId: string | null,
+  to: string,
+  url: string,
+  locale: Locale,
+  name: string,
+) {
   const t = await getTranslator(locale);
   await sendActionEmail({
+    clubId,
     to,
     locale,
     name,
@@ -40,6 +48,7 @@ export async function sendMagicLinkEmail(to: string, url: string, locale: Locale
 }
 
 export async function sendResetPasswordEmail(
+  clubId: string | null,
   to: string,
   url: string,
   locale: Locale,
@@ -47,6 +56,7 @@ export async function sendResetPasswordEmail(
 ) {
   const t = await getTranslator(locale);
   await sendActionEmail({
+    clubId,
     to,
     locale,
     name,
@@ -58,6 +68,7 @@ export async function sendResetPasswordEmail(
 }
 
 export async function sendInvitationEmail(input: {
+  clubId: string;
   to: string;
   url: string;
   locale: Locale;
@@ -69,6 +80,7 @@ export async function sendInvitationEmail(input: {
   const t = await getTranslator(input.locale);
   const role = t(`roles.${input.role}`);
   await sendActionEmail({
+    clubId: input.clubId,
     to: input.to,
     locale: input.locale,
     name: null,
