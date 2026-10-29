@@ -28,13 +28,34 @@ Browser ──https──▶ nginx (Port 443, Zertifikat) ──http──▶ 12
   sudo apt install nginx certbot python3-certbot-nginx
   ```
 
-### 2. Code holen und konfigurieren
+### 2. Eigenen Benutzer anlegen, Code holen und konfigurieren
+
+Die App gehört einem eigenen Systembenutzer `lektionsplaner`. So liegen Dateien, die Geheimnisse
+in `.env` und die Backups getrennt vom persönlichen Konto. Der Benutzer hat kein Passwort und kann
+sich nicht per SSH anmelden; man wechselt mit `sudo` zu ihm.
 
 ```bash
+sudo adduser --system --group --home /home/lektionsplaner --shell /bin/bash lektionsplaner
+sudo usermod -aG docker lektionsplaner
+sudo install -d -o lektionsplaner -g lektionsplaner -m 750 /opt/lektionsplaner
+```
+
+> Wer in der Gruppe `docker` ist, hat auf dem Server praktisch Root-Rechte. Der eigene Benutzer
+> sorgt für Ordnung und Dateirechte, ist aber keine harte Sicherheitsgrenze: seine Shell nur
+> Personen geben, denen man auch Root geben würde.
+
+Ab hier als dieser Benutzer arbeiten (zurück mit `exit`):
+
+```bash
+sudo -iu lektionsplaner
 git clone https://github.com/cysecer/j-s_lektionsplanner.git /opt/lektionsplaner
 cd /opt/lektionsplaner
 cp .env.production.example .env
+chmod 600 .env        # Geheimnisse: nur der Benutzer lektionsplaner darf sie lesen
 ```
+
+Auch alle späteren Befehle dieser Anleitung (`docker compose …`, Updates, Backup-Skript) laufen als
+`lektionsplaner`: zuerst `sudo -iu lektionsplaner` und `cd /opt/lektionsplaner`.
 
 In `.env` drei Werte setzen (Erklärungen stehen in der Datei):
 
@@ -48,7 +69,22 @@ In `.env` drei Werte setzen (Erklärungen stehen in der Datei):
 Einladungen und Anmelde-E-Mails, und Passkeys werden an diese Domain gebunden. Später die Domain zu
 wechseln heisst, dass alle ihre Passkeys neu einrichten (Anmeldelink und Passwort gehen weiter).
 
-`.env` enthält Geheimnisse: `chmod 600 .env`, nie ins Git.
+`.env` enthält Geheimnisse und gehört nie ins Git.
+
+**Berechtigungen im Überblick:**
+
+| Pfad                             | Besitzer           | Rechte | Warum                                        |
+| -------------------------------- | ------------------ | ------ | -------------------------------------------- |
+| `/opt/lektionsplaner`            | lektionsplaner     | `750`  | Andere Benutzer des Servers sehen nicht rein |
+| `/opt/lektionsplaner/.env`       | lektionsplaner     | `600`  | Geheimnisse: nur der Besitzer liest sie      |
+| `/opt/lektionsplaner/backup.sh`  | lektionsplaner     | `700`  | Nur der Besitzer führt es aus oder ändert es |
+| `/var/backups/lektionsplaner`    | lektionsplaner     | `700`  | Backups enthalten alle Daten                 |
+| nginx-Konfiguration, Zertifikate | root (unverändert) |        | Verwaltet von nginx und certbot              |
+
+Datenbank und hochgeladene Bilder liegen in Docker-Volumes unter `/var/lib/docker` und werden von
+Docker verwaltet; im Container läuft die App als unprivilegierter Benutzer `node`. Dort ist nichts
+einzustellen. Die Volumes nicht durch Host-Ordner (Bind-Mounts) ersetzen, sonst müssen die
+Besitzrechte von Hand passen.
 
 ### 3. Starten
 
@@ -127,6 +163,7 @@ Die App ist nur über `127.0.0.1` erreichbar, also nur über nginx. `TRUSTED_PRO
 ### Updates
 
 ```bash
+sudo -iu lektionsplaner
 cd /opt/lektionsplaner
 git pull
 docker compose -f docker-compose.prod.yml up -d --build
@@ -141,7 +178,18 @@ muss nach dem Update eventuell einmal neu laden.
 Zu sichern sind die Datenbank und der Upload-Ordner (Logo, Skizzen). PDFs werden nie gespeichert.
 
 **Tägliches Backup einrichten (optional).** Das Skript sichert beides in `/var/backups/lektionsplaner`
-und löscht Sicherungen, die älter als 14 Tage sind. Als `/opt/lektionsplaner/backup.sh` speichern:
+und löscht Sicherungen, die älter als 14 Tage sind. Es läuft als Benutzer `lektionsplaner`, nicht
+als root (ein Root-Job, der ein vom App-Benutzer änderbares Skript ausführt, wäre eine Hintertür).
+
+Zuerst Backup-Ordner und Logdatei für den Benutzer anlegen (mit deinem eigenen Konto):
+
+```bash
+sudo install -d -o lektionsplaner -g lektionsplaner -m 700 /var/backups/lektionsplaner
+sudo install -o lektionsplaner -g lektionsplaner -m 640 /dev/null /var/log/lektionsplaner-backup.log
+```
+
+Dann als `lektionsplaner` (`sudo -iu lektionsplaner`) dieses Skript als
+`/opt/lektionsplaner/backup.sh` speichern:
 
 ```bash
 #!/bin/sh
@@ -173,22 +221,33 @@ find "$BACKUP_DIR" -type f \( -name 'db-*.dump' -o -name 'storage-*.tar.gz' \) \
 echo "$(date -Iseconds) backup ok: db-$STAMP.dump, storage-$STAMP.tar.gz"
 ```
 
-Ausführbar machen, einmal von Hand testen und dann täglich um 02:30 Uhr laufen lassen:
+Ausführbar machen und einmal von Hand testen (weiterhin als `lektionsplaner`):
 
 ```bash
-sudo chmod 700 /opt/lektionsplaner/backup.sh
-sudo /opt/lektionsplaner/backup.sh && ls -lh /var/backups/lektionsplaner
-echo '30 2 * * * root /opt/lektionsplaner/backup.sh >> /var/log/lektionsplaner-backup.log 2>&1' \
+chmod 700 /opt/lektionsplaner/backup.sh
+/opt/lektionsplaner/backup.sh && ls -lh /var/backups/lektionsplaner
+exit
+```
+
+Dann mit deinem eigenen Konto den täglichen Lauf um 02:30 Uhr einrichten:
+
+```bash
+echo '30 2 * * * lektionsplaner /opt/lektionsplaner/backup.sh >> /var/log/lektionsplaner-backup.log 2>&1' \
   | sudo tee /etc/cron.d/lektionsplaner-backup
 ```
+
+`backup.sh` erscheint in `git status` als unversionierte Datei; das ist harmlos und stört
+`git pull` nicht.
 
 Ob es läuft, zeigt `tail /var/log/lektionsplaner-backup.log`. Ein Backup auf demselben Server
 schützt vor Bedienfehlern, aber nicht vor einem Plattenausfall: die Dateien zusätzlich regelmässig
 auf einen anderen Rechner kopieren (z. B. `rsync` oder der Backup-Dienst des Hosting-Anbieters).
 
-**Wiederherstellen** (z. B. auf einer frischen Installation nach Schritt 3; Dateinamen anpassen):
+**Wiederherstellen** (z. B. auf einer frischen Installation nach Schritt 3; als `lektionsplaner`,
+Dateinamen anpassen):
 
 ```bash
+sudo -iu lektionsplaner
 cd /opt/lektionsplaner
 docker compose -f docker-compose.prod.yml stop app
 docker compose -f docker-compose.prod.yml exec -T db \
@@ -204,6 +263,8 @@ SMTP-Passwort nicht mehr entschlüsseln (es muss dann neu eingegeben werden), un
 abgemeldet.
 
 ### Nützliche Befehle
+
+Als `lektionsplaner` im Ordner `/opt/lektionsplaner` (`sudo -iu lektionsplaner`, `cd /opt/lektionsplaner`):
 
 | Befehl (`docker compose -f docker-compose.prod.yml …`) | Zweck                             |
 | ------------------------------------------------------ | --------------------------------- |
