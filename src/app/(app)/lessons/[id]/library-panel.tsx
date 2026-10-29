@@ -17,7 +17,13 @@ import { blockSnapshotAction, searchLibraryAction } from "../actions";
 import { itemFromSnapshot } from "./item-from-snapshot";
 import { libraryDraggableId, type DragData } from "./lesson-dnd";
 
-type Result = { id: string; title: string; durationMinutes: number | null; tags: string[] };
+type Result = {
+  id: string;
+  title: string;
+  durationMinutes: number | null;
+  tags: string[];
+  material: string[];
+};
 const SUGGESTED = "suggested";
 
 export function LibraryPanel({
@@ -32,8 +38,17 @@ export function LibraryPanel({
   onAdd: (item: EditorItem) => void;
 }) {
   const t = useTranslations();
-  const ids = { search: useId(), insert: useId(), durMax: useId(), kids: useId(), all: useId() };
+  const ids = {
+    search: useId(),
+    material: useId(),
+    materials: useId(),
+    insert: useId(),
+    durMax: useId(),
+    kids: useId(),
+    all: useId(),
+  };
   const [q, setQ] = useState("");
+  const [material, setMaterial] = useState("");
   const [durMax, setDurMax] = useState("");
   const [kids, setKids] = useState("");
   const [allTeams, setAllTeams] = useState(false);
@@ -56,6 +71,7 @@ export function LibraryPanel({
       };
       const result = await searchLibraryAction({
         q: q.trim().slice(0, 100) || undefined,
+        material: material.trim().slice(0, 100) || undefined,
         teamId: allTeams ? null : lessonTeamId,
         durMax: num(durMax, 600),
         kids: num(kids, 500),
@@ -71,7 +87,7 @@ export function LibraryPanel({
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [q, durMax, kids, allTeams, lessonTeamId, page, t]);
+  }, [q, material, durMax, kids, allTeams, lessonTeamId, page, t]);
 
   async function add(block: Result) {
     const result = await blockSnapshotAction({ blockId: block.id });
@@ -112,6 +128,23 @@ export function LibraryPanel({
           className="h-11 pl-10 text-base"
         />
       </div>
+      <label htmlFor={ids.material} className="grid gap-1 text-sm font-medium">
+        {t("blocks.filterMaterial")}
+        <Input
+          id={ids.material}
+          value={material}
+          maxLength={100}
+          list={ids.materials}
+          placeholder={t("blocks.materialPlaceholder")}
+          onChange={(e) => resetPage(setMaterial)(e.target.value)}
+          className="h-11 text-base"
+        />
+        <datalist id={ids.materials}>
+          {options.materials.map((m) => (
+            <option key={m} value={m} />
+          ))}
+        </datalist>
+      </label>
       <div className="grid grid-cols-2 gap-2">
         <label htmlFor={ids.durMax} className="grid gap-1 text-sm font-medium">
           {t("blocks.durationRange")} {t("common.to")}
@@ -242,6 +275,11 @@ function LibraryResult({
             .filter(Boolean)
             .join(" · ")}
         </p>
+        {block.material.length > 0 ? (
+          <p className="text-muted-foreground text-xs break-words">
+            {t("blocks.materialList", { list: block.material.join(", ") })}
+          </p>
+        ) : null}
       </div>
       <Button
         variant="ghost"

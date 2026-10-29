@@ -13,6 +13,8 @@ const intParam = (min: number, max: number) => z.coerce.number().int().min(min).
 /** URL search params of the block library (also used by the lesson editor's side panel). */
 export const blockSearchSchema = z.object({
   q: loose(z.string().trim().min(1).max(100)),
+  /** Blocks that use this material (e.g. "Softbälle" also finds "Softball"). */
+  material: loose(z.string().trim().min(1).max(100)),
   /** Comma-separated tag ids; a block must carry all of them. */
   tags: loose(
     z
@@ -63,6 +65,26 @@ export function blockSearchToQuery(search: Partial<Record<keyof BlockSearch, unk
     params.set(key, Array.isArray(value) ? value.join(",") : String(value));
   }
   return params.toString();
+}
+
+/**
+ * Turns the free-text material entries of all blocks into search suggestions:
+ * leading quantities go ("4 Fussbälle" → "Fussbälle", "Ca. 10 Matten" →
+ * "Matten"), duplicates are merged case-insensitively, sorted by name.
+ */
+export function materialSuggestions(entries: string[], locale = "de-CH"): string[] {
+  const byKey = new Map<string, string>();
+  for (const entry of entries) {
+    const name = entry
+      .trim()
+      .replace(/^(ca\.?|ev\.?|evtl\.?|je|min\.?|max\.?)\s+/i, "")
+      .replace(/^\d+(\s*[-–]\s*\d+)?\s*(x\s+)?/i, "")
+      .trim();
+    if (name.length < 2) continue;
+    const key = name.toLocaleLowerCase(locale);
+    if (!byKey.has(key)) byKey.set(key, name);
+  }
+  return [...byKey.values()].sort((a, b) => a.localeCompare(b, locale));
 }
 
 /** Escapes LIKE wildcards so user input is matched literally. */

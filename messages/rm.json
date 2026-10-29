@@ -405,7 +405,10 @@
     "teamCount": "{count, plural, one {# team} other {# teams}}",
     "kidsRange": "{min}–{max} uffants",
     "kidsFrom": "a partir da {min} uffants",
-    "kidsTo": "fin {max} uffants"
+    "kidsTo": "fin {max} uffants",
+    "filterMaterial": "Material",
+    "materialPlaceholder": "p.ex. ballas moletgas, kegels",
+    "materialList": "Material: {list}"
   },
   "settings": {
     "title": "Configuraziun",

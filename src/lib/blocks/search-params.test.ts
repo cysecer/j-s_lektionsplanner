@@ -3,6 +3,7 @@ import {
   blockSearchSchema,
   blockSearchToQuery,
   escapeLike,
+  materialSuggestions,
   normalizeSearchParams,
 } from "./search-params";
 
@@ -99,5 +100,35 @@ describe("helpers", () => {
 
   it("escapes LIKE wildcards", () => {
     expect(escapeLike("100%_a\\b")).toBe("100\\%\\_a\\\\b");
+  });
+});
+
+describe("materialSuggestions", () => {
+  it("drops quantities, merges duplicates and sorts", () => {
+    expect(
+      materialSuggestions([
+        "4 Fussbälle",
+        "Ca. 10 Matten",
+        "fussbälle",
+        "Keulen",
+        "2-3 Softbälle",
+        "Ev. Bändeli",
+        "10 x Reifen",
+        "5",
+        "  ",
+      ]),
+    ).toEqual(["Bändeli", "Fussbälle", "Keulen", "Matten", "Reifen", "Softbälle"]);
+  });
+
+  it("keeps names that merely contain digits", () => {
+    expect(materialSuggestions(["Ball Grösse 5"])).toEqual(["Ball Grösse 5"]);
+  });
+});
+
+describe("material parameter", () => {
+  it("is trimmed and limited", () => {
+    expect(blockSearchSchema.parse({ material: "  Softbälle " }).material).toBe("Softbälle");
+    expect(blockSearchSchema.parse({ material: "x".repeat(101) }).material).toBeUndefined();
+    expect(blockSearchSchema.parse({ material: "   " }).material).toBeUndefined();
   });
 });

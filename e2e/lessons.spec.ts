@@ -36,6 +36,13 @@ test("plan a lesson: library, quick items, timing, autosave", async ({ page }) =
   await page.getByLabel("Lektionsdauer (Minuten)").fill("60");
   await page.getByLabel("Startzeit").fill("17:30");
 
+  // Library material filter shows what each block needs.
+  const panel = page.getByRole("complementary");
+  await panel.getByLabel("Material").fill("Matten");
+  await expect(panel.getByText("Material: Ca. 10 Matten, 4 Fussbälle")).toBeVisible();
+  await expect(panel.getByText("Keulenfussball")).toHaveCount(0);
+  await panel.getByLabel("Material").fill("");
+
   // From the library: lands in its suggested section (Hauptteil).
   await addFromLibrary(page, "Keulen", "Keulenfussball");
   await addFromLibrary(page, "Matten", "Mattenfussball");

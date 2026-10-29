@@ -1,7 +1,13 @@
 import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
-import { BLOCKS_PAGE_SIZE, escapeLike, type BlockSearch, type BlockSort } from "./search-params";
+import {
+  BLOCKS_PAGE_SIZE,
+  escapeLike,
+  materialSuggestions,
+  type BlockSearch,
+  type BlockSort,
+} from "./search-params";
 
 export type BlockListItem = Awaited<ReturnType<typeof searchBlocks>>["items"][number];
 
@@ -20,6 +26,15 @@ export async function searchBlocks(
     conditions.push(Prisma.sql`(
       to_tsvector('german', b."searchText") @@ websearch_to_tsquery('german', ${search.q})
       OR lower(b."searchText") LIKE ${like} ESCAPE '\\'
+    )`);
+  }
+  if (search.material) {
+    // Stemmed per entry, so plural and singular match; substring for partial words.
+    const like = `%${escapeLike(search.material.toLowerCase())}%`;
+    conditions.push(Prisma.sql`EXISTS (
+      SELECT 1 FROM unnest(b.material) m
+      WHERE to_tsvector('german', m) @@ plainto_tsquery('german', ${search.material})
+         OR lower(m) LIKE ${like} ESCAPE '\\'
     )`);
   }
   if (search.teamId) {
@@ -99,6 +114,7 @@ export async function searchBlocks(
       teamCount: true,
       minParticipants: true,
       maxParticipants: true,
+      material: true,
       suggestedSection: { select: { builtin: true, name: true } },
       tags: { select: { tag: { select: { id: true, name: true } } } },
       teams: { select: { team: { select: { id: true, name: true } } } },
@@ -158,8 +174,17 @@ export async function getBlockUsage(clubId: string, blockId: string) {
 }
 
 /** Options for filters and the editor (active entries only). */
+/** Material names used in the club's blocks, as suggestions for the material filter. */
+export async function listMaterials(clubId: string) {
+  const rows = await db.$queryRaw<{ m: string }[]>`
+    SELECT DISTINCT m FROM "ProgramBlock" b, unnest(b.material) m
+    WHERE b."clubId" = ${clubId}::uuid
+    LIMIT 2000`;
+  return materialSuggestions(rows.map((r) => r.m));
+}
+
 export async function getBlockOptions(clubId: string) {
-  const [tags, teams, sections, fields] = await Promise.all([
+  const [tags, teams, sections, fields, materials] = await Promise.all([
     db.tag.findMany({
       where: { clubId },
       orderBy: { name: "asc" },
@@ -180,6 +205,7 @@ export async function getBlockOptions(clubId: string) {
       orderBy: [{ sortOrder: "asc" }, { label: "asc" }],
       select: { id: true, label: true, type: true, searchable: true, filterable: true },
     }),
+    listMaterials(clubId),
   ]);
-  return { tags, teams, sections, fields };
+  return { tags, teams, sections, fields, materials };
 }

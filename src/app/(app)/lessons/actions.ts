@@ -65,6 +65,7 @@ export const searchLibraryAction = action({
   role: "COACH",
   input: z.strictObject({
     q: z.string().trim().max(100).optional(),
+    material: z.string().trim().max(100).optional(),
     tags: z.array(z.uuid()).max(30).optional(),
     section: z.uuid().optional(),
     teamId: z.uuid().nullable(),
@@ -74,8 +75,13 @@ export const searchLibraryAction = action({
     difficulty: z.enum(Difficulty).optional(),
     page: z.int().min(1).max(10_000).optional(),
   }),
-  handler: async ({ teamId, q, ...search }, { viewer }) => {
-    const result = await searchBlocks(viewer.clubId, { ...search, q: q || undefined, teamId });
+  handler: async ({ teamId, q, material, ...search }, { viewer }) => {
+    const result = await searchBlocks(viewer.clubId, {
+      ...search,
+      q: q || undefined,
+      material: material || undefined,
+      teamId,
+    });
     return {
       total: result.total,
       page: result.page,
@@ -85,6 +91,7 @@ export const searchLibraryAction = action({
         title: b.title,
         durationMinutes: b.durationMinutes,
         tags: b.tags.map((t) => t.name),
+        material: b.material,
       })),
     };
   },

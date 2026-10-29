@@ -405,7 +405,10 @@
     "teamCount": "{count, plural, one {# team} other {# teams}}",
     "kidsRange": "{min}–{max} kids",
     "kidsFrom": "from {min} kids",
-    "kidsTo": "up to {max} kids"
+    "kidsTo": "up to {max} kids",
+    "filterMaterial": "Equipment",
+    "materialPlaceholder": "e.g. soft balls, clubs",
+    "materialList": "Equipment: {list}"
   },
   "settings": {
     "title": "Settings",

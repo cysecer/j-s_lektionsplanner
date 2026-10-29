@@ -405,7 +405,10 @@
     "teamCount": "{count, plural, one {# équipe} other {# équipes}}",
     "kidsRange": "{min}–{max} enfants",
     "kidsFrom": "dès {min} enfants",
-    "kidsTo": "jusqu'à {max} enfants"
+    "kidsTo": "jusqu'à {max} enfants",
+    "filterMaterial": "Matériel",
+    "materialPlaceholder": "p. ex. balles en mousse, quilles",
+    "materialList": "Matériel : {list}"
   },
   "settings": {
     "title": "Paramètres",

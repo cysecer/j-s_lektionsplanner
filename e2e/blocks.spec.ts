@@ -151,6 +151,18 @@ test("search, filters and robust URL parameters", async ({ page }) => {
   await page.goto("/blocks?kids=24&team=all");
   await expect(page.getByRole("link", { name: /Keulenfussball/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Mattenfussball/ })).toHaveCount(0);
+  // Material: only the material list counts (plural/singular alike), not the description.
+  await page.goto("/blocks?material=Fussball&team=all");
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Mattenfussball/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Dschungelspiel/ })).toHaveCount(0);
+  await page.goto("/blocks?material=Matte&team=all");
+  await expect(page.getByRole("link", { name: /Mattenfussball/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toHaveCount(0);
+  await expect(page.getByLabel("Material")).toHaveValue("Matte");
+  // Wildcards are taken literally.
+  await page.goto("/blocks?material=%25&team=all");
+  await expect(page.getByRole("link", { name: /Keulenfussball/ })).toHaveCount(0);
   // Exact team count: of the demo games only Dschungelspiel is played in 2 teams.
   await page.goto("/blocks?teamCount=2&team=all");
   await expect(page.getByRole("link", { name: /Dschungelspiel/ })).toBeVisible();

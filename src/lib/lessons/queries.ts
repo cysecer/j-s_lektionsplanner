@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
+import { listMaterials } from "@/lib/blocks/queries";
 
 export const LESSONS_PAGE_SIZE = 20;
 
@@ -63,7 +64,7 @@ export async function getLessonOptions(
   usedTeamId: string | null,
   usedCoachIds: string[],
 ) {
-  const [teams, coaches, sections, layouts, fields, tags] = await Promise.all([
+  const [teams, coaches, sections, layouts, fields, tags, materials] = await Promise.all([
     db.team.findMany({
       where: { clubId, OR: [{ archivedAt: null }, ...(usedTeamId ? [{ id: usedTeamId }] : [])] },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
@@ -95,6 +96,7 @@ export async function getLessonOptions(
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
+    listMaterials(clubId),
   ]);
   return {
     teams,
@@ -107,6 +109,7 @@ export async function getLessonOptions(
     layouts,
     fields: fields.map(({ archivedAt, ...f }) => ({ ...f, archived: archivedAt !== null })),
     tags,
+    materials,
   };
 }
 

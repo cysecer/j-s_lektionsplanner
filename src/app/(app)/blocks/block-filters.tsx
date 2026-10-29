@@ -30,6 +30,7 @@ export async function BlockFilters({
   const t = await getTranslations();
   const filtersActive = Boolean(
     search.tags?.length ||
+    search.material ||
     search.section ||
     search.team ||
     search.durMin !== undefined ||
@@ -74,6 +75,22 @@ export async function BlockFilters({
           {t("blocks.filters")}
         </summary>
         <div className="grid gap-4 border-t p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <label className="grid gap-1 text-sm font-medium">
+            {t("blocks.filterMaterial")}
+            <Input
+              name="material"
+              defaultValue={search.material ?? ""}
+              maxLength={100}
+              list="block-materials"
+              placeholder={t("blocks.materialPlaceholder")}
+              className="h-11 text-base"
+            />
+            <datalist id="block-materials">
+              {options.materials.map((m) => (
+                <option key={m} value={m} />
+              ))}
+            </datalist>
+          </label>
           <label className="grid gap-1 text-sm font-medium">
             {t("blocks.team")}
             <select name="team" defaultValue={search.team ?? ""} className={selectClass}>

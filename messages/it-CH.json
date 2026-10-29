@@ -405,7 +405,10 @@
     "teamCount": "{count, plural, one {# squadra} other {# squadre}}",
     "kidsRange": "{min}–{max} bambini",
     "kidsFrom": "da {min} bambini",
-    "kidsTo": "fino a {max} bambini"
+    "kidsTo": "fino a {max} bambini",
+    "filterMaterial": "Materiale",
+    "materialPlaceholder": "ad es. palle morbide, birilli",
+    "materialList": "Materiale: {list}"
   },
   "settings": {
     "title": "Impostazioni",
