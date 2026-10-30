@@ -265,8 +265,7 @@
       "conflictTitle": "Qualcun altro ha modificato questa lezione",
       "conflictBody": "Ricarica la pagina per vedere la versione attuale. Le tue modifiche degli ultimi secondi andranno perse.",
       "reload": "Ricarica",
-      "saveNow": "Salva",
-      "finalHint": "Le lezioni pronte non vengono salvate automaticamente."
+      "saveNow": "Salva"
     },
     "timing": {
       "total": "Pianificato: {minutes}",
@@ -304,7 +303,11 @@
       "otherGroup": "Altri monitori",
       "freeText": "Testo libero …",
       "responsibleText": "Nome o descrizione",
-      "customFields": "Campi aggiuntivi"
+      "customFields": "Campi aggiuntivi",
+      "unsavedTitle": "Applicare le modifiche?",
+      "unsavedBody": "Hai modificato questo punto del programma. Applicare le modifiche alla lezione?",
+      "keepEditing": "Continua a modificare",
+      "discard": "Scarta"
     },
     "choice": {
       "title": "Dove deve valere la modifica?",
@@ -377,7 +380,21 @@
     },
     "saveDraft": "Salva bozza",
     "draftSaved": "Bozza salvata. Da ora le modifiche vengono salvate automaticamente.",
-    "notSavedYet": "Non ancora salvata"
+    "notSavedYet": "Non ancora salvata",
+    "leave": {
+      "newTitle": "Lezione non ancora salvata",
+      "newBody": "Questa nuova lezione non è ancora salvata. Salvarla come bozza prima di uscire?",
+      "failedTitle": "Modifiche non salvate",
+      "failedBody": "Le ultime modifiche non sono state salvate (vedi l’avviso sopra). Se esci ora, andranno perse.",
+      "stay": "Continua a modificare",
+      "discard": "Scarta ed esci"
+    },
+    "recovery": {
+      "title": "Trovata lezione non salvata",
+      "body": "«{title}» del {time} non è mai stata salvata. Vuoi riprendere da lì?",
+      "restore": "Ripristina",
+      "discard": "Scarta"
+    }
   },
   "blocks": {
     "title": "Blocchi di programma",

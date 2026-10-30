@@ -265,8 +265,7 @@
       "conflictTitle": "Someone else changed this lesson",
       "conflictBody": "Reload the page to see the current version. Your changes from the last few seconds will be lost.",
       "reload": "Reload",
-      "saveNow": "Save",
-      "finalHint": "Final lessons are not saved automatically."
+      "saveNow": "Save"
     },
     "timing": {
       "total": "Planned: {minutes}",
@@ -304,7 +303,11 @@
       "otherGroup": "Other coaches",
       "freeText": "Free text …",
       "responsibleText": "Name or description",
-      "customFields": "Custom fields"
+      "customFields": "Custom fields",
+      "unsavedTitle": "Apply changes?",
+      "unsavedBody": "You changed this program item. Apply the changes to the lesson?",
+      "keepEditing": "Keep editing",
+      "discard": "Discard"
     },
     "choice": {
       "title": "Where should the change apply?",
@@ -377,7 +380,21 @@
     },
     "saveDraft": "Save draft",
     "draftSaved": "Draft saved. Changes are now saved automatically.",
-    "notSavedYet": "Not saved yet"
+    "notSavedYet": "Not saved yet",
+    "leave": {
+      "newTitle": "Lesson not saved yet",
+      "newBody": "This new lesson is not saved yet. Save it as a draft before you leave?",
+      "failedTitle": "Changes not saved",
+      "failedBody": "The latest changes could not be saved (see the notice above). If you leave now, they are lost.",
+      "stay": "Keep editing",
+      "discard": "Discard and leave"
+    },
+    "recovery": {
+      "title": "Unsaved lesson found",
+      "body": "“{title}” from {time} was never saved. Continue where you left off?",
+      "restore": "Restore",
+      "discard": "Discard"
+    }
   },
   "blocks": {
     "title": "Program blocks",

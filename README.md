@@ -330,6 +330,19 @@ Für die E2E-Tests einmalig den Browser installieren: `npx playwright install ch
 E2E-Tests nutzen eine eigene Datenbank (`lektionsplaner_e2e`), die bei jedem Lauf neu angelegt
 wird; deine Entwicklungsdaten bleiben unberührt. Docker (Postgres + Mailpit) muss laufen.
 
+## Lektionen speichern
+
+- **Neue Lektion:** «Neue Lektionsvorbereitung» öffnet eine leere Lektion, die erst mit
+  **Entwurf speichern** angelegt wird. Wer vorher die Seite verlässt, wird gefragt (speichern,
+  verwerfen oder weiter bearbeiten). Zusätzlich liegt eine Kopie im Browser: nach einem Neuladen,
+  Absturz oder «Zurück» bietet die nächste neue Lektion an, sie wiederherzustellen.
+- **Danach speichert der Editor automatisch**, kurz nach jeder Änderung – bei Entwürfen und bei
+  fertigen Lektionen. Wer die Seite verlässt (Link, Zurück, Tab schliessen), speichert dabei noch
+  ausstehende Änderungen sofort. Nur wenn das Speichern scheitert (Eingabefehler, keine Verbindung,
+  gleichzeitige Änderung durch jemand anderen), fragt der Editor vor dem Verlassen nach.
+- **Programmpunkt bearbeiten:** Ein Klick neben das Fenster schliesst es nicht. Escape oder ✕ mit
+  Änderungen fragen, ob sie übernommen werden sollen.
+
 ## PDF-Export
 
 PDFs erzeugt ein Headless-Chromium auf dem Server: Er öffnet eine interne Druckseite der App

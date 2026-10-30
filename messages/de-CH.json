@@ -265,8 +265,7 @@
       "conflictTitle": "Jemand anders hat diese Lektion geändert",
       "conflictBody": "Lade die Seite neu, um die aktuelle Version zu sehen. Deine Änderungen der letzten Sekunden gehen dabei verloren.",
       "reload": "Neu laden",
-      "saveNow": "Speichern",
-      "finalHint": "Fertige Lektionen werden nicht automatisch gespeichert."
+      "saveNow": "Speichern"
     },
     "timing": {
       "total": "Geplant: {minutes}",
@@ -304,7 +303,11 @@
       "otherGroup": "Weitere Leitende",
       "freeText": "Freier Text …",
       "responsibleText": "Name oder Beschreibung",
-      "customFields": "Zusatzfelder"
+      "customFields": "Zusatzfelder",
+      "unsavedTitle": "Änderungen übernehmen?",
+      "unsavedBody": "Du hast an diesem Programmpunkt etwas geändert. Sollen die Änderungen in die Lektion übernommen werden?",
+      "keepEditing": "Weiter bearbeiten",
+      "discard": "Verwerfen"
     },
     "choice": {
       "title": "Wo soll die Änderung gelten?",
@@ -377,7 +380,21 @@
     },
     "saveDraft": "Entwurf speichern",
     "draftSaved": "Entwurf gespeichert. Änderungen werden ab jetzt automatisch gespeichert.",
-    "notSavedYet": "Noch nicht gespeichert"
+    "notSavedYet": "Noch nicht gespeichert",
+    "leave": {
+      "newTitle": "Lektion noch nicht gespeichert",
+      "newBody": "Diese neue Lektion ist noch nicht gespeichert. Willst du sie als Entwurf speichern, bevor du gehst?",
+      "failedTitle": "Änderungen nicht gespeichert",
+      "failedBody": "Die letzten Änderungen konnten nicht gespeichert werden (siehe Hinweis oben). Wenn du jetzt gehst, gehen sie verloren.",
+      "stay": "Weiter bearbeiten",
+      "discard": "Verwerfen und gehen"
+    },
+    "recovery": {
+      "title": "Nicht gespeicherte Lektion gefunden",
+      "body": "«{title}» vom {time} wurde nie gespeichert. Willst du dort weitermachen?",
+      "restore": "Wiederherstellen",
+      "discard": "Verwerfen"
+    }
   },
   "blocks": {
     "title": "Programmblöcke",

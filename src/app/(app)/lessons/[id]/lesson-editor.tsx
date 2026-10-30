@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { withoutPrefix } from "@/components/blocks/content-fields";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,6 +24,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { actionErrorMessage, describeFieldErrors } from "@/lib/i18n-keys";
+import {
+  clearNewLessonDraft,
+  newLessonDraftSnapshot,
+  parseNewLessonDraft,
+  storeNewLessonDraft,
+} from "@/lib/lessons/draft-recovery";
 import { normalize, type EditorItem } from "@/lib/lessons/editor-model";
 import type { LessonOptions } from "@/lib/lessons/queries";
 import type { LessonGeneralValues } from "@/lib/lessons/schema";
@@ -31,6 +37,7 @@ import type { LessonStatus } from "@/generated/prisma/enums";
 import type { FieldErrors } from "@/lib/server/result";
 import { createLessonAction, saveLessonAction } from "../actions";
 import { GeneralForm } from "./general-form";
+import { LeaveDialog, useLeaveGuard } from "./leave-guard";
 import { LessonActions } from "./lesson-actions";
 import { LessonDnd } from "./lesson-dnd";
 import { LibraryPanel } from "./library-panel";
@@ -58,6 +65,7 @@ export function LessonEditor({
   creator: { name: string | null; createdAt: string };
 }) {
   const t = useTranslations();
+  const format = useFormatter();
   const router = useRouter();
   const sectionOrder = useMemo(() => options.sections.map((s) => s.id), [options.sections]);
   const [general, setGeneral] = useState(initialGeneral);
@@ -105,6 +113,7 @@ export function LessonEditor({
         const created = await createLessonAction({ lesson, items: currentItems });
         inFlight.current = false;
         if (created.ok) {
+          clearNewLessonDraft();
           setFieldErrors(undefined);
           setSaveState("saved");
           toast.success(t("lessons.draftSaved"));
@@ -181,20 +190,73 @@ export function LessonEditor({
     if (lessonId && (await savedFirst())) router.push(`/lessons/${lessonId}/preview`);
   }
 
-  // Autosave drafts shortly after the last change – once the lesson is stored.
+  // Autosave shortly after the last change – drafts and finished lessons,
+  // once the lesson is stored.
   useEffect(() => {
-    if (lessonId === null || saveState !== "dirty" || general.status !== "DRAFT") return;
+    if (lessonId === null || saveState !== "dirty") return;
     const timer = setTimeout(() => void save(), AUTOSAVE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [lessonId, general, items, saveState, save]);
 
-  // Warn before leaving with unsaved changes.
+  // Leaving in any way (link, back button, closing or hiding the tab):
+  // changes still waiting for the autosave are saved right away.
+  const saveRef = useRef(save);
+  const pendingRef = useRef(false);
   useEffect(() => {
-    if (saveState === "saved") return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [saveState]);
+    saveRef.current = save;
+    pendingRef.current = saveState === "dirty";
+  }, [save, saveState]);
+  useEffect(() => {
+    if (lessonId === null) return;
+    const flush = () => {
+      if (pendingRef.current) void saveRef.current();
+    };
+    const onHidden = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+    document.addEventListener("visibilitychange", onHidden);
+    window.addEventListener("pagehide", flush);
+    window.addEventListener("beforeunload", flush);
+    return () => {
+      document.removeEventListener("visibilitychange", onHidden);
+      window.removeEventListener("pagehide", flush);
+      window.removeEventListener("beforeunload", flush);
+      flush(); // the editor closes: in-app navigation
+    };
+  }, [lessonId]);
+
+  // Ask before leaving when changes cannot be saved automatically: a new
+  // lesson not stored yet, or a stored one whose saving failed.
+  const leave = useLeaveGuard(
+    lessonId === null
+      ? saveState !== "saved"
+      : saveState === "invalid" || saveState === "error" || saveState === "conflict",
+  );
+
+  // New lessons: a copy in the browser survives reloads, crashes and the
+  // back button; it is offered again when a new lesson is opened.
+  const recoverySnapshot = useSyncExternalStore(
+    () => () => {},
+    () => (lessonId === null ? newLessonDraftSnapshot() : null),
+    () => null,
+  );
+  const [recoveryHandled, setRecoveryHandled] = useState(false);
+  // Offered until the person restores, discards or starts typing anew.
+  const recovered =
+    recoveryHandled || saveState !== "saved" ? null : parseNewLessonDraft(recoverySnapshot);
+  useEffect(() => {
+    if (lessonId !== null || saveState !== "dirty") return;
+    const timer = setTimeout(() => storeNewLessonDraft({ general, items }), 400);
+    return () => clearTimeout(timer);
+  }, [lessonId, general, items, saveState]);
+
+  function restoreDraft() {
+    if (!recovered) return;
+    setGeneral(recovered.general);
+    setItems(normalize(recovered.items, sectionOrder));
+    markDirty();
+    setRecoveryHandled(true);
+  }
 
   const generalErrors = withoutPrefix(fieldErrors, "lesson.");
   const itemErrorIds = new Set(
@@ -254,15 +316,10 @@ export function LessonEditor({
           </div>
         ) : (
           <div className="flex flex-wrap items-center gap-2">
-            <SaveIndicator state={saveState} isDraft={general.status === "DRAFT"} />
-            {general.status === "FINAL" || saveState === "invalid" || saveState === "error" ? (
-              <Button
-                className="h-11"
-                disabled={
-                  saveState === "saving" || saveState === "saved" || saveState === "conflict"
-                }
-                onClick={() => void save(true)}
-              >
+            <SaveIndicator state={saveState} />
+            {/* Autosave runs on its own; after a failure, retry by hand. */}
+            {saveState === "invalid" || saveState === "error" ? (
+              <Button className="h-11" onClick={() => void save(true)}>
                 {t("lessons.save.saveNow")}
               </Button>
             ) : null}
@@ -301,6 +358,70 @@ export function LessonEditor({
           </div>
         )}
       </div>
+
+      {recovered ? (
+        <Alert role="status">
+          <AlertTitle>{t("lessons.recovery.title")}</AlertTitle>
+          <AlertDescription className="grid gap-2">
+            <p>
+              {t("lessons.recovery.body", {
+                title: recovered.general.title || t("lessons.untitled"),
+                time: format.dateTime(new Date(recovered.savedAt), {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                }),
+              })}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button className="h-11" onClick={restoreDraft}>
+                {t("lessons.recovery.restore")}
+              </Button>
+              <Button
+                variant="outline"
+                className="h-11"
+                onClick={() => {
+                  clearNewLessonDraft();
+                  setRecoveryHandled(true);
+                }}
+              >
+                {t("lessons.recovery.discard")}
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      <LeaveDialog
+        open={leave.target !== null}
+        title={lessonId === null ? t("lessons.leave.newTitle") : t("lessons.leave.failedTitle")}
+        description={lessonId === null ? t("lessons.leave.newBody") : t("lessons.leave.failedBody")}
+        onCancel={leave.cancel}
+      >
+        <Button variant="outline" className="h-11" onClick={leave.cancel}>
+          {t("lessons.leave.stay")}
+        </Button>
+        <Button
+          variant="outline"
+          className="h-11"
+          onClick={() => {
+            if (lessonId === null) clearNewLessonDraft();
+            leave.leave();
+          }}
+        >
+          {t("lessons.leave.discard")}
+        </Button>
+        {lessonId === null ? (
+          <Button
+            className="h-11"
+            onClick={async () => {
+              leave.cancel();
+              await save(true);
+            }}
+          >
+            {t("lessons.saveDraft")}
+          </Button>
+        ) : null}
+      </LeaveDialog>
 
       {saveState === "conflict" ? (
         <Alert variant="destructive" role="alert">
@@ -389,11 +510,11 @@ export function LessonEditor({
   );
 }
 
-function SaveIndicator({ state, isDraft }: { state: SaveState; isDraft: boolean }) {
+function SaveIndicator({ state }: { state: SaveState }) {
   const t = useTranslations("lessons.save");
   const content: Record<SaveState, [React.ReactNode, string]> = {
     saved: [<Check key="i" aria-hidden className="size-4" />, t("saved")],
-    dirty: [null, isDraft ? t("unsaved") : t("finalHint")],
+    dirty: [null, t("unsaved")],
     saving: [<Loader2 key="i" aria-hidden className="size-4 animate-spin" />, t("saving")],
     invalid: [<AlertTriangle key="i" aria-hidden className="size-4" />, t("failed")],
     error: [<AlertTriangle key="i" aria-hidden className="size-4" />, t("offline")],

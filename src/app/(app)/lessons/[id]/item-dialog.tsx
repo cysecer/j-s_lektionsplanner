@@ -69,6 +69,10 @@ export function ItemDialog({
   const [values, setValues] = useState(item);
   const [errors, setErrors] = useState<FieldErrors>();
   const [choosing, setChoosing] = useState(false);
+  // Closing with changes asks first instead of silently discarding them.
+  const [confirmingClose, setConfirmingClose] = useState(false);
+  const changed = JSON.stringify(values) !== JSON.stringify(item);
+  const requestClose = () => (changed ? setConfirmingClose(true) : onClose());
   const [busy, setBusy] = useState(false);
   const responsibleId = useId();
   const activeFields = options.fields.filter((f) => !f.archived);
@@ -150,9 +154,37 @@ export function ItemDialog({
   }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
-        {choosing ? (
+    <Dialog open onOpenChange={(open) => !open && requestClose()}>
+      <DialogContent
+        className="max-h-[90vh] overflow-y-auto sm:max-w-3xl"
+        // A click beside the dialog is too easy to make by accident.
+        onInteractOutside={(event) => event.preventDefault()}
+      >
+        {confirmingClose ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>{t("lessons.itemDialog.unsavedTitle")}</DialogTitle>
+              <DialogDescription>{t("lessons.itemDialog.unsavedBody")}</DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex-wrap gap-2">
+              <Button variant="outline" className="h-11" onClick={() => setConfirmingClose(false)}>
+                {t("lessons.itemDialog.keepEditing")}
+              </Button>
+              <Button variant="outline" className="h-11" onClick={onClose}>
+                {t("lessons.itemDialog.discard")}
+              </Button>
+              <Button
+                className="h-11"
+                onClick={() => {
+                  setConfirmingClose(false);
+                  apply();
+                }}
+              >
+                {t("lessons.itemDialog.apply")}
+              </Button>
+            </DialogFooter>
+          </>
+        ) : choosing ? (
           <ChoiceView
             name={item.title}
             busy={busy}

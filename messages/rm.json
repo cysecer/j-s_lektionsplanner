@@ -265,8 +265,7 @@
       "conflictTitle": "Insatgi auter ha midà questa lecziun",
       "conflictBody": "Chargia danovamain la pagina per vesair la versiun actuala. Tias midadas da las ultimas secundas van a perder.",
       "reload": "Chargiar danovamain",
-      "saveNow": "Memorisar",
-      "finalHint": "Lecziuns finidas na vegnan betg memorisadas automaticamain."
+      "saveNow": "Memorisar"
     },
     "timing": {
       "total": "Planisà: {minutes}",
@@ -304,7 +303,11 @@
       "otherGroup": "Ulteriurs manaders",
       "freeText": "Text liber …",
       "responsibleText": "Num u descripziun",
-      "customFields": "Champs supplementars"
+      "customFields": "Champs supplementars",
+      "unsavedTitle": "Surpigliar las midadas?",
+      "unsavedBody": "Ti has midà quest punct dal program. Duain las midadas vegnir surpigliadas en la lecziun?",
+      "keepEditing": "Cuntinuar a modifitgar",
+      "discard": "Rinunziar"
     },
     "choice": {
       "title": "Nua duai valair la midada?",
@@ -377,7 +380,21 @@
     },
     "saveDraft": "Memorisar il sboz",
     "draftSaved": "Sboz memorisà. Midadas vegnan da qua davent memorisadas automaticamain.",
-    "notSavedYet": "Anc betg memorisà"
+    "notSavedYet": "Anc betg memorisà",
+    "leave": {
+      "newTitle": "Lecziun anc betg memorisada",
+      "newBody": "Questa nova lecziun n’è anc betg memorisada. La vuls ti memorisar sco sboz avant che ir?",
+      "failedTitle": "Midadas betg memorisadas",
+      "failedBody": "Las ultimas midadas n’han betg pudì vegnir memorisadas (guarda l’avis survart). Sche ti vas ussa, van ellas a perder.",
+      "stay": "Cuntinuar a modifitgar",
+      "discard": "Rinunziar ed ir"
+    },
+    "recovery": {
+      "title": "Lecziun betg memorisada chattada",
+      "body": "«{title}» dals {time} n’è mai vegnida memorisada. Vuls ti cuntinuar là?",
+      "restore": "Restaurar",
+      "discard": "Rinunziar"
+    }
   },
   "blocks": {
     "title": "Blocs da program",

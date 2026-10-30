@@ -265,8 +265,7 @@
       "conflictTitle": "Quelqu'un d'autre a modifié cette leçon",
       "conflictBody": "Recharge la page pour voir la version actuelle. Tes modifications des dernières secondes seront perdues.",
       "reload": "Recharger",
-      "saveNow": "Enregistrer",
-      "finalHint": "Les leçons terminées ne sont pas enregistrées automatiquement."
+      "saveNow": "Enregistrer"
     },
     "timing": {
       "total": "Planifié : {minutes}",
@@ -304,7 +303,11 @@
       "otherGroup": "Autres moniteurs",
       "freeText": "Texte libre …",
       "responsibleText": "Nom ou description",
-      "customFields": "Champs supplémentaires"
+      "customFields": "Champs supplémentaires",
+      "unsavedTitle": "Reprendre les modifications ?",
+      "unsavedBody": "Tu as modifié ce point de programme. Reprendre les modifications dans la leçon ?",
+      "keepEditing": "Continuer à modifier",
+      "discard": "Abandonner"
     },
     "choice": {
       "title": "Où la modification doit-elle s'appliquer ?",
@@ -377,7 +380,21 @@
     },
     "saveDraft": "Enregistrer le brouillon",
     "draftSaved": "Brouillon enregistré. Les modifications sont désormais enregistrées automatiquement.",
-    "notSavedYet": "Pas encore enregistré"
+    "notSavedYet": "Pas encore enregistré",
+    "leave": {
+      "newTitle": "Leçon pas encore enregistrée",
+      "newBody": "Cette nouvelle leçon n’est pas encore enregistrée. L’enregistrer comme brouillon avant de partir ?",
+      "failedTitle": "Modifications non enregistrées",
+      "failedBody": "Les dernières modifications n’ont pas pu être enregistrées (voir l’avis ci-dessus). Si tu pars maintenant, elles seront perdues.",
+      "stay": "Continuer à modifier",
+      "discard": "Abandonner et partir"
+    },
+    "recovery": {
+      "title": "Leçon non enregistrée trouvée",
+      "body": "« {title} » du {time} n’a jamais été enregistrée. Reprendre là où tu t’étais arrêté·e ?",
+      "restore": "Restaurer",
+      "discard": "Abandonner"
+    }
   },
   "blocks": {
     "title": "Blocs de programme",
