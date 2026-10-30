@@ -9,10 +9,15 @@ import { LocalStorage } from "@/lib/storage/storage";
 
 export const storage = new LocalStorage(env.STORAGE_DIR);
 
-export const uploadPurposeSchema = z.enum(["logo", "sketch", "field"]);
+export const uploadPurposeSchema = z.enum(["logo", "favicon", "sketch", "field"]);
 export type UploadPurpose = z.infer<typeof uploadPurposeSchema>;
 
-const MAX_DIMENSION: Record<UploadPurpose, number> = { logo: 1024, sketch: 2000, field: 2000 };
+const MAX_DIMENSION: Record<UploadPurpose, number> = {
+  logo: 1024,
+  favicon: 512,
+  sketch: 2000,
+  field: 2000,
+};
 
 /** Validates, normalises and stores an uploaded image for a club. */
 export async function storeImage(clubId: string, input: Buffer, purpose: UploadPurpose) {
@@ -73,10 +78,17 @@ export async function deleteAssetIfUnused(assetId: string) {
     select: {
       storageKey: true,
       logoOfClub: { select: { id: true } },
+      faviconOfClub: { select: { id: true } },
       _count: { select: { blockSketches: true, lessonItemSketches: true } },
     },
   });
-  if (!asset || asset.logoOfClub || asset._count.blockSketches || asset._count.lessonItemSketches) {
+  if (
+    !asset ||
+    asset.logoOfClub ||
+    asset.faviconOfClub ||
+    asset._count.blockSketches ||
+    asset._count.lessonItemSketches
+  ) {
     return;
   }
   const [inFields] = await db.$queryRaw<{ used: boolean }[]>`
@@ -104,6 +116,7 @@ export async function sweepUnusedUploads(clubId: string): Promise<number> {
       clubId,
       createdAt: { lt: new Date(Date.now() - UNUSED_UPLOAD_GRACE_MS) },
       logoOfClub: { is: null },
+      faviconOfClub: { is: null },
       blockSketches: { none: {} },
       lessonItemSketches: { none: {} },
     },

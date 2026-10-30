@@ -37,11 +37,13 @@ const MULTIPART_OVERHEAD = 64 * 1024;
  * limit: reading stops as soon as the limit is exceeded.
  */
 export function route<
+  R extends Role | "public",
   P extends z.ZodType = Empty,
   Q extends z.ZodType = Empty,
   B extends z.ZodType = Empty,
 >(config: {
-  role: Role;
+  /** "public": no session needed (e.g. the club's favicon on the login page). */
+  role: R;
   params?: P;
   query?: Q;
   body?: B;
@@ -49,7 +51,7 @@ export function route<
   file?: { maxBytes: number };
   handler: (ctx: {
     request: NextRequest;
-    viewer: Viewer;
+    viewer: R extends "public" ? Viewer | null : Viewer;
     params: z.output<P>;
     query: z.output<Q>;
     body: z.output<B>;
@@ -60,8 +62,10 @@ export function route<
 
   return async (request: NextRequest, context: { params: Promise<unknown> }) => {
     const viewer = await getViewer();
-    if (!viewer) return fail("unauthorized");
-    if (!hasRole(viewer.role, config.role)) return fail("forbidden");
+    if (config.role !== "public") {
+      if (!viewer) return fail("unauthorized");
+      if (!hasRole(viewer.role, config.role)) return fail("forbidden");
+    }
 
     const params = (config.params ?? empty).safeParse((await context.params) ?? {});
     const query = (config.query ?? empty).safeParse(
@@ -111,7 +115,7 @@ export function route<
     try {
       return await config.handler({
         request,
-        viewer,
+        viewer: viewer as R extends "public" ? Viewer | null : Viewer,
         params: params.data as z.output<P>,
         query: query.data as z.output<Q>,
         body: body.data as z.output<B>,

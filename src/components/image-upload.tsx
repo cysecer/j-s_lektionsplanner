@@ -23,7 +23,7 @@ export function ImageUpload({
   onUploaded,
   className,
 }: {
-  purpose: "logo" | "sketch" | "field";
+  purpose: "logo" | "favicon" | "sketch" | "field";
   onUploaded: (image: UploadedImage) => void;
   className?: string;
 }) {

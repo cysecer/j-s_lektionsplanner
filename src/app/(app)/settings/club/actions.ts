@@ -25,6 +25,26 @@ export const updateClubAction = action({
   },
 });
 
+/** Sets (or removes) the favicon; the previous image is deleted once unused. */
+export const setClubFaviconAction = action({
+  role: "ADMIN",
+  input: clubLogoSchema,
+  handler: async ({ assetId }, { viewer }) => {
+    if (assetId) await requireClubAsset(viewer.clubId, assetId);
+    const previous = await db.club.findUniqueOrThrow({
+      where: { id: viewer.clubId },
+      select: { faviconAssetId: true },
+    });
+    await db.club.update({ where: { id: viewer.clubId }, data: { faviconAssetId: assetId } });
+    if (previous.faviconAssetId && previous.faviconAssetId !== assetId) {
+      await deleteAssetIfUnused(previous.faviconAssetId);
+    }
+    // Every page's <head> links the icon.
+    revalidatePath("/", "layout");
+    return null;
+  },
+});
+
 /** Sets (or removes) the logo; the previous image is deleted once unused. */
 export const setClubLogoAction = action({
   role: "ADMIN",

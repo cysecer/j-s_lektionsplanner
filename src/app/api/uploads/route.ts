@@ -7,7 +7,7 @@ import { ActionFailure } from "@/lib/server/result";
 import { route } from "@/lib/server/route";
 
 /**
- * POST /api/uploads?purpose=logo|sketch|field  (multipart, single field "file")
+ * POST /api/uploads?purpose=logo|favicon|sketch|field  (multipart, single field "file")
  * Returns the new asset; attaching it happens in a separate, validated action.
  */
 export const POST = route({
@@ -15,7 +15,10 @@ export const POST = route({
   query: z.strictObject({ purpose: uploadPurposeSchema }),
   file: { maxBytes: MAX_UPLOAD_BYTES },
   handler: async ({ viewer, query, file }) => {
-    if (query.purpose === "logo" && !hasRole(viewer.role, "ADMIN")) {
+    if (
+      (query.purpose === "logo" || query.purpose === "favicon") &&
+      !hasRole(viewer.role, "ADMIN")
+    ) {
       throw new ActionFailure("forbidden");
     }
     const asset = await storeImage(viewer.clubId, file!, query.purpose);

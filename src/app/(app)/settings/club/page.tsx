@@ -4,6 +4,7 @@ import { requireViewer } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { formatTimeOfDay } from "@/lib/format";
 import { ClubForm } from "./club-form";
+import { FaviconEditor } from "./favicon-editor";
 import { LogoEditor } from "./logo-editor";
 
 export default async function ClubSettingsPage() {
@@ -15,6 +16,7 @@ export default async function ClubSettingsPage() {
       name: true,
       pdfFooterText: true,
       logoAssetId: true,
+      faviconAssetId: true,
       defaultStartTimeMinutes: true,
       defaultDurationMinutes: true,
       readerPdfDailyLimit: true,
@@ -36,6 +38,9 @@ export default async function ClubSettingsPage() {
       </SectionCard>
       <SectionCard title={t("logo")} description={t("logoHint")}>
         <LogoEditor logoAssetId={club.logoAssetId} clubName={club.name} />
+      </SectionCard>
+      <SectionCard title={t("favicon")} description={t("faviconHint")}>
+        <FaviconEditor faviconAssetId={club.faviconAssetId} />
       </SectionCard>
     </div>
   );

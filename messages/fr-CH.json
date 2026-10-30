@@ -490,7 +490,13 @@
       "removeLogo": "Supprimer le logo",
       "removeLogoConfirm": "Le logo sera retiré de tous les futurs PDF.",
       "readerPdfLimit": "PDF par jour pour les lecteurs",
-      "readerPdfLimitHint": "Nombre de PDF qu'une personne avec droits de lecture peut créer par jour. 0 = aucun. Les moniteurs et admins ne sont pas limités."
+      "readerPdfLimitHint": "Nombre de PDF qu'une personne avec droits de lecture peut créer par jour. 0 = aucun. Les moniteurs et admins ne sont pas limités.",
+      "favicon": "Favicon",
+      "faviconHint": "La petite icône dans l’onglet du navigateur, les favoris et sur l’écran d’accueil. Idéalement une image carrée peu détaillée (PNG à fond transparent).",
+      "noFavicon": "Pas encore de favicon propre – l’icône par défaut est utilisée.",
+      "removeFavicon": "Supprimer le favicon",
+      "removeFaviconConfirm": "Supprimer le favicon de la société ? L’icône par défaut réapparaît ensuite.",
+      "faviconAlt": "Favicon"
     },
     "teams": {
       "title": "Groupes",

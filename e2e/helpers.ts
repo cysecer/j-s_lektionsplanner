@@ -7,7 +7,11 @@ export function uniqueEmail(prefix: string) {
 }
 
 /** Creates an invitation through the real CLI and returns the link. */
-export function invite(email: string, role: "ADMIN" | "COACH" | "READER" = "COACH"): string {
+export function invite(
+  email: string,
+  role: "ADMIN" | "COACH" | "READER" = "COACH",
+  locale = "de-CH",
+): string {
   const output = execFileSync(
     process.execPath,
     [
@@ -18,6 +22,8 @@ export function invite(email: string, role: "ADMIN" | "COACH" | "READER" = "COAC
       email,
       "--role",
       role,
+      "--locale",
+      locale,
     ],
     { env: { ...process.env, ...e2eServerEnv() }, encoding: "utf8" },
   );

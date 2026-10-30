@@ -3,8 +3,10 @@ import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { z } from "zod";
-import { localeSchema } from "@/i18n/config";
+import { LOCALE_COOKIE, localeSchema } from "@/i18n/config";
+import { toLocale } from "@/i18n/translator";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 import { hashToken, tokenSchema } from "./tokens";
 
 /**
@@ -24,7 +26,10 @@ export const invitationPlugin = () =>
           body: z.strictObject({
             token: tokenSchema,
             name: z.string().trim().min(1).max(100),
-            /** Language shown while accepting; becomes the account's language. */
+            /**
+             * Language the invitation page was shown in: the one chosen in the
+             * invitation, unless the person picked another one there.
+             */
             locale: localeSchema,
           }),
         },
@@ -93,6 +98,17 @@ export const invitationPlugin = () =>
             const session = await ctx.context.internalAdapter.createSession(userRecord.id);
             if (!session) throw new Error("session creation failed");
             await setSessionCookie(ctx, { session, user: userRecord });
+            // The login page shows the account's language later on, too.
+            const locale = existing
+              ? toLocale((existing.user as { locale?: string }).locale)
+              : ctx.body.locale;
+            ctx.setCookie(LOCALE_COOKIE, locale, {
+              path: "/",
+              maxAge: 60 * 60 * 24 * 365,
+              sameSite: "lax",
+              secure: env.APP_URL.startsWith("https://"),
+              httpOnly: true,
+            });
             return ctx.json({ ok: true });
           } catch (error) {
             // Give the token back so the person can retry.

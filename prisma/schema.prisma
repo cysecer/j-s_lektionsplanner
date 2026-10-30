@@ -47,6 +47,8 @@ model Club {
   id                      String   @id @default(uuid(7)) @db.Uuid
   name                    String
   logoAssetId             String?  @unique @db.Uuid
+  /// Browser tab icon (also on the login page); null = the app's default.
+  faviconAssetId          String?  @unique @db.Uuid
   /// Optional text in the PDF footer (e.g. "J+S-Kindersport").
   pdfFooterText           String?
   defaultLayoutId         String?  @unique @db.Uuid
@@ -60,6 +62,7 @@ model Club {
   updatedAt               DateTime @updatedAt
 
   logo          Asset?         @relation("ClubLogo", fields: [logoAssetId], references: [id], onDelete: SetNull)
+  favicon       Asset?         @relation("ClubFavicon", fields: [faviconAssetId], references: [id], onDelete: SetNull)
   defaultLayout Layout?        @relation("ClubDefaultLayout", fields: [defaultLayoutId], references: [id], onDelete: SetNull)
   teams         Team[]
   coaches       Coach[]
@@ -220,6 +223,7 @@ model Asset {
 
   club               Club                 @relation("ClubAssets", fields: [clubId], references: [id], onDelete: Cascade)
   logoOfClub         Club?                @relation("ClubLogo")
+  faviconOfClub      Club?                @relation("ClubFavicon")
   blockSketches      ProgramBlockSketch[]
   lessonItemSketches LessonItemSketch[]
 

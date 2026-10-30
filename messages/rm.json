@@ -490,7 +490,13 @@
       "removeLogo": "Allontanar il logo",
       "removeLogoConfirm": "Il logo vegn allontanà da tut ils PDFs futurs.",
       "readerPdfLimit": "PDFs per di per lecturs",
-      "readerPdfLimitHint": "Quants PDFs ina persuna cun dretgs da lectura dastga crear per di. 0 = nagins. Manaders ed admins n'èn betg limitads."
+      "readerPdfLimitHint": "Quants PDFs ina persuna cun dretgs da lectura dastga crear per di. 0 = nagins. Manaders ed admins n'èn betg limitads.",
+      "favicon": "Favicon",
+      "faviconHint": "Il pitschen simbol en il tab dal navigatur, en ils segnapaginas e sin il visur da partenza. Il meglier in maletg quadrat cun paucs detagls (PNG cun fund transparent).",
+      "noFavicon": "Anc nagin agen favicon – i vegn duvrà il simbol da standard.",
+      "removeFavicon": "Allontanar il favicon",
+      "removeFaviconConfirm": "Allontanar il favicon da la societad? Silsuenter cumpara puspè il simbol da standard.",
+      "faviconAlt": "Favicon"
     },
     "teams": {
       "title": "Gruppas",

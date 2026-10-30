@@ -490,7 +490,13 @@
       "removeLogo": "Logo entfernen",
       "removeLogoConfirm": "Das Logo wird aus allen künftigen PDFs entfernt.",
       "readerPdfLimit": "PDFs pro Tag für Lesende",
-      "readerPdfLimitHint": "Wie viele PDFs eine Person mit Leserechten pro Tag erstellen darf. 0 = keine. Leitende und Admins sind nicht begrenzt."
+      "readerPdfLimitHint": "Wie viele PDFs eine Person mit Leserechten pro Tag erstellen darf. 0 = keine. Leitende und Admins sind nicht begrenzt.",
+      "favicon": "Favicon",
+      "faviconHint": "Das kleine Symbol im Browser-Tab, in Lesezeichen und auf dem Startbildschirm. Am besten ein quadratisches Bild mit wenig Details (PNG mit transparentem Hintergrund).",
+      "noFavicon": "Noch kein eigenes Favicon – es wird das Standardsymbol verwendet.",
+      "removeFavicon": "Favicon entfernen",
+      "removeFaviconConfirm": "Das eigene Favicon entfernen? Danach erscheint wieder das Standardsymbol.",
+      "faviconAlt": "Favicon"
     },
     "teams": {
       "title": "Riegen",

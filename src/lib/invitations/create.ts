@@ -108,6 +108,7 @@ export async function findOpenInvitation(token: string) {
     select: {
       email: true,
       role: true,
+      locale: true,
       club: { select: { name: true } },
       coach: { select: { name: true } },
     },

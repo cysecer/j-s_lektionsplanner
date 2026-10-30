@@ -490,7 +490,13 @@
       "removeLogo": "Remove logo",
       "removeLogoConfirm": "The logo will be removed from all future PDFs.",
       "readerPdfLimit": "PDFs per day for readers",
-      "readerPdfLimitHint": "How many PDFs a person with read-only access may create per day. 0 = none. Coaches and admins are not limited."
+      "readerPdfLimitHint": "How many PDFs a person with read-only access may create per day. 0 = none. Coaches and admins are not limited.",
+      "favicon": "Favicon",
+      "faviconHint": "The small icon in the browser tab, in bookmarks and on the home screen. Best a square image with little detail (PNG with transparent background).",
+      "noFavicon": "No own favicon yet – the default icon is used.",
+      "removeFavicon": "Remove favicon",
+      "removeFaviconConfirm": "Remove the club favicon? The default icon is shown again afterwards.",
+      "faviconAlt": "Favicon"
     },
     "teams": {
       "title": "Groups",

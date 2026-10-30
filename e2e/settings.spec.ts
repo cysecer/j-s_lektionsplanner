@@ -47,7 +47,8 @@ test("club: validated settings and logo upload", async ({ page }) => {
   await expect(page.getByLabel("Standard-Startzeit")).toHaveValue("17:30");
 
   // A disguised HTML file is refused by content, not by its name.
-  const fileInput = page.locator('input[type="file"]');
+  // (The first upload field is the logo, the second the favicon.)
+  const fileInput = page.locator('input[type="file"]').first();
   await fileInput.setInputFiles({
     name: "logo.png",
     mimeType: "image/png",
