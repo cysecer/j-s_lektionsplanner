@@ -156,9 +156,10 @@ Die App ist nur über `127.0.0.1` erreichbar, also nur über nginx. `TRUSTED_PRO
 
 1. **Einstellungen → E-Mail**: Mailserver des Hosting-Anbieters eintragen, «Testmail an mich
    senden». Ab jetzt gehen Einladungen und Anmeldelinks per E-Mail raus.
-2. **Einstellungen → Verein**: Logo, Fusszeile, Startzeit, PDF-Kontingent für Lesende.
+2. **Einstellungen → Verein**: Logo, Favicon (Symbol im Browser-Tab, auch auf der Login-Seite),
+   Fusszeile, Startzeit, PDF-Kontingent für Lesende.
 3. **Einstellungen → Riegen und Leitende** erfassen, dann unter **Personen** einladen (Rolle für
-   alle Riegen oder pro Riege).
+   alle Riegen oder pro Riege, Sprache der Einladung).
 
 ### Updates
 
@@ -369,5 +370,7 @@ Anmeldung, Rollen und Eingabevalidierung sind in [SECURITY.md](SECURITY.md) besc
 ## Sprachen
 
 Oberfläche auf Deutsch (Schweiz), Französisch, Italienisch, Rumantsch und Englisch. Die Sprache
-wird pro Person gespeichert. Status der Übersetzungen und Anleitung für neue Sprachen:
+wird pro Person gespeichert. Neue Personen erhalten die Sprache, die bei der Einladung gewählt
+wurde (Standard: Deutsch); die Einladungsseite erscheint bereits in dieser Sprache. Ändern kann
+jede Person ihre Sprache jederzeit über die Sprachauswahl oben rechts. Status der Übersetzungen und Anleitung für neue Sprachen:
 [TRANSLATIONS.md](TRANSLATIONS.md).
