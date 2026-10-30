@@ -1,9 +1,9 @@
 import { fileURLToPath } from "node:url";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  // "@/…" imports from tsconfig.json (built into Vite, no plugin needed).
+  resolve: { tsconfigPaths: true },
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
